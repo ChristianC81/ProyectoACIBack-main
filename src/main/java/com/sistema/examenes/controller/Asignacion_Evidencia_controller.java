@@ -2,15 +2,17 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
+import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
+import com.sistema.examenes.entity.Usuario;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
-import com.sistema.examenes.projection.AsignacionProjection;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
+import com.sistema.examenes.services.Historial_Asignacion_Evidencia_Service;
+import com.sistema.examenes.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @CrossOrigin(origins = { "*" })
@@ -19,13 +21,28 @@ import java.util.List;
 public class Asignacion_Evidencia_controller {
     @Autowired
     Asignacion_Evidencia_Service Service;
-
+    @Autowired
+    Historial_Asignacion_Evidencia_Service ServiceHistorialAsignacion;
+    @Autowired
+    UsuarioService usuarioService;
+    Historial_Asignacion_Evidencia nuevoRegistroAsignacion;
+    Usuario usuarioAsignador;
     @PostMapping("/crear")
     public ResponseEntity<Asignacion_Evidencia> crear(@RequestBody Asignacion_Evidencia r) {
         try {
             r.setVisible(true);
-            return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
+            Asignacion_Evidencia asignacionGuardada = Service.save(r);
+            usuarioAsignador= new Usuario();
+            usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
+            System.out.println("Usuario asignador:"+usuarioAsignador.getPersona().getCedula());
+            nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
+            nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
+            nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
+            nuevoRegistroAsignacion.setVisible(true);
+            ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
+            return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
