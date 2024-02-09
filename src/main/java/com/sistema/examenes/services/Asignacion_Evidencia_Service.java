@@ -1,6 +1,7 @@
 package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Asignacion_Evidencia;
+import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
 
@@ -14,4 +15,6 @@ public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_
     Boolean verificarAsignacionUsuario(Long id_usuario, Long id_evidencia,Long id_modelo);
     List<AsignaProjection> listarAsigEvidencia();
     Asignacion_Evidencia fechaactividades(Long id_evidencia,Long id_modelo);
+
+    List<ActiCalendarProjection> listarActiCalendarbyuser (Long usuario);
 }
