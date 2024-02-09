@@ -214,4 +214,16 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/responsablesAdmin/{idAdministrador}")
+    public ResponseEntity<List<ResponsableProjection>> responsablesAdmin(@PathVariable Long idAdministrador) {
+        try {
+            //Tendria que tomar el id del administrador como parametro, y con ello traigo los responsables
+            List<ResponsableProjection> responsables = usuarioService.responsablesAdmin(idAdministrador);
+            return new ResponseEntity<>(responsables, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

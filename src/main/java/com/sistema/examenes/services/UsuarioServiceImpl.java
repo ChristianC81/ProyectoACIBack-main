@@ -49,4 +49,8 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, Long> implem
         return usuarioRepository.listaSOLORESPONSABLES();
     }
 
+    @Override
+    public List<ResponsableProjection> responsablesAdmin(Long idAdministrador) {
+        return usuarioRepository.responsablesAdmin(idAdministrador);
+    }
 }

@@ -2,6 +2,7 @@ package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
+import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
@@ -48,6 +49,11 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     @Override
     public Asignacion_Evidencia fechaactividades(Long id_evidencia, Long id_modelo) {
         return repository.fechaactividades(id_evidencia, id_modelo);
+    }
+
+    @Override
+    public List<ActiCalendarProjection> listarActiCalendarbyuser(Long usuario) {
+        return repository.findActCalendarByUsuarioId(usuario);
     }
 
     @Override
