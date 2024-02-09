@@ -1,6 +1,7 @@
 package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Actividad;
+import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.projection.ActivAprobadaProjection;
 import com.sistema.examenes.projection.ActivProyection;
@@ -159,16 +160,6 @@ public class Actividad_Controller {
 
         try {
             return new ResponseEntity<>(Service.listareviuser(username,id_evidencia), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/buscarusuario/{username}")
-    public ResponseEntity <List<Actividad>> listaractiUsuario(@PathVariable("username") String username) {
-
-        try {
-            return new ResponseEntity<>(Service.listarporusuario(username), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
