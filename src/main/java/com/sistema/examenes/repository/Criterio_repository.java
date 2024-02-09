@@ -109,7 +109,7 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
                 "ORDER BY criterio.id_criterio, evidencia.id_evidencia", nativeQuery = true)
          List<CriteProjection> actividadesusuario(Long id, Long id_modelo);
 
-        @Query(value = "SELECT cri.nombre AS criterio\n" +
+        @Query(value = "SELECT cri.nombre AS criterio, cri.descripcion AS descripcion\n" +
                 "                FROM indicador i JOIN subcriterio sub ON sub.id_subcriterio=i.subcriterio_id_subcriterio \n" +
                 "                JOIN criterio cri ON cri.id_criterio =sub.id_criterio \n" +
                 "                JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true \n" +
