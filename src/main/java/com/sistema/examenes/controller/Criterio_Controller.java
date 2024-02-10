@@ -233,5 +233,17 @@ public class Criterio_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+  
+    @GetMapping("/criteriosporusuarioymodelo/{usuarioId}/{modeloId}")
+    public ResponseEntity<List<Criterio>> obtenerCriteriosPorUsuarioYModelo(
+            @PathVariable("usuarioId") Long usuarioId,
+            @PathVariable("modeloId") Long modeloId) {
+        try {
+            List<Criterio> criterios = Service.obtenerCriteriosPorUsuarioYModelo(usuarioId, modeloId);
+            return new ResponseEntity<>(criterios, HttpStatus.OK);
+           } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
 }

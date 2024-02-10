@@ -23,7 +23,7 @@ public class Asignacion_Admin_Controller {
     public ResponseEntity<Asignacion_Admin> crear(@RequestBody Asignacion_Admin r) {
         try {
             Long criterio = r.getCriterio().getId_criterio(); // Obtener el ID del criterio
-            Long modelo = r.getId_modelo();
+            Long modelo = r.getId_modelo().getId_modelo();
             Long usuario=r.getUsuario().getId();
             Asignacion_Admin asignacionExistente = Service.asignacion_existente(criterio, modelo,usuario);
             if (asignacionExistente != null) {
@@ -128,12 +128,41 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/veradminsporcriterio/{id_modelo}/{id_criterio}")
+    public ResponseEntity<List<AsignacionProjection>> veradminsporcriterio(
+            @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
+        try {
+            return new ResponseEntity<>(Service.veradminsporcriterio(id_modelo, id_criterio), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/verresponsablesporcriterio/{id_modelo}/{id_criterio}")
+    public ResponseEntity<List<AsignacionProjection>> verresponsablesporcriterio(
+            @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
+        try {
+            return new ResponseEntity<>(Service.verresponsablesporcriterio(id_modelo, id_criterio), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/listarAsignacion_AdminPorUsuarioCriterio/{id_criterio}/{id_modelo}")
-    public ResponseEntity<Asignacion_Admin> listarAsignacion_AdminPorUsuarioCriterio(
+    public ResponseEntity<List<Asignacion_Admin>> listarAsignacion_AdminPorUsuarioCriterio(
             @PathVariable("id_criterio") Long id_criterio,  @PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listarAsignacion_AdminPorUsuarioCriterio(id_criterio, id_modelo),
-                    HttpStatus.OK);
+            List<Asignacion_Admin> asignaciones = Service.listarAsignacion_AdminPorUsuarioCriterio(id_criterio, id_modelo);
+
+            if (asignaciones.isEmpty()) {
+                // Manejar el caso en el que no hay asignaciones
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // o cualquier otro código de estado adecuado
+            } else {
+                // Retornar la lista de asignaciones
+                return new ResponseEntity<>(asignaciones, HttpStatus.OK);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -146,12 +175,31 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
-                a.setVisible(false);
+                a.setVisible(true);
                 return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
+        }
+    }
+
+
+    @GetMapping("/busqueda_especifica/{idUsuario}/{idModelo}/{idCriterio}")
+    public ResponseEntity<Asignacion_Admin> buscarAsignacionAdmin(
+            @PathVariable("idUsuario") Long idUsuario,
+            @PathVariable("idModelo") Long idModelo,
+            @PathVariable("idCriterio") Long idCriterio) {
+        try {
+            Asignacion_Admin asignacionAdmin = Service.buscar_asignacion_especifica(idUsuario, idModelo, idCriterio);
+
+            if (asignacionAdmin != null) {
+                return new ResponseEntity<>(asignacionAdmin, HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Manejar el caso en el que no se encuentre ninguna asignación
+            }
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
