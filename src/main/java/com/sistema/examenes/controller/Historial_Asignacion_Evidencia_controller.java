@@ -79,10 +79,10 @@ public class Historial_Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarHistorial/{id_usuario_asignador}/{id_criterio}")
-    public ResponseEntity<List<HistorialAsignacionEvidenciaProjection>> listarHistorial(@PathVariable("id_usuario_asignador") Long id_usuario_asignador , @PathVariable("id_criterio") Long id_criterio ) {
+    @GetMapping("/listarHistorial/{id_usuario_asignador}/{id_criterio}/{veri}")
+    public ResponseEntity<List<HistorialAsignacionEvidenciaProjection>> listarHistorial(@PathVariable("id_usuario_asignador") Long id_usuario_asignador , @PathVariable("id_criterio") Long id_criterio, @PathVariable("veri") String veri ) {
         try {
-            return new ResponseEntity<>(Service.listarHistorial(id_usuario_asignador, id_criterio), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarHistorial(id_usuario_asignador, id_criterio, veri), HttpStatus.OK);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
