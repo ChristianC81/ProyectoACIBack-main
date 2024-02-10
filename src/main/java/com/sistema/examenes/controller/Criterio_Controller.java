@@ -225,4 +225,13 @@ public class Criterio_Controller {
         return Service.obtenerDatosCriterios();
     }
 
+    @GetMapping("/listCriAdmin/{id}")
+    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(Service.listarCriterioAdms(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

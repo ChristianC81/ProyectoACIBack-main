@@ -93,4 +93,9 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
         return repository.getCorreo(id_modelo, id_evidencia);
     }
 
+    @Override
+    public List<CriterioAdm> listarCriterioAdms(Long userId) {
+        return repository.getCriteriosByAdmin(userId);
+    }
+
 }
