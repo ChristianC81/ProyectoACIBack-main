@@ -1,7 +1,8 @@
 package com.sistema.examenes.repository;
 
+import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
-import com.sistema.examenes.entity.Criterio;
+import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -62,4 +63,25 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
                     "AND ae.evidencia_id_evidencia=:id_evidencia " +
                     "AND aa.id_modelo=:id_modelo", nativeQuery = true)
     Boolean verificarAsignacionUsuario(Long id_usuario, Long id_evidencia,Long id_modelo);
+
+    @Query(value = "SELECT e.descripcion, a.fecha_inicio, a.fecha_fin " +
+            "FROM asignacion_evidencia a " +
+            "JOIN evidencia e ON e.id_evidencia = a.evidencia_id_evidencia " +
+            "WHERE a.usuario_id = :usuarioId AND a.visible = true AND LOWER(e.estado)='pendiente'", nativeQuery = true)
+    List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId);
+
+    @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "WHERE u.username = :username AND ae.evidencia_id_evidencia=:id_evidencia ", nativeQuery = true)
+    List<Object[]> listarAsigEviUser(String username, Long id_evidencia);
+
+    @Query(value = "select * from  asignacion_evidencia ac JOIN usuarios u ON ac.usuario_id = u.id where u.username=:username and ac.visible =true",nativeQuery = true)
+    List<Asignacion_Evidencia>listarporusuario(String username);
+
+    @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidendicia ;",nativeQuery = true)
+    List<Asignacion_Evidencia>listarporEvidencia(Long idEvidendicia);
+
+
 }
