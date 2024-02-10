@@ -139,7 +139,7 @@ public class UsuarioController {
         }
     }
     @GetMapping("/responsables")
-    public ResponseEntity<List<ResponsableProjection>> Responsables() {
+    public ResponseEntity<List<Usuario>> Responsables() {
         try {
             return new ResponseEntity<>(uR.responsables(), HttpStatus.OK);
         } catch (Exception e) {
