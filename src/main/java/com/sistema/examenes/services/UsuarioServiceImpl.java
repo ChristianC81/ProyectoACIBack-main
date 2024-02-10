@@ -30,7 +30,7 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, Long> implem
     }
 
     @Override
-    public List<ResponsableProjection> responsables() {
+    public List<Usuario> responsables() {
         return usuarioRepository.responsables();
     }
 
