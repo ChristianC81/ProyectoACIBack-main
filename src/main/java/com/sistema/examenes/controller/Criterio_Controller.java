@@ -133,6 +133,15 @@ public class Criterio_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/listcriresp/{id}/{id_modelo}")
+    public ResponseEntity<List<CriteRespProjection>> criterioporresp(@PathVariable("id") Long id,@PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.criterioporresp(id,id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/buscar/{id}")
     public ResponseEntity<Criterio> getById(@PathVariable("id") Long id) {
         try {
@@ -216,6 +225,15 @@ public class Criterio_Controller {
         return Service.obtenerDatosCriterios();
     }
 
+    @GetMapping("/listCriAdmin/{id}")
+    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id") Long id) {
+        try {
+            return new ResponseEntity<>(Service.listarCriterioAdms(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+  
     @GetMapping("/criteriosporusuarioymodelo/{usuarioId}/{modeloId}")
     public ResponseEntity<List<Criterio>> obtenerCriteriosPorUsuarioYModelo(
             @PathVariable("usuarioId") Long usuarioId,
@@ -223,7 +241,7 @@ public class Criterio_Controller {
         try {
             List<Criterio> criterios = Service.obtenerCriteriosPorUsuarioYModelo(usuarioId, modeloId);
             return new ResponseEntity<>(criterios, HttpStatus.OK);
-        } catch (Exception e) {
+           } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

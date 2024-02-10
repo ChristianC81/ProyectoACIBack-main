@@ -1,6 +1,7 @@
 package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Actividad;
+import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.projection.ActivAprobadaProjection;
 import com.sistema.examenes.projection.ActivProyection;
 import com.sistema.examenes.projection.ActividadesProjection;
@@ -146,8 +147,6 @@ List<ActivAprobadaProjection> actividadRechazada();
             "AND ac.fecha_fin BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND ac.estado = 'pendiente' AND ac.visible=true ;", nativeQuery = true)
     List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
-    @Query(value = "select * from  actividad ac JOIN usuarios u ON ac.usuario_id = u.id where u.username=:username and ac.visible =true",nativeQuery = true)
-    List<Actividad>listarporusuario(String username);
 
     @Query(value = "SELECT ac.* FROM  actividad ac JOIN usuarios u " +
             "ON ac.usuario_id = u.id where u.username=:username " +
