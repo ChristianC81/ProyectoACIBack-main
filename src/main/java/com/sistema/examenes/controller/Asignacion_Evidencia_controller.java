@@ -4,6 +4,8 @@ import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
+import com.sistema.examenes.projection.ActiCalendarProjection;
+import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
@@ -75,6 +77,16 @@ public class Asignacion_Evidencia_controller {
     public ResponseEntity<List<AsignacionEvidenciaProyeccion>> listarpruebasevi() {
         try {
             return new ResponseEntity<>(Service.listarAsignacionEvidenciaProyeccion(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/actCalendar/{id}")
+    public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id) {
+        try {
+            List<ActiCalendarProjection> actividades = Service.listarActiCalendarbyuser(id);
+            return new ResponseEntity<>(actividades, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -177,4 +189,29 @@ public class Asignacion_Evidencia_controller {
 
         }
     }
+
+    @GetMapping("/listarAsigEviUser/{username}/{id_evidencia}")
+    public List<Asignacion_EvidenciaDTO> listarAsigEviUser(@PathVariable("username") String username,@PathVariable("id_evidencia") Long id_evidencia) {
+        return Service.listarAsigEviUser(username,id_evidencia);
+    }
+
+    @GetMapping("/buscarusuario/{username}")
+    public ResponseEntity <List<Asignacion_Evidencia>> listaractiUsuario(@PathVariable("username") String username) {
+
+        try {
+            return new ResponseEntity<>(Service.listarporusuario(username), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/buscarporEvide/{idEviden}")
+    public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
+        try {
+            return new ResponseEntity<>(Service.listarporEvidencia(idEvidencia), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 }

@@ -84,6 +84,11 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     }
 
     @Override
+    public List<CriteRespProjection> criterioporresp(Long id, Long id_modelo) {
+        return repository.criterioporresp(id, id_modelo);
+    }
+
+    @Override
     public CorreoProjection getCorreo(Long id_modelo, Long id_evidencia) {
         return repository.getCorreo(id_modelo, id_evidencia);
     }
