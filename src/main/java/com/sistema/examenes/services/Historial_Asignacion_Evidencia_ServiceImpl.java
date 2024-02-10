@@ -18,7 +18,8 @@ public class Historial_Asignacion_Evidencia_ServiceImpl extends GenericServiceIm
         return repository;
     }
     @Override
-    public List<HistorialAsignacionEvidenciaProjection> listarHistorial(Long id_usuario_asignador, Long id_criterio) {
-        return repository.obtenerHistorialPorUsuario(id_usuario_asignador, id_criterio);
+    public List<HistorialAsignacionEvidenciaProjection> listarHistorial(Long id_usuario_asignador, Long id_criterio, String veri) {
+        return repository.obtenerHistorialPorUsuario(id_usuario_asignador, id_criterio, veri );
     }
+
 }

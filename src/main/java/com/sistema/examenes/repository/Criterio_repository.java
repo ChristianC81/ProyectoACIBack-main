@@ -109,6 +109,7 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
                 "ORDER BY criterio.id_criterio, evidencia.id_evidencia", nativeQuery = true)
          List<CriteProjection> actividadesusuario(Long id, Long id_modelo);
 
+
         @Query(value = "SELECT c.id_criterio, c.nombre AS nombre_criterio, c.descripcion AS descripcion_criterio " +
                 "FROM asignacion_admin a " +
                 "JOIN criterio c ON c.id_criterio = a.criterio_id_criterio " +
@@ -130,5 +131,17 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
                 "                JOIN criterio cri ON cri.id_criterio = s.id_criterio \n" +
                 "                WHERE ae.usuario_id =?1 AND ae.id_modelo =?2 ) GROUP BY cri.nombre,cri.id_criterio ORDER BY cri.id_criterio", nativeQuery = true)
         List<CriteRespProjection> criterioporresp(Long id, Long id_modelo);
+  
+  
+        @Query(value = "SELECT c.id_criterio, c.descripcion, c.nombre, c.visible " +
+                "FROM criterio c " +
+                "JOIN asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio " +
+                "JOIN usuarios u ON aa.usuario_id = u.id " +
+                "JOIN modelo m ON aa.id_modelo = m.id_modelo " +
+                "WHERE u.id = ?1 " +
+                "AND m.id_modelo = ?2 " +
+                "AND c.visible = true " +
+                "AND aa.visible = true", nativeQuery = true)
+        List<Criterio> obtenerCriteriosPorUsuarioYModelo(Long usuarioId, Long modeloId);
 
 }
