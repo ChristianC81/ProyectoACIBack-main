@@ -40,9 +40,11 @@ public class Asignacion_Evidencia implements Serializable {
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "asignacion_evi")
     @JsonIgnore
     private Set<Historial_Asignacion_Evidencia> historial_asignacion = new HashSet<>();
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "actividad")
     @JsonIgnore
     private Set<Archivo_s> lista_archivo = new HashSet<>();
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "actividad")
     @JsonIgnore
     private Set<Observacion> lista_observaciones = new HashSet<>();

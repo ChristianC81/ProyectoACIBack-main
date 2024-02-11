@@ -15,5 +15,4 @@ public interface UsuarioService extends GenericService<Usuario, Long> {
     public List<Usuario> responsables();
     public List<Usuario> listaAdminDatos();
     public List<Usuario>listaSOLORESPONSABLES();
-    public List<ResponsableProjection> responsablesAdmin(Long idAdministrador);
 }

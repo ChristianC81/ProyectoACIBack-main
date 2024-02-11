@@ -3,6 +3,7 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.*;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.repository.UsuarioRepository;
+import com.sistema.examenes.services.Asignacion_Responsable_Service;
 import com.sistema.examenes.services.RolService;
 import com.sistema.examenes.services.UsuarioRolService;
 import com.sistema.examenes.services.UsuarioService;
@@ -34,6 +35,8 @@ public class UsuarioController {
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
 
+    @Autowired
+    private Asignacion_Responsable_Service serviceAsigResponsable;
     @PostConstruct
     public void init() {
         Rol usuario1 = new Rol(1L, "ADMIN");
@@ -90,6 +93,32 @@ public class UsuarioController {
         }
     }
 
+    @PostMapping("/crear/{rolId}/{idAdmin}")
+    public ResponseEntity<Usuario> crearResponsable(@RequestBody Usuario r, @PathVariable Long rolId,@PathVariable Long idAdmin) {
+        try {
+            if (usuarioService.obtenerUsuario(r.getUsername()) == null) {
+                // Buscar el rol por ID
+                Rol rol = rolService.findById(rolId);
+                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+                r.setVisible(true);
+                // Crear un nuevo UsuarioRol y establecer las referencias correspondientes
+                UsuarioRol usuarioRol = new UsuarioRol();
+                usuarioRol.setUsuario(r);
+                usuarioRol.setRol(rol);
+
+                // Agregar el UsuarioRol a la lista de roles del usuario
+                r.getUsuarioRoles().add(usuarioRol);
+
+                // Guardar el usuario en la base de datos
+                // Usuario nuevoUsuario = usuarioService.save(r);
+                return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
+            }
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/listar")
     public ResponseEntity<List<Usuario>> obtenerLista() {
         try {
@@ -210,17 +239,6 @@ public class UsuarioController {
         try {
 
             return new ResponseEntity<>(uR.listaSOLORESPONSABLES(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/responsablesAdmin/{idAdministrador}")
-    public ResponseEntity<List<ResponsableProjection>> responsablesAdmin(@PathVariable Long idAdministrador) {
-        try {
-            //Tendria que tomar el id del administrador como parametro, y con ello traigo los responsables
-            List<ResponsableProjection> responsables = usuarioService.responsablesAdmin(idAdministrador);
-            return new ResponseEntity<>(responsables, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

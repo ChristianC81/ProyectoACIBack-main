@@ -145,8 +145,6 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "ORDER BY s.nombre, i.id_indicador ", nativeQuery = true)
     List<IndicadorEvidenciasProjectionFull> obtenerIndicadoresConCantidadEvidenciaFull();
 
-
-
     @Query("SELECT DISTINCT i FROM Indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN Asignacion_Indicador ai ON ai.indicador = i " +

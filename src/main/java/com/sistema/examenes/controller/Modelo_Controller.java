@@ -204,7 +204,6 @@ public class  Modelo_Controller {
         try {
             return new ResponseEntity<>(Service.listicritedes(id_modelo,nombre), HttpStatus.OK);
         } catch (Exception e) {
-            
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

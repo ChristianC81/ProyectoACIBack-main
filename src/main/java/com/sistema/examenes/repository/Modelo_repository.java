@@ -60,9 +60,9 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
             "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
             "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
-            "LEFT JOIN actividad ac ON ev.id_evidencia = ac.id_evidencia AND ac.visible = true " +
-            "LEFT JOIN archivo arc ON ac.id_actividad = arc.id_actividad AND arc.visible = true " +
-            "WHERE ai.modelo_id_modelo =:id_modelo AND cri.nombre =:nombre " +
+            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
+            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
+            "WHERE ai.modelo_id_modelo = :id_modelo AND cri.nombre = :nombre " +
             "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador", nativeQuery = true)
     List<criteriosdesprojection> listicritedes(Long id_modelo,String nombre);
     @Query(value = "SELECT cri.nombre AS criterionomj, sub.nombre AS subcrierioj, i.id_indicador AS id_indicardorj, " +
@@ -75,8 +75,8 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
             "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
             "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
-            "LEFT JOIN actividad ac ON ev.id_evidencia = ac.id_evidencia AND ac.visible = true " +
-            "LEFT JOIN archivo arc ON ac.id_actividad = arc.id_actividad AND arc.visible = true " +
+            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
+            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "WHERE cri.id_criterio =:id_criterio AND ai.modelo_id_modelo =:id_modelo " +
             "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador", nativeQuery = true)
     List<criteriosdesprojection> listcritmodel(Long id_criterio, Long id_modelo);
@@ -89,8 +89,8 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
             "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
             "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
-            "LEFT JOIN actividad ac ON ev.id_evidencia = ac.id_evidencia AND ac.visible = true " +
-            "LEFT JOIN archivo arc ON ac.id_actividad = arc.id_actividad AND arc.visible = true " +
+            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
+            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true AND aa.id_modelo=:id_modelo " +
             "WHERE ai.modelo_id_modelo =:id_modelo AND aa.usuario_id=:id " +
             "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador;", nativeQuery = true)
@@ -106,8 +106,8 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "JOIN subcriterio sub ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
             "JOIN criterio cri ON cri.id_criterio = sub.id_criterio AND sub.visible = true " +
             "JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
-            "LEFT JOIN actividad ac ON ev.id_evidencia = ac.id_evidencia AND ac.visible = true " +
-            "LEFT JOIN archivo arc ON ac.id_actividad = arc.id_actividad AND arc.visible = true " +
+            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
+            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true AND aa.id_modelo =:id_modelo " +
             "JOIN asignacion_evidencia ae ON ev.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true AND ae.id_modelo =:id_modelo " +
             "WHERE ai.modelo_id_modelo =:id_modelo AND ae.usuario_id =:id " +
@@ -117,8 +117,9 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
 @Query(value = "SELECT cri.nombre AS criterionomj,sub.nombre AS subcrierioj,i.id_indicador AS id_indicardorj, " +
         "i.nombre AS ind_nombrej,CASE WHEN ai.visible IS NOT NULL THEN ai.visible ELSE false END AS visi, " +
         "arc.nombre AS archivo_nombre,arc.enlace AS archivo_enlace " +
-        "FROM archivo arc JOIN actividad ac ON ac.id_actividad = arc.id_actividad " +
-        "JOIN evidencia ev ON ev.id_evidencia = ac.id_evidencia " +
+        "FROM archivo arc " +
+        "JOIN asignacion_evidencia ac ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia " +
+        "JOIN evidencia ev ON ev.id_evidencia = ac.evidencia_id_evidencia " +
         "JOIN indicador i ON ev.indicador_id_indicador = i.id_indicador " +
         "JOIN subcriterio sub ON i.subcriterio_id_subcriterio = sub.id_subcriterio AND sub.visible = true " +
         "JOIN criterio cri ON cri.id_criterio = sub.id_criterio AND sub.visible = true " +

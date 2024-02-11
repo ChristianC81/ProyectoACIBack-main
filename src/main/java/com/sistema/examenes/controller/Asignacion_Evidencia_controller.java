@@ -1,6 +1,5 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
@@ -101,7 +100,7 @@ public class Asignacion_Evidencia_controller {
         }
     }
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Actividad actividad) {
+    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Asignacion_Evidencia actividad) {
         return Service.delete(id);
     }
     @PutMapping("/eliminarlogic/{id}")

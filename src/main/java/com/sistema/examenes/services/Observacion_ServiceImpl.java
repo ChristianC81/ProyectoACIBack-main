@@ -1,6 +1,5 @@
 package com.sistema.examenes.services;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Observacion;
 import com.sistema.examenes.repository.Observacion_repository;
 import org.springframework.beans.factory.annotation.Autowired;

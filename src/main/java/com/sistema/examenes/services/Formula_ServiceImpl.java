@@ -1,6 +1,5 @@
 package com.sistema.examenes.services;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Formula;
 import com.sistema.examenes.repository.Formula_repository;
 import org.springframework.beans.factory.annotation.Autowired;
