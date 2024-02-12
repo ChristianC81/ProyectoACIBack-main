@@ -66,7 +66,11 @@ public class UsuarioController {
     @PostMapping("/crear/{rolId}")
     public ResponseEntity<Usuario> crear(@RequestBody Usuario r, @PathVariable Long rolId) {
         try {
-            if (usuarioService.obtenerUsuario(r.getUsername()) == null) {
+            Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
+            if (usuarioExistente != null) {
+                usuarioExistente.setVisible(true);
+                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+            }
                 // Buscar el rol por ID
                 Rol rol = rolService.findById(rolId);
                 r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
@@ -82,8 +86,6 @@ public class UsuarioController {
                 // Guardar el usuario en la base de datos
                 // Usuario nuevoUsuario = usuarioService.save(r);
                 return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
-            }
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
 
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -146,10 +148,10 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/responsablesAdmin")
+    @GetMapping("/responsablesGeneral")
     public ResponseEntity<List<ResponsableProjection>> ResponsablesAdmin() {
         try {
-            return new ResponseEntity<>(uR.responsablesAdmin(), HttpStatus.OK);
+            return new ResponseEntity<>(uR.responsablesGeneral(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
