@@ -1,9 +1,12 @@
 package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.*;
+import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
 import com.sistema.examenes.projection.ResponsableProjection;
+import com.sistema.examenes.repository.SeguimientoUsuario_repository;
 import com.sistema.examenes.repository.UsuarioRepository;
 import com.sistema.examenes.services.RolService;
+import com.sistema.examenes.services.SeguimientoUsuario_Service;
 import com.sistema.examenes.services.UsuarioRolService;
 import com.sistema.examenes.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,10 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Objects;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -33,6 +39,12 @@ public class UsuarioController {
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    @Autowired
+    private SeguimientoUsuario_repository seguimientoUsuarioRepository;
+    @Autowired
+    private SeguimientoUsuario_Service suService;
+
 
     @PostConstruct
     public void init() {
@@ -78,10 +90,17 @@ public class UsuarioController {
 
                 // Agregar el UsuarioRol a la lista de roles del usuario
                 r.getUsuarioRoles().add(usuarioRol);
-
                 // Guardar el usuario en la base de datos
-                // Usuario nuevoUsuario = usuarioService.save(r);
-                return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
+                Usuario nuevoUsuario = uR.save(r);
+
+                // Registrar la acción en el seguimiento de usuarios
+                SeguimientoUsuario seguimiento = new SeguimientoUsuario();
+                seguimiento.setUsuario(nuevoUsuario);
+                seguimiento.setDescripcion("Usuario creado");
+                seguimiento.setFecha(new Date()); // Establecer la fecha actual de creacion
+                seguimientoUsuarioRepository.save(seguimiento);
+
+                return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
             }
             return new ResponseEntity<>(HttpStatus.CONFLICT);
 
@@ -165,26 +184,64 @@ public class UsuarioController {
     }
 
     @DeleteMapping("/{usuarioId}")
-    public void eliminarUsuario(@PathVariable("usuarioId") Long usuarioId) {
-        usuarioService.delete(usuarioId);
+    public ResponseEntity<?> eliminarUsuario(@PathVariable("usuarioId") Long usuarioId) {
+        try {
+            Usuario usuario = usuarioService.findById(usuarioId);
+            if (usuario == null) {
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
+
+            // Registrar la acción en el seguimiento de usuarios antes de eliminar el usuario
+            SeguimientoUsuario seguimiento = new SeguimientoUsuario();
+            seguimiento.setUsuario(usuario);
+            seguimiento.setDescripcion("Usuario eliminado");
+            seguimiento.setFecha(new Date());
+            seguimientoUsuarioRepository.save(seguimiento);
+
+            // Eliminar al usuario
+            usuarioService.delete(usuarioId);
+
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
+
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<Usuario> actualizarCliente(@PathVariable Long id, @RequestBody Usuario p) {
-        Usuario usu = usuarioService.findById(id);
-        UsuarioRol urol=userrol.findByUsuario_UsuarioId(id);
-        if (usu == null) {
+        Usuario usuarioAntes = usuarioService.findById(id);
+        if (usuarioAntes == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            try {
-                usu.setPassword(this.bCryptPasswordEncoder.encode(p.getPassword()));
-                return new ResponseEntity<>(usuarioService.save(usu), HttpStatus.CREATED);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+
+        try {
+            // Capturar los campos editados
+            List<String> camposEditados = new ArrayList<>();
+            if (!Objects.equals(usuarioAntes.getPassword(), p.getPassword())) {
+                camposEditados.add("contraseña");
+            }
+            // Actualizar el usuario con los nuevos valores
+            usuarioAntes.setPassword(this.bCryptPasswordEncoder.encode(p.getPassword()));
+
+            // Guardar el usuario actualizado en la base de datos
+            Usuario usuarioDespues = usuarioService.save(usuarioAntes);
+
+            // Si hay campos editados, registrar la acción en el seguimiento de usuarios
+            if (!camposEditados.isEmpty()) {
+                SeguimientoUsuario seguimiento = new SeguimientoUsuario();
+                seguimiento.setUsuario(usuarioDespues);
+                seguimiento.setDescripcion("Usuario actualizado - Campos editados: " + String.join(", ", camposEditados));
+                seguimiento.setFecha(new Date());
+                seguimientoUsuarioRepository.save(seguimiento);
             }
 
+            return new ResponseEntity<>(usuarioDespues, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
@@ -194,11 +251,19 @@ public class UsuarioController {
         } else {
             try {
                 a.setVisible(false);
-                return new ResponseEntity<>(usuarioService.save(a), HttpStatus.CREATED);
+                uR.save(a);
+
+                // Registrar la acción en el seguimiento de usuarios
+                SeguimientoUsuario seguimiento = new SeguimientoUsuario();
+                seguimiento.setUsuario(a);
+                seguimiento.setDescripcion("Usuario inactivo");
+                seguimiento.setFecha(new Date());
+                seguimientoUsuarioRepository.save(seguimiento);
+
+                return new ResponseEntity<>(HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
         }
     }
 
@@ -229,6 +294,15 @@ public class UsuarioController {
             //Tendria que tomar el id del administrador como parametro, y con ello traigo los responsables
             List<ResponsableProjection> responsables = usuarioService.responsablesAdmin(idAdministrador);
             return new ResponseEntity<>(responsables, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listarSeguimientoUsuario")
+    public ResponseEntity<List<SeguimientoUsuarioDTO>> listaSeguimientoUsuario() {
+        try {
+            return new ResponseEntity<>(suService.listaSeguimientoUsuario(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

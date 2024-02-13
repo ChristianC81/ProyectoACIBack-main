@@ -37,6 +37,15 @@ public class Notificacion_Controller {
         }
     }
 
+    @GetMapping("/listarTodasNotificaciones")
+    public ResponseEntity<List<Notificacion>>listarTodasNotificaciones(){
+        try {
+            return new ResponseEntity<>(service.listarTodasNotificaciones(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/listarnotificaciones/{id}")
     public ResponseEntity<List<Notificacion>>listar(@PathVariable("id") Long id){
         try {
