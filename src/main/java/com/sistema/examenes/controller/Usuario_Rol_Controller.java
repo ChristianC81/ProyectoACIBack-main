@@ -82,13 +82,11 @@ public class Usuario_Rol_Controller {
                        if (rol != null) {
                            rolUsuario.setUsuario(usuarioRolExistente.getUsuario());
                            rolUsuario.setRol(rol);
+                           usuarioRolExistente=usuarioService.save(rolUsuario);
                        }
                    }
                }
-
-                usuarioRolExistente.setRol(usuarioRol.getRol());
-                UsuarioRol usuarioRolActualizado = usuarioService.save(usuarioRolExistente);
-                return new ResponseEntity<>(usuarioRolActualizado, HttpStatus.OK);
+                return new ResponseEntity<>(usuarioRolExistente, HttpStatus.OK);
             }
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {
