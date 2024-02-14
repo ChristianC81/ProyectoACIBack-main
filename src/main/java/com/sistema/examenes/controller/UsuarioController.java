@@ -5,6 +5,7 @@ import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.repository.SeguimientoUsuario_repository;
 import com.sistema.examenes.repository.UsuarioRepository;
+import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.RolService;
 import com.sistema.examenes.services.SeguimientoUsuario_Service;
 import com.sistema.examenes.services.UsuarioRolService;
@@ -29,6 +30,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private Asignacion_Evidencia_Service asigeviservice;
     @Autowired
     private RolService rolService;
 
@@ -251,6 +254,17 @@ public class UsuarioController {
         } else {
             try {
                 a.setVisible(false);
+                // Guardar los cambios en el usuario
+                usuarioService.save(a);
+
+                // Obtener las asignaciones de evidencia relacionadas con el usuario
+                List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id);
+                for (Asignacion_Evidencia asignacion : asignaciones) {
+                    asignacion.setVisible(false);
+                    // Guardar los cambios en cada asignación de evidencia
+                    asigeviservice.save(asignacion);
+                }
+
                 uR.save(a);
 
                 // Registrar la acción en el seguimiento de usuarios
@@ -266,6 +280,8 @@ public class UsuarioController {
             }
         }
     }
+
+
 
     // public List<Usuario> listaAdminDatos();
     @GetMapping("/listarAdminDatos")

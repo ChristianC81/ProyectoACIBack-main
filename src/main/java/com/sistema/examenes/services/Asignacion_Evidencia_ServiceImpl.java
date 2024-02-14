@@ -89,4 +89,10 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporEvidencia(idEvidencia);
 
     }
+
+    @Override
+    public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId) {
+        return repository.listarporUsuarioxd(userId);
+    }
+
 }
