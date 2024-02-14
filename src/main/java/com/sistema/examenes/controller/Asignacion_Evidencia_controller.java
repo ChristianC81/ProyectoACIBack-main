@@ -34,7 +34,6 @@ public class Asignacion_Evidencia_controller {
         try {
             r.setVisible(true);
             Asignacion_Evidencia asignacionGuardada = Service.save(r);
-            usuarioAsignador= new Usuario();
             usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
             System.out.println("Usuario asignador:"+usuarioAsignador.getPersona().getCedula());
             nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
