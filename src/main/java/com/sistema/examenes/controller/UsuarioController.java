@@ -265,8 +265,6 @@ public class UsuarioController {
                     asigeviservice.save(asignacion);
                 }
 
-                uR.save(a);
-
                 // Registrar la acción en el seguimiento de usuarios
                 SeguimientoUsuario seguimiento = new SeguimientoUsuario();
                 seguimiento.setUsuario(a);
