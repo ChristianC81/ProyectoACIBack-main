@@ -77,6 +77,10 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
+    public List<EvidenciaProjection> evidenUserPendiente(String username) { return repository.evidenUserPendiente(username);
+    }
+
+    @Override
     public ActiDiagramaPieProjection porcentajeEstadosdeActividades(Long responsableId) {
         return repository.porcentajeEstadosdeActividadesByResponsableId(responsableId);
     }
