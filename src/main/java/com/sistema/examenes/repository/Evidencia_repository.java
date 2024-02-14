@@ -27,6 +27,16 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "WHERE u.username=:username ", nativeQuery = true)
     public List<EvidenciaProjection> evidenUsuario(String username);
 
+    @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion AS descripcion, " +
+            "e.estado AS estado FROM evidencia e JOIN indicador i ON i.id_indicador=e.indicador_id_indicador " +
+            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
+            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia=e.id_evidencia " +
+            "AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
+            "JOIN usuarios u ON u.id=ae.usuario_id " +
+            "WHERE u.username=:username AND LOWER(e.estado)='pendiente'", nativeQuery = true)
+    public List<EvidenciaProjection> evidenUserPendiente(String username);
+
    /* @Query(value = " SELECT e.* FROM evidencia e  \n" +
             "               LEFT JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia \n" +
             "               WHERE ae.id_asignacion_evidencia IS NULL AND e.visible=true",nativeQuery = true)*/

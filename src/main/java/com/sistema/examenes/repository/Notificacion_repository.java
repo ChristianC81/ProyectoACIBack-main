@@ -10,6 +10,9 @@ import java.sql.Date;
 import java.util.List;
 
 public interface Notificacion_repository extends JpaRepository<Notificacion, Long> {
+    //ListarTODO
+    @Query(value = "SELECT * FROM notificacion ORDER BY fecha DESC;",nativeQuery = true)
+    List<Notificacion> listarTodasNotificaciones();
     @Query(value = "SELECT * FROM notificacion WHERE usuario=:user ORDER BY fecha DESC;",nativeQuery = true)
     List<Notificacion> listarUserNoti(Long user);
     @Modifying

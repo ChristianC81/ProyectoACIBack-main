@@ -125,6 +125,15 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/evidenuserpendiente/{username}")
+    public ResponseEntity<List<EvidenciaProjection>> evidenUserPendiente(@PathVariable("username") String username) {
+        try {
+            return new ResponseEntity<>(Service.evidenUserPendiente(username), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/evidenciacal/{id_evidencia}/{id_modelo}")
     public ResponseEntity<EvidenciaCalProjection> evidenciacal(@PathVariable("id_evidencia") Long id_evidencia,@PathVariable("id_modelo") Long id_modelo) {
         try {
