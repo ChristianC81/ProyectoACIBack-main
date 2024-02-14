@@ -14,6 +14,6 @@ public interface NotificacionService extends GenericService<Notificacion, Long> 
     public List<Notificacion> listarNotifi(String fecha);
 
     public List<Notificacion> listarulNoti(Long us);
-    public List<Notificacion> all2(String roluserer);
+    public List<Notificacion> all2(String roluserer,Long userId);
     Date fechaeliminar();
 }
