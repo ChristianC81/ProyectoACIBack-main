@@ -3,6 +3,7 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.*;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.repository.UsuarioRepository;
+import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.RolService;
 import com.sistema.examenes.services.UsuarioRolService;
 import com.sistema.examenes.services.UsuarioService;
@@ -23,6 +24,8 @@ public class UsuarioController {
     @Autowired
     private UsuarioService usuarioService;
 
+    @Autowired
+    private Asignacion_Evidencia_Service asigeviservice;
     @Autowired
     private RolService rolService;
 
@@ -178,6 +181,22 @@ public class UsuarioController {
         }
     }
 
+//    @PutMapping("/eliminarlogic/{id}")
+//    public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
+//        Usuario a = usuarioService.findById(id);
+//        if (a == null) {
+//            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+//        } else {
+//            try {
+//                a.setVisible(false);
+//                return new ResponseEntity<>(usuarioService.save(a), HttpStatus.CREATED);
+//            } catch (Exception e) {
+//                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+//            }
+//
+//        }
+//    }
+
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Usuario a = usuarioService.findById(id);
@@ -186,13 +205,25 @@ public class UsuarioController {
         } else {
             try {
                 a.setVisible(false);
-                return new ResponseEntity<>(usuarioService.save(a), HttpStatus.CREATED);
+                // Guardar los cambios en el usuario
+                usuarioService.save(a);
+
+                // Obtener las asignaciones de evidencia relacionadas con el usuario
+                List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id);
+                for (Asignacion_Evidencia asignacion : asignaciones) {
+                    asignacion.setVisible(false);
+                    // Guardar los cambios en cada asignación de evidencia
+                    asigeviservice.save(asignacion);
+                }
+
+                return new ResponseEntity<>(HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
-
         }
     }
+
+
 
     // public List<Usuario> listaAdminDatos();
     @GetMapping("/listarAdminDatos")
