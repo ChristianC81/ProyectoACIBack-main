@@ -91,6 +91,34 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @PostMapping("/crearsup")
+    public ResponseEntity<Usuario> crearSup(@RequestBody Usuario r, @RequestParam("rolIds") List<Long> rolIds) {
+        try {
+            Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
+            if (usuarioExistente != null) {
+                usuarioExistente.setVisible(true);
+                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+            }
+
+            for (Long rol : rolIds) {
+                Rol nRol = rolService.findById(rol);
+                UsuarioRol usuarioRol = new UsuarioRol();
+                usuarioRol.setUsuario(r);
+                usuarioRol.setRol(nRol);
+                r.getUsuarioRoles().add(usuarioRol);
+            }
+
+            // Codificar la contraseña antes de guardar el usuario
+            r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+            r.setVisible(true);
+
+            // Guardar el usuario en la base de datos
+            return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
+
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/listar")
     public ResponseEntity<List<Usuario>> obtenerLista() {
