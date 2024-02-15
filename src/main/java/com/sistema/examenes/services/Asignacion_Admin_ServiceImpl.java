@@ -66,4 +66,9 @@ public class Asignacion_Admin_ServiceImpl extends GenericServiceImpl<Asignacion_
     public List<AsignacionProjection> verresponsablesporcriterio(Long id_modelo, Long id_criterio) {
         return repository.verresponsablesporcriterio(id_modelo,id_criterio);
     }
+
+    @Override
+    public List<Asignacion_Admin> listaAsignacionAdminPorIdUsuario(Long id_usuario) {
+        return repository.findAsignacion_AdminByUsuario_Id(id_usuario);
+    }
 }

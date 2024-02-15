@@ -5,11 +5,7 @@ import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.repository.SeguimientoUsuario_repository;
 import com.sistema.examenes.repository.UsuarioRepository;
-import com.sistema.examenes.services.Asignacion_Evidencia_Service;
-import com.sistema.examenes.services.RolService;
-import com.sistema.examenes.services.SeguimientoUsuario_Service;
-import com.sistema.examenes.services.UsuarioRolService;
-import com.sistema.examenes.services.UsuarioService;
+import com.sistema.examenes.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +28,8 @@ public class UsuarioController {
 
     @Autowired
     private Asignacion_Evidencia_Service asigeviservice;
+    @Autowired
+    private Asignacion_Admin_Service asigadmservice;
     @Autowired
     private RolService rolService;
 
@@ -277,6 +275,18 @@ public class UsuarioController {
                     asignacion.setVisible(false);
                     // Guardar los cambios en cada asignación de evidencia
                     asigeviservice.save(asignacion);
+                }
+                // Obtener las asignaciones de evidencia relacionadas con el usuario
+                List<Asignacion_Admin> asignaciones_admin = asigadmservice.listaAsignacionAdminPorIdUsuario(id);
+                for (Asignacion_Admin asignacion : asignaciones_admin) {
+                    asignacion.setVisible(false);
+                    // Guardar los cambios en cada asignación de evidencia
+                    asigadmservice.save(asignacion);
+                }
+                // Obtener los registros del usuariorol relacionadas con el usuario
+                List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
+                for (UsuarioRol usuarioconRol : usuarioRols) {
+                    userrol.delete(usuarioconRol.getUsuarioRolId());
                 }
 
                 // Registrar la acción en el seguimiento de usuarios
