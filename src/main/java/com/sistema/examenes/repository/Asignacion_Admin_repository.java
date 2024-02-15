@@ -77,6 +77,6 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "ORDER BY u.id;", nativeQuery = true)
     List<AsignacionProjection> verresponsablesporcriterio(Long id_modelo, Long id_criterio);
 
-
+    List<Asignacion_Admin> findAsignacion_AdminByUsuario_Id(Long id_usuario);
 
 }
