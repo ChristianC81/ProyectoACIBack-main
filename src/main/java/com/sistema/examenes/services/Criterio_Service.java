@@ -31,7 +31,7 @@ public interface Criterio_Service extends GenericService<Criterio, Long> {
     List<CriteProjection> actividadesusuario(Long id, Long id_modelo);
     List<ValoresProjection> listarvalresp(Long id_modelo,Long id);
     CorreoProjection getCorreo(Long id_modelo, Long id_evidencia);
-    List<CriterioAdm> listarCriterioAdms (Long userId);
+    List<CriterioAdm> listarCriterioAdms (Long id_modelo,Long userId);
     List<CriteRespProjection> criterioporresp(Long id, Long id_modelo);
 
 }
