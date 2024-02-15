@@ -111,13 +111,16 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
 
         @Query(value = "SELECT c.id_criterio, c.nombre AS nombre_criterio, c.descripcion AS descripcion_criterio " +
-                "FROM asignacion_admin a " +
-                "JOIN criterio c ON c.id_criterio = a.criterio_id_criterio " +
-                "JOIN modelo m ON m.id_modelo = a.id_modelo " +
-                "JOIN usuarios u ON u.id = a.usuario_id " +
-                "JOIN persona ON persona.id_persona = u.persona_id_persona " +
-                "WHERE a.usuario_id = :userId", nativeQuery = true)
-        List<CriterioAdm> getCriteriosByAdmin(Long userId);
+                "FROM criterio cri JOIN subcriterio sub ON cri.id_criterio = sub.id_criterio AND sub.visible = true " +
+                "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
+                "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
+                "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
+                "LEFT JOIN actividad ac ON ev.id_evidencia = ac.id_evidencia AND ac.visible = true " +
+                "LEFT JOIN archivo arc ON ac.id_actividad = arc.id_actividad AND arc.visible = true " +
+                "JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true AND aa.id_modelo=:id_modelo " +
+                "WHERE ai.modelo_id_modelo =:id_modelo AND aa.usuario_id=:userId " +
+                "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador;", nativeQuery = true)
+        List<CriterioAdm> getCriteriosByAdmin(Long id_modelo,Long userId);
 
         @Query(value = "SELECT cri.id_criterio AS id_criterio, " +
                 "       cri.nombre AS criterio, " +
