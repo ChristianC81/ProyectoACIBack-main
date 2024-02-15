@@ -69,6 +69,13 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "    a.fecha_fin, " +
             "    a.fecha_inicio", nativeQuery = true)
     List<ResponsableProjection> listadeResponsablesByAdmin(@Param("idAdministrador") Long idAdministrador);
+
+   // AND asig.criterio_id_criterio IN ( " +
+   //                                            "        SELECT criterio.id_criterio " +
+   //                                            "        FROM criterio " +
+   //                                            "        JOIN asignacion_admin ON asignacion_admin.criterio_id_criterio = criterio.id_criterio " +
+   //                                            "        WHERE asignacion_admin.usuario_id =:idAdministrador " +
+   //                                            "    ) " +
     @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
     Asignacion_Responsable asignacionByIdUsuarioResponsable(Long id_usuarioResponsable);
 }
