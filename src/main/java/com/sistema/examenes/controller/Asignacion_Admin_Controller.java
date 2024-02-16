@@ -8,6 +8,7 @@ import com.sistema.examenes.projection.NombreAsigProjection;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
 import com.sistema.examenes.services.Asignacion_Responsable_Service;
+import org.hibernate.tool.schema.internal.exec.ScriptTargetOutputToFile;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -84,29 +85,30 @@ public class Asignacion_Admin_Controller {
 
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
-        Asignacion_Admin a = Service.findById(id);
-        //Eliminar a la lista de responsables que tiene el criterio de ese admin
-        Criterio criterioAdm=  a.getCriterio();
-        List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
-        for (Asignacion_Responsable responsable : responsables) {
-            Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
-            if(criterioAdm.getId_criterio()==asigcriterioResp.getCriterio().getId_criterio()){
-                responsable.setVisible(false);
-                asignacionResService.save(responsable);
+        try {
+            Asignacion_Admin a = Service.findById(id);
+            if (a == null) {
+                return new ResponseEntity<>("Asignacion_Admin no encontrada con el ID proporcionado", HttpStatus.NOT_FOUND);
             }
-        }
-        if (a == null) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        } else {
-            try {
-                a.setVisible(false);
-                return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
-            } catch (Exception e) {
-                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            Criterio criterioAdm = a.getCriterio();
+            List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
+            if (!responsables.isEmpty()) {
+                for (Asignacion_Responsable responsable : responsables) {
+                    Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
+                    if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                        responsable.setVisible(false);
+                        asignacionResService.save(responsable);
+                    }
+                }
             }
-
+            a.setVisible(false);
+            return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>("Error al cambiar la visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<Asignacion_Admin> actualizar(@PathVariable Long id, @RequestBody Asignacion_Admin p) {

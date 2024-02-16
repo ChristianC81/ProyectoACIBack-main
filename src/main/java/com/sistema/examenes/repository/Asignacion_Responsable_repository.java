@@ -72,6 +72,6 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
 
     @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
     Asignacion_Responsable asignacionByIdUsuarioResponsable(Long id_usuarioResponsable);
-    @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
+    @Query(value = "SELECT * from asignacion_responsable where usuarioadmin_id = ?1", nativeQuery = true)
     List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(Long idAdministrador);
 }
