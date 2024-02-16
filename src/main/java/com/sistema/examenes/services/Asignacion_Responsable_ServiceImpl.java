@@ -36,5 +36,10 @@ public class Asignacion_Responsable_ServiceImpl extends GenericServiceImpl<Asign
         return repository.asignacion_existente(id_usuarioAdmin,id_usuarioResponsable);
     }
 
+    @Override
+    public List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(Long idAdministrador) {
+        return repository.Asignacion_ResponsablesByAdmin(idAdministrador);
+    }
+
 
 }
