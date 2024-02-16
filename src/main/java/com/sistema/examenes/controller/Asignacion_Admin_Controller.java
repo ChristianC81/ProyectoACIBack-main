@@ -1,10 +1,13 @@
 package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Asignacion_Admin;
+import com.sistema.examenes.entity.Asignacion_Responsable;
+import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.projection.AsignacionProjection;
 import com.sistema.examenes.projection.NombreAsigProjection;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
+import com.sistema.examenes.services.Asignacion_Responsable_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +21,9 @@ import java.util.List;
 public class Asignacion_Admin_Controller {
     @Autowired
     Asignacion_Admin_Service Service;
+
+    @Autowired
+    Asignacion_Responsable_Service asignacionResService;
 
     @PostMapping("/crear")
     public ResponseEntity<Asignacion_Admin> crear(@RequestBody Asignacion_Admin r) {
@@ -79,6 +85,16 @@ public class Asignacion_Admin_Controller {
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Asignacion_Admin a = Service.findById(id);
+        //Eliminar a la lista de responsables que tiene el criterio de ese admin
+        Criterio criterioAdm=  a.getCriterio();
+        List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
+        for (Asignacion_Responsable responsable : responsables) {
+            Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
+            if(criterioAdm.getId_criterio()==asigcriterioResp.getCriterio().getId_criterio()){
+                responsable.setVisible(false);
+                asignacionResService.save(responsable);
+            }
+        }
         if (a == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {

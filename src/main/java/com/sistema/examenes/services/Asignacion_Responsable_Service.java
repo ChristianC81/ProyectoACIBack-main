@@ -9,6 +9,7 @@ import java.util.List;
 public interface Asignacion_Responsable_Service extends GenericService<Asignacion_Responsable, Long> {
      Asignacion_Responsable asignacion_existente(Long id_usuarioAdmin, Long id_usuarioResponsable);
      List<ResponsableProjection> listadeResponsablesByAdmin(Long idAdministrador);
+     List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(Long idAdministrador);
      Asignacion_Responsable asignacionByIdUsuarioResponsable(Long id_usuarioResponsable);
 
 }
