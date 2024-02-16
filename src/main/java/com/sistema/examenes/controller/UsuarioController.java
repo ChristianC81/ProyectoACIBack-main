@@ -19,8 +19,8 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/usuarios")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/usuarios")
+@CrossOrigin("https://apps.tecazuay.edu.ec")
 public class UsuarioController {
 
     @Autowired

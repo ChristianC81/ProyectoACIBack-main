@@ -19,9 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = "https://apps.tecazuay.edu.ec")
 @RestController
-@RequestMapping("/api/modelo")
+@RequestMapping("/aseguramiento/api/modelo")
 public class  Modelo_Controller {
     @Autowired
     Modelo_Service Service;

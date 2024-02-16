@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/criterio")
+@RequestMapping("/aseguramiento/api/criterio")
 public class Criterio_Controller {
     @Autowired
     Criterio_Service Service;

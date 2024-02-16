@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/actividad")
+@RequestMapping("/aseguramiento/api/actividad")
 public class Actividad_Controller {
     @Autowired
     Actividad_Service Service;
-
-
 
     @PostMapping("/crear")
     public ResponseEntity<Actividad> crear(@RequestBody Actividad r) {

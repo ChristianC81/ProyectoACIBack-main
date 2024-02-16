@@ -18,9 +18,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/notificacion")
+@RequestMapping("/aseguramiento/api/notificacion")
 public class Notificacion_Controller {
     @Autowired
     NotificacionService service;

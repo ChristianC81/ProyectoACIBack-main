@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/detalle_evaluacion")
+@RequestMapping("/aseguramiento/api/detalle_evaluacion")
 public class Detalle_Evaluacion_Controller {
     @Autowired
     Detalle_Evaluacion_Service Service;

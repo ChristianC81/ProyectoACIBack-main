@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 import java.util.List;
 
 //Controller para fenix
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/fenix")
+@RequestMapping("/aseguramiento/api/fenix")
 public class FenixController {
 
     // metodos para el controlador de fenix

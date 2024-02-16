@@ -17,7 +17,8 @@ import org.springframework.web.bind.annotation.*;
 import java.security.Principal;
 
 @RestController
-@CrossOrigin("*")
+@CrossOrigin("https://apps.tecazuay.edu.ec")
+@RequestMapping("/aseguramiento")
 public class AuthenticationController {
 
     @Autowired

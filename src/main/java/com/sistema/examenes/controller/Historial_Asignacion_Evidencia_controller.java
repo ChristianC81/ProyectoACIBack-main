@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
-@RequestMapping("/api/historialasignacionevidencia")
+@RequestMapping("/aseguramiento/api/historialasignacionevidencia")
 public class Historial_Asignacion_Evidencia_controller {
     @Autowired
     Historial_Asignacion_Evidencia_Service Service;

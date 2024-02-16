@@ -17,8 +17,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
-@CrossOrigin(origins = { "*" })
+@CrossOrigin(origins = { "https://apps.tecazuay.edu.ec" })
 @RestController
+@RequestMapping("/aseguramiento")
 public class Email_controller {
 @Autowired
 private JavaMailSender mail;
