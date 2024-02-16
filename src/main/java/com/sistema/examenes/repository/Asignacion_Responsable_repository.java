@@ -49,10 +49,18 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "    AND ( " +
             "        (asigres.usuarioadmin_id = ?1 AND asigres.visible = true) " +
             "        OR " +
-            "        (asigadm.criterio_id_criterio IN ( " +
-            "            SELECT criterio_id_criterio " +
-            "            FROM asignacion_admin " +
-            "            WHERE usuario_id = ?1 " +
+            "        (u.id IN ( " +
+            "            SELECT ae_inner.usuario_id " +
+            "            FROM asignacion_evidencia ae_inner " +
+            "            JOIN evidencia e ON ae_inner.evidencia_id_evidencia = e.id_evidencia " +
+            "            JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "            JOIN subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
+            "            JOIN criterio c ON sc.id_criterio = c.id_criterio " +
+            "            WHERE c.id_criterio IN ( " +
+            "                SELECT criterio_id_criterio " +
+            "                FROM asignacion_admin " +
+            "                WHERE usuario_id = ?1 " +
+            "            ) " +
             "        )) " +
             "    ) " +
             "    AND u.visible = true " +
@@ -68,8 +76,7 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "    rol, " +
             "    evidencias", nativeQuery = true)
     List<ResponsableProjection> listadeResponsablesByAdmin(@Param("idAdministrador") Long idAdministrador);
-
-
+    
     @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
     Asignacion_Responsable asignacionByIdUsuarioResponsable(Long id_usuarioResponsable);
     @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
