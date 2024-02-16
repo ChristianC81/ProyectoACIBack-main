@@ -9,4 +9,6 @@ public interface ResponsableProjection {
     String getRol();
     String getUsua();
     String getEvidencias();
+
+    String getNombre_criterio();
 }
