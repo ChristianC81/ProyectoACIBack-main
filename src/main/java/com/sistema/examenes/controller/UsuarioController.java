@@ -31,12 +31,21 @@ public class UsuarioController {
     @Autowired
     private Asignacion_Admin_Service asigadmservice;
     @Autowired
+    private Modelo_Service modeloService;
+
+    @Autowired
     private RolService rolService;
 
     @Autowired
     private UsuarioRepository uR;
     @Autowired
     private UsuarioRolService userrol;
+
+    @Autowired
+    private Criterio_Service criterioService;
+
+    @Autowired
+    private Asignacion_Responsable_Service asigresService;
 
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -60,41 +69,6 @@ public class UsuarioController {
         rolService.save(usuario4);
     }
 
-    @PostMapping("/crear/{rolId}")
-    public ResponseEntity<Usuario> crear(@RequestBody Usuario r, @PathVariable Long rolId) {
-        try {
-            Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
-            if (usuarioExistente != null) {
-                usuarioExistente.setVisible(true);
-                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
-            }
-                // Buscar el rol por ID
-                Rol rol = rolService.findById(rolId);
-                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
-                r.setVisible(true);
-                // Crear un nuevo UsuarioRol y establecer las referencias correspondientes
-                UsuarioRol usuarioRol = new UsuarioRol();
-                usuarioRol.setUsuario(r);
-                usuarioRol.setRol(rol);
-
-                // Agregar el UsuarioRol a la lista de roles del usuario
-                r.getUsuarioRoles().add(usuarioRol);
-                // Guardar el usuario en la base de datos
-                Usuario nuevoUsuario = uR.save(r);
-
-                // Registrar la acción en el seguimiento de usuarios
-                SeguimientoUsuario seguimiento = new SeguimientoUsuario();
-                seguimiento.setUsuario(nuevoUsuario);
-                seguimiento.setDescripcion("Usuario creado");
-                seguimiento.setFecha(new Date()); // Establecer la fecha actual de creacion
-                seguimientoUsuarioRepository.save(seguimiento);
-
-                return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-  
     @PostMapping("/crearsup")
     public ResponseEntity<Usuario> crearSup(@RequestBody Usuario r, @RequestParam("rolIds") List<Long> rolIds) {
         try {
@@ -124,6 +98,83 @@ public class UsuarioController {
         }
     }
 
+    @PostMapping("/crearadm/{rolId}/{adminId}/{modeloId}")
+    public ResponseEntity<Usuario> crearadm(@RequestBody Usuario r, @PathVariable Long rolId,@PathVariable Long adminId,@PathVariable Long modeloId) {
+        try {
+            Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
+            if (usuarioExistente != null) {
+                System.out.println(usuarioExistente.getPersona().getCedula());
+                usuarioExistente.setVisible(true);
+                //Si el responsable existe se crea nuevamente las asignaciones de los criterios
+                registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);
+                asignarResponsableAdm(usuarioExistente,adminId);
+                // Registrar la acción en el seguimiento de usuarios
+                registrarSeguimiento(usuarioExistente);
+                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+            }
+            // Buscar el rol por ID
+            Rol rol = rolService.findById(rolId);
+            r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+            r.setVisible(true);
+            // Crear un nuevo UsuarioRol y establecer las referencias correspondientes
+            UsuarioRol usuarioRol = new UsuarioRol();
+            usuarioRol.setUsuario(r);
+            usuarioRol.setRol(rol);
+
+            // Agregar el UsuarioRol a la lista de roles del usuario
+            r.getUsuarioRoles().add(usuarioRol);
+            // Guardar el usuario en la base de datos
+            Usuario nuevoUsuario = uR.save(r);
+            //Una vez que se crea el usuario se debe crear una asignacion con los criterios del admin
+            registrarCriteriosAdminAlResponsable(nuevoUsuario, adminId, modeloId);
+            //Registrar la asignacion del responsable con el admin
+            asignarResponsableAdm(nuevoUsuario,adminId);
+            // Registrar la acción en el seguimiento de usuarios
+            registrarSeguimiento(nuevoUsuario);
+
+            return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    private void registrarCriteriosAdminAlResponsable(Usuario responsable, Long adminId, Long modeloId) {
+        List<Criterio> listaCriteriosAdm = criterioService.obtenerCriteriosPorUsuarioYModelo(adminId,modeloId);
+        for (Criterio criterios : listaCriteriosAdm) {
+            Asignacion_Admin asignacion= asigadmservice.asignacion_existente(criterios.getId_criterio(),modeloId,responsable.getId());
+            if(asignacion==null){
+                Asignacion_Admin nuevaAsignacion = new Asignacion_Admin();
+                nuevaAsignacion.setUsuario(responsable);
+                nuevaAsignacion.setCriterio(criterios);
+                Modelo modelo = modeloService.findById(modeloId);
+                nuevaAsignacion.setId_modelo(modelo);
+                nuevaAsignacion.setVisible(true);
+                asigadmservice.save(nuevaAsignacion);
+            }else {
+                asignacion.setVisible(true);
+                asigadmservice.save(asignacion);
+            }
+        }
+    }
+    private void asignarResponsableAdm(Usuario usuario, Long adminId) {
+        Asignacion_Responsable asignacionExistente = asigresService.asignacion_existente(adminId, usuario.getId());
+        if (asignacionExistente != null) {
+            asignacionExistente.setVisible(true);
+            asigresService.save(asignacionExistente);
+        }
+        Asignacion_Responsable asigres = new Asignacion_Responsable();
+        Usuario admin = usuarioService.findById(adminId);
+        asigres.setUsuarioAdmin(admin);
+        asigres.setUsuarioResponsable(usuario);
+        asigres.setVisible(true);
+        asigresService.save(asigres);
+    }
+    private void registrarSeguimiento(Usuario usuario) {
+        SeguimientoUsuario seguimiento = new SeguimientoUsuario();
+        seguimiento.setUsuario(usuario);
+        seguimiento.setDescripcion("Usuario creado");
+        seguimiento.setFecha(new Date());
+        seguimientoUsuarioRepository.save(seguimiento);
+    }
     @GetMapping("/listar")
     public ResponseEntity<List<Usuario>> obtenerLista() {
         try {
@@ -276,7 +327,7 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigeviservice.save(asignacion);
                 }
-                // Obtener las asignaciones de evidencia relacionadas con el usuario
+                // Obtener las asignaciones de admins con criterios relacionadas con el usuario
                 List<Asignacion_Admin> asignaciones_admin = asigadmservice.listaAsignacionAdminPorIdUsuario(id);
                 for (Asignacion_Admin asignacion : asignaciones_admin) {
                     asignacion.setVisible(false);
