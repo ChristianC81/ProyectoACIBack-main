@@ -226,7 +226,7 @@ public class Criterio_Controller {
     }
 
     @GetMapping("/listCriAdmin/{id_modelo}/{id}")
-    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id") Long id_modelo,@PathVariable("id") Long id) {
+    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id_modelo") Long id_modelo,@PathVariable("id") Long id) {
         try {
             return new ResponseEntity<>(Service.listarCriterioAdms(id_modelo,id), HttpStatus.OK);
         } catch (Exception e) {
