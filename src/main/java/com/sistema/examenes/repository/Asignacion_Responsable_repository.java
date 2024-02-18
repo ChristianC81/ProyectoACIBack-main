@@ -13,7 +13,7 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
     Asignacion_Responsable asignacion_existente(Long id_usuarioAdmin, Long id_usuarioResponsable);
     @Query(value = "SELECT " +
             "    u.id, " +
-            "    CONCAT(per.primer_nombre, ' ', per.primer_apellido) AS nombres, " +
+            "    CONCAT(per.primer_nombre, ' ',per.segundo_nombre,' ',per.primer_apellido,' ',per.segundo_apellido) AS nombres, " +
             "    u.username AS usua, " +
             "    r.rolnombre AS rol, " +
             "    CASE " +
