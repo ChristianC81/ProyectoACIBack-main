@@ -13,7 +13,10 @@ public interface UsuarioService extends GenericService<Usuario, Long> {
     public Usuario findAllByUsername(String username);
 
     public List<Usuario> responsables();
+    public List<ResponsableProjection> responsablesAdmin();
     public List<Usuario> listaAdminDatos();
     public List<Usuario>listaSOLORESPONSABLES();
     public List<ResponsableProjection> responsablesAdmin(Long idAdministrador);
+
+
 }

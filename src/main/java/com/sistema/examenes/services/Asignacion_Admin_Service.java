@@ -21,4 +21,6 @@ public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admi
    public List<AsignacionProjection> veradminsporcriterio(Long id_modelo, Long id_criterio);
 
     public List<AsignacionProjection> verresponsablesporcriterio (Long id_modelo, Long id_criterio);
+
+    public List<Asignacion_Admin> listaAsignacionAdminPorIdUsuario(Long id_usuario);
 }

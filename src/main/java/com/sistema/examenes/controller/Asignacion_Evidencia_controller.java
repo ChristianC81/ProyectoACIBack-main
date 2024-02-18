@@ -8,6 +8,7 @@ import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
+import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.Historial_Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.UsuarioService;
@@ -34,7 +35,6 @@ public class Asignacion_Evidencia_controller {
         try {
             r.setVisible(true);
             Asignacion_Evidencia asignacionGuardada = Service.save(r);
-            usuarioAsignador= new Usuario();
             usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
             System.out.println("Usuario asignador:"+usuarioAsignador.getPersona().getCedula());
             nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
@@ -209,6 +209,34 @@ public class Asignacion_Evidencia_controller {
     public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
         try {
             return new ResponseEntity<>(Service.listarporEvidencia(idEvidencia), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    //listar las actividades rechazadas
+    @GetMapping("/listEviR")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviR() {
+        try {
+            return new ResponseEntity<>(Service.listaEvidRe(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listEviAp")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviAp() {
+        try {
+            return new ResponseEntity<>(Service.listaEvidAp(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listEviPen")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviPen() {
+        try {
+            return new ResponseEntity<>(Service.listaEvidPen(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

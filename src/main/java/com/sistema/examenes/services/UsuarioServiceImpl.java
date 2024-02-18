@@ -34,6 +34,10 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, Long> implem
         return usuarioRepository.responsables();
     }
 
+    @Override
+    public List<ResponsableProjection> responsablesAdmin() {
+        return usuarioRepository.responsablesGeneral();
+    }
 
     @Override
     public Usuario obtenerId(String username) {

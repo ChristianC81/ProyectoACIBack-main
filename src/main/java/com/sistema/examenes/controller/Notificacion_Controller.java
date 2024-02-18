@@ -37,6 +37,15 @@ public class Notificacion_Controller {
         }
     }
 
+    @GetMapping("/listarTodasNotificaciones")
+    public ResponseEntity<List<Notificacion>>listarTodasNotificaciones(){
+        try {
+            return new ResponseEntity<>(service.listarTodasNotificaciones(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/listarnotificaciones/{id}")
     public ResponseEntity<List<Notificacion>>listar(@PathVariable("id") Long id){
         try {
@@ -62,10 +71,10 @@ public class Notificacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listartodo2/{roluser}")
-    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser) {
+    @GetMapping("/listartodo2/{roluser}/{userId}")
+    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser, @PathVariable("userId") Long userId) {
         try {
-            return new ResponseEntity<>(service.all2(roluser), HttpStatus.OK);
+            return new ResponseEntity<>(service.all2(roluser,userId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

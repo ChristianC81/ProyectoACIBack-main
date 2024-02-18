@@ -25,6 +25,7 @@ public class Usuario implements UserDetails {
     @Column(name = "visible")
     private boolean visible;
 
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
     @JsonIgnore
     private Set<UsuarioRol> usuarioRoles = new HashSet<>();
@@ -47,7 +48,18 @@ public class Usuario implements UserDetails {
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
     @JsonIgnore
     private Set<Observacion> lista_observacion = new HashSet<>();
+    //Para registro de acciones
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuario")
+    @JsonIgnore
+    private Set<SeguimientoUsuario> historial_acciones = new HashSet<>();
 
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuarioAdmin")
+    @JsonIgnore
+    private Set<Asignacion_Responsable> usuarioAdmin = new HashSet<>();
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "usuarioResponsable")
+    @JsonIgnore
+    private Set<Asignacion_Responsable> usuarioResponsable = new HashSet<>();
     public Usuario() {
     }
 

@@ -111,13 +111,10 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
 
         @Query(value = "SELECT c.id_criterio, c.nombre AS nombre_criterio, c.descripcion AS descripcion_criterio " +
-                "FROM asignacion_admin a " +
-                "JOIN criterio c ON c.id_criterio = a.criterio_id_criterio " +
-                "JOIN modelo m ON m.id_modelo = a.id_modelo " +
-                "JOIN usuarios u ON u.id = a.usuario_id " +
-                "JOIN persona ON persona.id_persona = u.persona_id_persona " +
-                "WHERE a.usuario_id = :userId", nativeQuery = true)
-        List<CriterioAdm> getCriteriosByAdmin(Long userId);
+                "FROM criterio c " +
+                "JOIN asignacion_admin aa ON aa.criterio_id_criterio = c.id_criterio " +
+                "WHERE aa.visible = true AND aa.id_modelo = :id_modelo AND aa.usuario_id = :userId", nativeQuery = true)
+        List<CriterioAdm> getCriteriosByAdmin(Long id_modelo,Long userId);
 
         @Query(value = "SELECT cri.id_criterio AS id_criterio, " +
                 "       cri.nombre AS criterio, " +

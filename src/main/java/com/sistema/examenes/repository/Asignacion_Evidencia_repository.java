@@ -5,6 +5,7 @@ import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
+import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -83,5 +84,51 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
     @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidendicia ;",nativeQuery = true)
     List<Asignacion_Evidencia>listarporEvidencia(Long idEvidendicia);
 
+    @Query(value = "SELECT * FROM asignacion_evidencia WHERE usuario_id = :userId AND visible = true;",nativeQuery = true)
+    List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);
 
+    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE (LOWER(e.estado) = 'rechazada') " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvideRechazadas();
+
+    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE (LOWER(e.estado) = 'aprobada') " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvideAprobadas();
+
+    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE (LOWER(e.estado) = 'pendiente') " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvidePendientes();
 }

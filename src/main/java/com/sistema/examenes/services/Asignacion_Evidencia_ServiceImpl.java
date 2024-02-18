@@ -6,6 +6,7 @@ import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.projection.AsignaProjection;
 import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
+import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
 import com.sistema.examenes.repository.Asignacion_Evidencia_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -89,4 +90,25 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporEvidencia(idEvidencia);
 
     }
+
+    @Override
+    public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId) {
+        return repository.listarporUsuarioxd(userId);
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidRe() {
+        return repository.listarEvideRechazadas();
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidAp() {
+        return repository.listarEvideAprobadas();
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidPen() {
+        return repository.listarEvidePendientes();
+    }
+
 }
