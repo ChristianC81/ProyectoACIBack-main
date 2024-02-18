@@ -43,11 +43,40 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         // " WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
         // public List<Usuario> listaResponsablesAdmin();
 
-        @Query(value = "SELECT * FROM usuarios u\n" +
-                        "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id\n" +
-                        "JOIN persona p  ON u.persona_id_persona = p.id_persona\n" +
-                        "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
-        public List<Usuario> listaResponsablesDatos();
+        @Query(value = "SELECT u.* " +
+                "FROM " +
+                "    usuarios u " +
+                "JOIN " +
+                "    persona per ON per.id_persona = u.persona_id_persona " +
+                "JOIN " +
+                "    usuariorol ur ON u.id = ur.usuario_id " +
+                "JOIN " +
+                "    roles r ON ur.rol_rolid = r.rolid " +
+                "LEFT JOIN " +
+                "    asignacion_responsable asigres ON asigres.usuarioresponsable_id = u.id " +
+                "LEFT JOIN " +
+                "    asignacion_admin asigadm ON asigres.usuarioresponsable_id = asigadm.usuario_id " +
+                "WHERE " +
+                "    r.rolnombre = 'RESPONSABLE' " +
+                "    AND ( " +
+                "        (asigres.usuarioadmin_id = ?1 AND asigres.visible = true) " +
+                "        OR " +
+                "        (u.id IN ( " +
+                "            SELECT ae_inner.usuario_id " +
+                "            FROM asignacion_evidencia ae_inner " +
+                "            JOIN evidencia e ON ae_inner.evidencia_id_evidencia = e.id_evidencia " +
+                "            JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+                "            JOIN subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
+                "            JOIN criterio c ON sc.id_criterio = c.id_criterio " +
+                "            WHERE c.id_criterio IN ( " +
+                "                SELECT criterio_id_criterio " +
+                "                FROM asignacion_admin " +
+                "                WHERE usuario_id = ?1 " +
+                "            ) " +
+                "        )) " +
+                "    ) " +
+                "    AND u.visible = true ", nativeQuery = true)
+        List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador);
 
         @Query(value = "SELECT u.* FROM usuarios u " +
                         "JOIN usuariorol ur ON u.id = ur.usuario_id " +
