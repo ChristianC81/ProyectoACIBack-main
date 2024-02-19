@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/usuarios")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/usuarios")
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 public class UsuarioController {
 
     @Autowired
@@ -105,7 +105,7 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-                System.out.println(usuarioExistente.getPersona().getCedula());
+
                 usuarioExistente.setVisible(true);
                 //Si el responsable existe se crea nuevamente las asignaciones de los criterios
                 registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);

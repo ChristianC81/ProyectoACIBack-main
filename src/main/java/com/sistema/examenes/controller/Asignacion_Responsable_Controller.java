@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/asignacion_responsable")
+@RequestMapping("/aseguramiento/api/asignacion_responsable")
 public class Asignacion_Responsable_Controller {
     @Autowired
     Asignacion_Responsable_Service Service;
@@ -71,7 +71,7 @@ public class Asignacion_Responsable_Controller {
                 ServiceUsuario.save(u);
                 return new ResponseEntity<>(Service.save(a), HttpStatus.NO_CONTENT);
             } catch (Exception e) {
-                System.out.println(e.getMessage());
+
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 
