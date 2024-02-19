@@ -3,7 +3,9 @@ package com.sistema.examenes.repository;
 import com.sistema.examenes.entity.Usuario;
 import java.util.List;
 
+import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
+import com.sistema.examenes.projection.UsuariosProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -29,24 +31,60 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT * FROM usuarios WHERE username=:user", nativeQuery = true)
         public Usuario buscarId(String user);
 
-        /*
-         * @Query(value = "SELECT u.* " +
-         * "FROM usuarios u " +
-         * "JOIN usuariorol ur ON u.id = ur.usuario_id " +
-         * "LEFT JOIN asignacion_evidencia ae ON u.id = ae.usuario_id " +
-         * "WHERE ur.rol_rolid = 3 AND ae.id_asignacion_evidencia IS NULL AND u.visible=true"
-         * , nativeQuery = true)
-         */
-        // @Query(value = "SELECT u.*\n" +
-        // " FROM usuarios u \n" +
-        // " JOIN usuariorol ur ON u.id = ur.usuario_id \n" +
-        // " WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
-        // public List<Usuario> listaResponsablesAdmin();
+
+        @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
+                "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre, \n" +
+                "CASE WHEN evidencia.descripcion IS NOT NULL THEN evidencia.descripcion ELSE '' END AS evidencianombre \n" +
+                "FROM UsuarioRol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
+                "JOIN persona pe ON u.persona_id_persona=pe.id_persona \n" +
+                "JOIN roles ro ON ur.rol_rolid=ro.rolid\n" +
+                "LEFT JOIN asignacion_admin aa ON aa.usuario_id = u.id AND aa.visible = true AND aa.id_modelo =:id_modelo\n" +
+                "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
+                "LEFT JOIN asignacion_evidencia ae ON ae.usuario_id = u.id AND ae.visible = true AND ae.id_modelo =:id_modelo\n" +
+                "LEFT JOIN evidencia evidencia ON ae.evidencia_id_evidencia = evidencia.id_evidencia \n" +
+                "WHERE u.visible = true", nativeQuery = true)
+        List<UsuariosProjection> listarusercrite(Long id_modelo);
+
+      
+        @Query(value = "SELECT u.* " +
+                "FROM " +
+                "    usuarios u " +
+                "JOIN " +
+                "    persona per ON per.id_persona = u.persona_id_persona " +
+                "JOIN " +
+                "    usuariorol ur ON u.id = ur.usuario_id " +
+                "JOIN " +
+                "    roles r ON ur.rol_rolid = r.rolid " +
+                "LEFT JOIN " +
+                "    asignacion_responsable asigres ON asigres.usuarioresponsable_id = u.id " +
+                "LEFT JOIN " +
+                "    asignacion_admin asigadm ON asigres.usuarioresponsable_id = asigadm.usuario_id " +
+                "WHERE " +
+                "    r.rolnombre = 'RESPONSABLE' " +
+                "    AND ( " +
+                "        (asigres.usuarioadmin_id = ?1 AND asigres.visible = true) " +
+                "        OR " +
+                "        (u.id IN ( " +
+                "            SELECT ae_inner.usuario_id " +
+                "            FROM asignacion_evidencia ae_inner " +
+                "            JOIN evidencia e ON ae_inner.evidencia_id_evidencia = e.id_evidencia " +
+                "            JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+                "            JOIN subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
+                "            JOIN criterio c ON sc.id_criterio = c.id_criterio " +
+                "            WHERE c.id_criterio IN ( " +
+                "                SELECT criterio_id_criterio " +
+                "                FROM asignacion_admin " +
+                "                WHERE usuario_id = ?1 " +
+                "            ) " +
+                "        )) " +
+                "    ) " +
+                "    AND u.visible = true ", nativeQuery = true)
+        List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador);
 
         @Query(value = "SELECT * FROM usuarios u\n" +
-                        "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id\n" +
-                        "JOIN persona p  ON u.persona_id_persona = p.id_persona\n" +
-                        "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
+                "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id\n" +
+                "JOIN persona p  ON u.persona_id_persona = p.id_persona\n" +
+                "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
         public List<Usuario> listaResponsablesDatos();
 
         @Query(value = "SELECT u.* FROM usuarios u " +
