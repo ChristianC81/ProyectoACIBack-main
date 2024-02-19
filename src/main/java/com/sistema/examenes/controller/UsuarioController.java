@@ -2,7 +2,9 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.*;
 import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
+import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
+import com.sistema.examenes.projection.UsuariosProjection;
 import com.sistema.examenes.repository.SeguimientoUsuario_repository;
 import com.sistema.examenes.repository.UsuarioRepository;
 import com.sistema.examenes.services.*;
@@ -350,6 +352,15 @@ public class UsuarioController {
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+    }
+
+    @GetMapping("/listUserCrite/{id_modelo}")
+    public ResponseEntity<List<UsuariosProjection>> listusercrite(@PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(usuarioService.listarusercrite(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 

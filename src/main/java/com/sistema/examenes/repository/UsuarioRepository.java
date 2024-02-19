@@ -3,7 +3,9 @@ package com.sistema.examenes.repository;
 import com.sistema.examenes.entity.Usuario;
 import java.util.List;
 
+import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
+import com.sistema.examenes.projection.UsuariosProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -28,6 +30,19 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
         @Query(value = "SELECT * FROM usuarios WHERE username=:user", nativeQuery = true)
         public Usuario buscarId(String user);
+
+        @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
+                "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre, \n" +
+                "CASE WHEN evidencia.descripcion IS NOT NULL THEN evidencia.descripcion ELSE '' END AS evidencianombre \n" +
+                "FROM UsuarioRol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
+                "JOIN persona pe ON u.persona_id_persona=pe.id_persona \n" +
+                "JOIN roles ro ON ur.rol_rolid=ro.rolid\n" +
+                "LEFT JOIN asignacion_admin aa ON aa.usuario_id = u.id AND aa.visible = true AND aa.id_modelo =:id_modelo\n" +
+                "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
+                "LEFT JOIN asignacion_evidencia ae ON ae.usuario_id = u.id AND ae.visible = true AND ae.id_modelo =:id_modelo\n" +
+                "LEFT JOIN evidencia evidencia ON ae.evidencia_id_evidencia = evidencia.id_evidencia \n" +
+                "WHERE u.visible = true", nativeQuery = true)
+        List<UsuariosProjection> listarusercrite(Long id_modelo);
 
         /*
          * @Query(value = "SELECT u.* " +
