@@ -206,6 +206,14 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/listarResDatos")
+    public ResponseEntity<List<Usuario>> obtenerListaRespoDatosSup() {
+        try {
+            return new ResponseEntity<>(uR.listaResponsablesDatos(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/listaResponsablesFromAdmin/{idAdministrador}")
     public ResponseEntity<List<Usuario>> obtenerListaRespoDatos(@PathVariable Long idAdministrador) {

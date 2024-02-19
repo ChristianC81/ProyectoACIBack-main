@@ -31,6 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT * FROM usuarios WHERE username=:user", nativeQuery = true)
         public Usuario buscarId(String user);
 
+
         @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
                 "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre, \n" +
                 "CASE WHEN evidencia.descripcion IS NOT NULL THEN evidencia.descripcion ELSE '' END AS evidencianombre \n" +
@@ -44,20 +45,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "WHERE u.visible = true", nativeQuery = true)
         List<UsuariosProjection> listarusercrite(Long id_modelo);
 
-        /*
-         * @Query(value = "SELECT u.* " +
-         * "FROM usuarios u " +
-         * "JOIN usuariorol ur ON u.id = ur.usuario_id " +
-         * "LEFT JOIN asignacion_evidencia ae ON u.id = ae.usuario_id " +
-         * "WHERE ur.rol_rolid = 3 AND ae.id_asignacion_evidencia IS NULL AND u.visible=true"
-         * , nativeQuery = true)
-         */
-        // @Query(value = "SELECT u.*\n" +
-        // " FROM usuarios u \n" +
-        // " JOIN usuariorol ur ON u.id = ur.usuario_id \n" +
-        // " WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
-        // public List<Usuario> listaResponsablesAdmin();
-
+      
         @Query(value = "SELECT u.* " +
                 "FROM " +
                 "    usuarios u " +
@@ -92,6 +80,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "    ) " +
                 "    AND u.visible = true ", nativeQuery = true)
         List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador);
+
+        @Query(value = "SELECT * FROM usuarios u\n" +
+                "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id\n" +
+                "JOIN persona p  ON u.persona_id_persona = p.id_persona\n" +
+                "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
+        public List<Usuario> listaResponsablesDatos();
 
         @Query(value = "SELECT u.* FROM usuarios u " +
                         "JOIN usuariorol ur ON u.id = ur.usuario_id " +

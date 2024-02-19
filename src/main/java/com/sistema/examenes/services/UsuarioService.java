@@ -22,4 +22,6 @@ public interface UsuarioService extends GenericService<Usuario, Long> {
     List<UsuariosProjection> listarusercrite(Long id_modelo);
 
 
+
+
 }
