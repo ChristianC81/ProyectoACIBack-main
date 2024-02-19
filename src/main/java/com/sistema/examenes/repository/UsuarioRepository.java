@@ -29,20 +29,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT * FROM usuarios WHERE username=:user", nativeQuery = true)
         public Usuario buscarId(String user);
 
-        /*
-         * @Query(value = "SELECT u.* " +
-         * "FROM usuarios u " +
-         * "JOIN usuariorol ur ON u.id = ur.usuario_id " +
-         * "LEFT JOIN asignacion_evidencia ae ON u.id = ae.usuario_id " +
-         * "WHERE ur.rol_rolid = 3 AND ae.id_asignacion_evidencia IS NULL AND u.visible=true"
-         * , nativeQuery = true)
-         */
-        // @Query(value = "SELECT u.*\n" +
-        // " FROM usuarios u \n" +
-        // " JOIN usuariorol ur ON u.id = ur.usuario_id \n" +
-        // " WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
-        // public List<Usuario> listaResponsablesAdmin();
-
         @Query(value = "SELECT u.* " +
                 "FROM " +
                 "    usuarios u " +
