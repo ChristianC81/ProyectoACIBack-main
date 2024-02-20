@@ -40,7 +40,11 @@ public class Usuario_Rol_Controller {
     @GetMapping("/listarrolesporusername/{username}")
         public ResponseEntity<List<Rol>> listaRolesPorUsername( @PathVariable String username) {
         try {
-            return new ResponseEntity<>(rolService.listaRolesPorUsername(username), HttpStatus.OK);
+            if(!username.isEmpty()){
+                return new ResponseEntity<>(rolService.listaRolesPorUsername(username), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
