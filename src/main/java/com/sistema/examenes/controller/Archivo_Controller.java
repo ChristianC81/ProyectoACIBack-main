@@ -55,7 +55,7 @@ public class Archivo_Controller {
             });
             String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
             String url = ServletUriComponentsBuilder.fromHttpUrl(host)
-                    .path("/archivo/").path(fileNames.get(0)).toUriString();
+                    .path("/aseguramiento/archivo/").path(fileNames.get(0)).toUriString();
             archivoservis.save(new Archivo_s(url.toString(), fileNames.toString().join(",",fileNames), describcion, true, actividad));
             meNsaje = "Se subieron correctamente " + fileNames;
             return ResponseEntity.status(HttpStatus.OK).body(new Archivosmensajes(meNsaje + "url:" + url));
