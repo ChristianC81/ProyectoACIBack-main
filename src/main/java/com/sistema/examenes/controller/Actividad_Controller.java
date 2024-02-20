@@ -14,14 +14,12 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/actividad")
+@RequestMapping("/aseguramiento/api/actividad")
 public class Actividad_Controller {
     @Autowired
     Actividad_Service Service;
-
-
 
     @PostMapping("/crear")
     public ResponseEntity<Actividad> crear(@RequestBody Actividad r) {
@@ -108,10 +106,8 @@ public class Actividad_Controller {
     @GetMapping("/listarActAtrasa")
     public ResponseEntity<List<Actividad>> obtenerListaEviAtras() {
         try {
-            System.out.println(Service.listaEvidAtrasada());
             return new ResponseEntity<>(Service.listaEvidAtrasada(), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage().toString());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -120,7 +116,6 @@ public class Actividad_Controller {
         try {
             return new ResponseEntity<>(Service.actividadCont(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage().toString());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

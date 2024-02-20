@@ -21,8 +21,8 @@ import java.util.List;
 import java.util.Objects;
 
 @RestController
-@RequestMapping("/usuarios")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/usuarios")
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 public class UsuarioController {
 
     @Autowired
@@ -85,7 +85,6 @@ public class UsuarioController {
                 UsuarioRol usuarioRol = new UsuarioRol();
                 usuarioRol.setUsuario(r);
                 usuarioRol.setRol(nRol);
-                usuarioRol.setVisible(true);
                 r.getUsuarioRoles().add(usuarioRol);
             }
 
@@ -106,7 +105,7 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-                System.out.println(usuarioExistente.getPersona().getCedula());
+
                 usuarioExistente.setVisible(true);
                 //Si el responsable existe se crea nuevamente las asignaciones de los criterios
                 registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);
@@ -347,8 +346,7 @@ public class UsuarioController {
                 // Obtener los registros del usuariorol relacionadas con el usuario
                 List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
                 for (UsuarioRol usuarioconRol : usuarioRols) {
-                    usuarioconRol.setVisible(false);
-                    userrol.save(usuarioconRol);
+                    userrol.delete(usuarioconRol.getUsuarioRolId());
                 }
 
                 // Registrar la acción en el seguimiento de usuarios

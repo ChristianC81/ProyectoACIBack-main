@@ -95,11 +95,6 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     }
 
     @Override
-    public List<CriterioAdm> criteriosadmultimomodelo(Long userId) {
-        return repository.criteriosadmultimomodelo(userId);
-    }
-
-    @Override
     public CorreoProjection getCorreo(Long id_modelo, Long id_evidencia) {
         return repository.getCorreo(id_modelo, id_evidencia);
     }
@@ -108,7 +103,5 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     public List<CriterioAdm> listarCriterioAdms(Long id_modelo, Long userId) {
         return repository.getCriteriosByAdmin(id_modelo,userId);
     }
-
-
 
 }

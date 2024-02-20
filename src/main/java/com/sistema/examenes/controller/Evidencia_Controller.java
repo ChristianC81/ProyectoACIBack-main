@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/evidencia")
+@RequestMapping("/aseguramiento/api/evidencia")
 public class Evidencia_Controller {
     @Autowired
     Evidencia_Service Service;
