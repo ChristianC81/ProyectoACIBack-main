@@ -1,8 +1,6 @@
 package com.sistema.examenes.services;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Notificacion;
-
 import java.sql.Date;
 import java.util.List;
 

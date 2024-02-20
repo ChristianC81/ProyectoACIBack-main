@@ -1,6 +1,5 @@
 package com.sistema.examenes.repository;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.projection.ActiCalendarProjection;
 import com.sistema.examenes.projection.AsignaProjection;

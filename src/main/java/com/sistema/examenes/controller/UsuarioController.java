@@ -318,7 +318,6 @@ public class UsuarioController {
         }
     }
 
-
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Usuario a = usuarioService.findById(id);
@@ -374,23 +373,18 @@ public class UsuarioController {
         }
     }
 
-
-
     // public List<Usuario> listaAdminDatos();
     @GetMapping("/listarAdminDatos")
     public ResponseEntity<List<Usuario>> obtenerListaAdminDatos() {
         try {
-
             return new ResponseEntity<>(uR.listaAdminDatos(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/listarsoloResponsables")
     public ResponseEntity<List<Usuario>> solloresonsables() {
         try {
-
             return new ResponseEntity<>(uR.listaSOLORESPONSABLES(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

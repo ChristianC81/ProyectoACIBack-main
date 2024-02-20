@@ -1,6 +1,5 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
@@ -100,10 +99,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Actividad actividad) {
-        return Service.delete(id);
-    }
+
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarloginc(@PathVariable Long id) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);

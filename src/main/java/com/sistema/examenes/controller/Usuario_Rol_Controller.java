@@ -21,10 +21,8 @@ import java.util.Optional;
 public class Usuario_Rol_Controller {
     @Autowired
     private UsuarioRolService usuarioService;
-
     @Autowired
     private RolService rolService;
-
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
     @GetMapping("/listarv")
