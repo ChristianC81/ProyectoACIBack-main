@@ -42,7 +42,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
                 "LEFT JOIN asignacion_evidencia ae ON ae.usuario_id = u.id AND ae.visible = true AND ae.id_modelo =:id_modelo\n" +
                 "LEFT JOIN evidencia evidencia ON ae.evidencia_id_evidencia = evidencia.id_evidencia \n" +
-                "WHERE u.visible = true", nativeQuery = true)
+                "WHERE u.visible = true AND ur.visible=true", nativeQuery = true)
         List<UsuariosProjection> listarusercrite(Long id_modelo);
 
       
@@ -94,7 +94,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         public List<Usuario> listaResponsablesAdmin();
         @Query(value = "SELECT " +
                 "    u.id, " +
-                "    CONCAT(per.primer_nombre, ' ', per.primer_apellido) AS nombres, " +
+                "    CONCAT(per.primer_nombre, ' ', per.segundo_nombre, ' ', per.primer_apellido, ' ', per.segundo_apellido) AS nombres, " +
                 "    u.username AS usua, " +
                 "    r.rolnombre AS rol, " +
                 "    CASE " +
@@ -134,7 +134,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "GROUP BY " +
                 "    u.id, " +
                 "    per.primer_nombre, " +
+                "    per.segundo_nombre, " +
                 "    per.primer_apellido, " +
+                "    per.segundo_apellido, " +
                 "    u.username, " +
                 "    r.rolnombre, " +
                 "    ae.count_evidencias", nativeQuery = true)

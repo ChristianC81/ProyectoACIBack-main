@@ -10,9 +10,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/historialasignacionevidencia")
+@RequestMapping("/api/historialasignacionevidencia")
 public class Historial_Asignacion_Evidencia_controller {
     @Autowired
     Historial_Asignacion_Evidencia_Service Service;
@@ -84,7 +84,7 @@ public class Historial_Asignacion_Evidencia_controller {
         try {
             return new ResponseEntity<>(Service.listarHistorial(id_usuario_asignador, id_criterio, veri), HttpStatus.OK);
         } catch (Exception e) {
-
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

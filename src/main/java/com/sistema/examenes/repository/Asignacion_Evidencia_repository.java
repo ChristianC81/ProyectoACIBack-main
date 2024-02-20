@@ -24,7 +24,7 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "WHERE evidencia_id_evidencia=:id_evidencia AND visible=true AND id_modelo=:id_modelo ",nativeQuery = true)
     Asignacion_Evidencia fechaactividades(Long id_evidencia,Long id_modelo);
     @Query(value = "SELECT ae.id_asignacion_evidencia AS idevid, e.id_evidencia AS ideviden, cri.nombre AS crite,s.nombre AS subcrite,i.nombre AS indi, " +
-            "pe.primer_nombre||' '||pe.primer_apellido AS respon, e.descripcion AS descev,ae.fecha_inicio AS ini, ae.fecha_fin AS fini " +
+            "pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido AS respon, e.descripcion AS descev,ae.fecha_inicio AS ini, ae.fecha_fin AS fini " +
             "FROM asignacion_evidencia ae JOIN evidencia e ON e.id_evidencia=ae.evidencia_id_evidencia AND ae.visible =true\n" +
             "JOIN usuarios u ON u.id=ae.usuario_id \n" +
             "JOIN persona pe ON pe.id_persona=u.persona_id_persona \n" +
@@ -98,37 +98,8 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
-            "WHERE (LOWER(e.estado) = 'rechazada') " +
+            "WHERE (LOWER(e.estado) = LOWER(:estado)) " +
             "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
-    List<EvidenciaReApPeAtrProjection> listarEvideRechazadas();
+    List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
 
-    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
-            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
-            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
-            "FROM asignacion_evidencia ae " +
-            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
-            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
-            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
-            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
-            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
-            "JOIN usuarios u ON ae.usuario_id = u.id " +
-            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
-            "WHERE (LOWER(e.estado) = 'aprobada') " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
-    List<EvidenciaReApPeAtrProjection> listarEvideAprobadas();
-
-    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
-            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
-            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
-            "FROM asignacion_evidencia ae " +
-            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
-            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
-            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
-            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
-            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
-            "JOIN usuarios u ON ae.usuario_id = u.id " +
-            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
-            "WHERE (LOWER(e.estado) = 'pendiente') " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
-    List<EvidenciaReApPeAtrProjection> listarEvidePendientes();
 }
