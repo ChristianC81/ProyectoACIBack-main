@@ -94,7 +94,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         public List<Usuario> listaResponsablesAdmin();
         @Query(value = "SELECT " +
                 "    u.id, " +
-                "    CONCAT(per.primer_nombre, ' ', per.primer_apellido) AS nombres, " +
+                "    CONCAT(per.primer_nombre, ' ', per.segundo_nombre, ' ', per.primer_apellido, ' ', per.segundo_apellido) AS nombres, " +
                 "    u.username AS usua, " +
                 "    r.rolnombre AS rol, " +
                 "    CASE " +
@@ -134,7 +134,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "GROUP BY " +
                 "    u.id, " +
                 "    per.primer_nombre, " +
+                "    per.segundo_nombre, " +
                 "    per.primer_apellido, " +
+                "    per.segundo_apellido, " +
                 "    u.username, " +
                 "    r.rolnombre, " +
                 "    ae.count_evidencias", nativeQuery = true)
