@@ -85,6 +85,7 @@ public class UsuarioController {
                 UsuarioRol usuarioRol = new UsuarioRol();
                 usuarioRol.setUsuario(r);
                 usuarioRol.setRol(nRol);
+                usuarioRol.setVisible(true);
                 r.getUsuarioRoles().add(usuarioRol);
             }
 
@@ -346,7 +347,8 @@ public class UsuarioController {
                 // Obtener los registros del usuariorol relacionadas con el usuario
                 List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
                 for (UsuarioRol usuarioconRol : usuarioRols) {
-                    userrol.delete(usuarioconRol.getUsuarioRolId());
+                    usuarioconRol.setVisible(false);
+                    userrol.save(usuarioconRol);
                 }
 
                 // Registrar la acción en el seguimiento de usuarios
