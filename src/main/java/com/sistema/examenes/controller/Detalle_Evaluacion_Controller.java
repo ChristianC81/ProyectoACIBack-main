@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/detalle_evaluacion")
+@RequestMapping("/api/detalle_evaluacion")
 public class Detalle_Evaluacion_Controller {
     @Autowired
     Detalle_Evaluacion_Service Service;
@@ -22,6 +22,7 @@ public class Detalle_Evaluacion_Controller {
     @PostMapping("/crear")
     public ResponseEntity<Detalle_Evaluacion> crear(@RequestBody Detalle_Evaluacion r) {
         Boolean existe = Service.existeeva(r.getEvidencia().getId_evidencia(), r.getUsuario().getId(), r.getId_modelo());
+        System.out.println("existe detalle "+existe);
         try {
             if (existe) {
                 Long iddet=Service.iddetalle(r.getEvidencia().getId_evidencia(), r.getUsuario().getId(), r.getId_modelo());

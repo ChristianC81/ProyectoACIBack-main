@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/indicadores")
+@RequestMapping("/api/indicadores")
 public class Indicadores_Controller {
     @Autowired
     Indicador_Service Service;

@@ -12,9 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/subcriterio")
+@RequestMapping("/api/subcriterio")
 public class Subcriterio_Controller {
     @Autowired
     Subcriterio_Service Service;
