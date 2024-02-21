@@ -224,4 +224,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "    a.fecha_inicio;", nativeQuery = true)
         public List<ResponsableProjection> responsablesAdmin(@Param("idAdministrador") Long idAdministrador);
 
+       // boolean existsByUsuarioAdminIdAndUsuarioResponsableUsername(Long adminId, String username);
 }

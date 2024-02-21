@@ -41,5 +41,4 @@ public class Asignacion_Responsable_ServiceImpl extends GenericServiceImpl<Asign
         return repository.Asignacion_ResponsablesByAdmin(idAdministrador);
     }
 
-
 }
