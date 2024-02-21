@@ -44,6 +44,14 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
+    public List<AsignaProjection> listarAsigEvidenciaPorUsuario(Long usuarioId) {
+        return repository.listarAsigEvidenciaPorUsuario(usuarioId);
+    }
+
+
+
+
+    @Override
     public Asignacion_Evidencia fechaactividades(Long id_evidencia, Long id_modelo) {
         return repository.fechaactividades(id_evidencia, id_modelo);
     }

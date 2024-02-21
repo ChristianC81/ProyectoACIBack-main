@@ -69,6 +69,16 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/listasignacioneviporuser/{usuarioId}")
+    public ResponseEntity<List<AsignaProjection>> obtenerListaAsignacion(@PathVariable("usuarioId") Long usuarioId) {
+        try {
+            List<AsignaProjection> asignaciones = Service.listarAsigEvidenciaPorUsuario(usuarioId);
+            return new ResponseEntity<>(asignaciones, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/listarpruebasevi")
     public ResponseEntity<List<AsignacionEvidenciaProyeccion>> listarpruebasevi() {
         try {

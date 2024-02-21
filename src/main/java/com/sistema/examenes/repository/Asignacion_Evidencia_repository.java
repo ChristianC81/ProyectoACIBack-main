@@ -32,6 +32,37 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) \n" +
             "WHERE ae.visible=true ORDER BY ae.usuario_id,cri.id_criterio, s.id_subcriterio,i.id_indicador;",nativeQuery = true)
     List<AsignaProjection> listarAsigEvidencia();
+
+    @Query(value = "SELECT ae.id_asignacion_evidencia AS idevid, " +
+            "e.id_evidencia AS ideviden, " +
+            "cri.nombre AS crite, " +
+            "s.nombre AS subcrite, " +
+            "i.nombre AS indi, " +
+            "CONCAT(pe_resp.primer_nombre, ' ', pe_resp.primer_apellido) AS respon, " +
+            "CONCAT(pe_asig.primer_nombre, ' ', pe_asig.primer_apellido) AS asignador, " +
+            "e.descripcion AS descev, " +
+            "ae.fecha_inicio AS ini, " +
+            "ae.fecha_fin AS fini " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
+            "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +
+            "JOIN persona pe_resp ON pe_resp.id_persona = u_resp.persona_id_persona " +
+            "JOIN usuarios u_asig ON u_asig.id = ae.id_usuario_asignador " +
+            "JOIN persona pe_asig ON pe_asig.id_persona = u_asig.persona_id_persona " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
+            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador " +
+            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
+            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio " +
+            "WHERE ae.visible = true " +
+            "AND aa.usuario_id = ?1 " +
+            "AND aa.visible = true " +
+            "AND ae.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador", nativeQuery = true)
+    List<AsignaProjection> listarAsigEvidenciaPorUsuario(Long usuarioId);
+
     @Query(value = "SELECT ae.id_asignacion_evidencia as idAsignacionEvidencia, ae.usuario_id as usuarioId, ae.evidencia_id_evidencia as evidenciaId " +
             "FROM asignacion_evidencia ae " +
             "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
