@@ -19,8 +19,8 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 @RestController
-@RequestMapping("/usuarios")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/usuarios")
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 public class UsuarioController {
 
     @Autowired
@@ -84,7 +84,6 @@ public class UsuarioController {
                 UsuarioRol usuarioRol = new UsuarioRol();
                 usuarioRol.setUsuario(r);
                 usuarioRol.setRol(nRol);
-                usuarioRol.setVisible(true);
                 r.getUsuarioRoles().add(usuarioRol);
             }
 
@@ -106,6 +105,7 @@ public class UsuarioController {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
 
+<<<<<<< HEAD
                 if (!arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, usuarioExistente.getId())) {
                     // Si no lo ha asignado, realizar la asignación
                     usuarioExistente.setVisible(true);
@@ -116,6 +116,15 @@ public class UsuarioController {
                     System.out.println("USUARIO YA ASIGNADO POR ESTE ADMINISTRADOR");
                     return new ResponseEntity<>(usuarioExistente, HttpStatus.BAD_REQUEST);
                 }
+=======
+                usuarioExistente.setVisible(true);
+                //Si el responsable existe se crea nuevamente las asignaciones de los criterios
+                registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);
+                asignarResponsableAdm(usuarioExistente,adminId);
+                // Registrar la acción en el seguimiento de usuarios
+                registrarSeguimiento(usuarioExistente);
+                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+>>>>>>> fb3e15096b708ed1851734dce7647ce85429536e
             }
             // Buscar el rol por ID
             Rol rol = rolService.findById(rolId);
@@ -368,8 +377,7 @@ public class UsuarioController {
                 // Obtener los registros del usuariorol relacionadas con el usuario
                 List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
                 for (UsuarioRol usuarioconRol : usuarioRols) {
-                    usuarioconRol.setVisible(false);
-                    userrol.save(usuarioconRol);
+                    userrol.delete(usuarioconRol.getUsuarioRolId());
                 }
 
                 // Registrar la acción en el seguimiento de usuarios

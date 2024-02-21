@@ -10,9 +10,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/evaluar_cuantitativa")
+@RequestMapping("/aseguramiento/api/evaluar_cuantitativa")
 public class Evaluar_Cuantitativa_Controller {
     @Autowired
     Evaluar_Cuantitativa_Service Service;
