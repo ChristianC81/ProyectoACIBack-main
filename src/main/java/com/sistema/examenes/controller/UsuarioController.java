@@ -5,6 +5,7 @@ import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
 import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.projection.UsuariosProjection;
+import com.sistema.examenes.repository.Asignacion_Responsable_repository;
 import com.sistema.examenes.repository.SeguimientoUsuario_repository;
 import com.sistema.examenes.repository.UsuarioRepository;
 import com.sistema.examenes.services.*;
@@ -15,10 +16,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 @RestController
 @RequestMapping("/usuarios")
@@ -57,7 +55,8 @@ public class UsuarioController {
     @Autowired
     private SeguimientoUsuario_Service suService;
 
-
+    @Autowired
+    private Asignacion_Responsable_repository arr;
     @PostConstruct
     public void init() {
         Rol usuario1 = new Rol(1L, "ADMIN");
@@ -106,21 +105,23 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-                System.out.println(usuarioExistente.getPersona().getCedula());
-                usuarioExistente.setVisible(true);
 
-                asignarResponsableAdm(usuarioExistente,adminId);
-                //Si el responsable existe se crea nuevamente las asignaciones de los criterios
-                registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);
-                // Registrar la acción en el seguimiento de usuarios
-                registrarSeguimiento(usuarioExistente);
-                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+                if (!arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, usuarioExistente.getId())) {
+                    // Si no lo ha asignado, realizar la asignación
+                    usuarioExistente.setVisible(true);
+                    registrarCriteriosAdminAlResponsable(usuarioExistente, adminId, modeloId);
+                    asignarResponsableAdm(usuarioExistente, adminId);
+                    return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+                } else {
+                    System.out.println("USUARIO YA ASIGNADO POR ESTE ADMINISTRADOR");
+                    return new ResponseEntity<>(usuarioExistente, HttpStatus.BAD_REQUEST);
+                }
             }
             // Buscar el rol por ID
             Rol rol = rolService.findById(rolId);
             r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
             r.setVisible(true);
-            // Crear un nuevo UsuarioRol y establecer las referencias correspondientes
+            // Crear un nuevo UsuarioRol
             UsuarioRol usuarioRol = new UsuarioRol();
             usuarioRol.setUsuario(r);
             usuarioRol.setRol(rol);
@@ -129,11 +130,11 @@ public class UsuarioController {
 
             // Guardar el usuario en la base de datos
             Usuario nuevoUsuario = uR.save(r);
-            //Una vez que se crea el usuario se debe crear una asignacion con los criterios del admin
+            //Se crea una asignacion con los criterios del admin
             registrarCriteriosAdminAlResponsable(nuevoUsuario, adminId, modeloId);
-            //Registrar la asignacion del responsable con el admin
+            //Registra la asignacion del responsable con el admin
             asignarResponsableAdm(nuevoUsuario,adminId);
-            // Registrar la acción en el seguimiento de usuarios
+            // Registra la acción en el seguimiento de usuarios
             registrarSeguimiento(nuevoUsuario);
 
             return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
@@ -141,6 +142,25 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /*@GetMapping("/verificar-asignacion/{adminId}/{username}")
+    public ResponseEntity<Boolean> verificarAsignacionUsuario(
+            @PathVariable Long adminId,
+            @PathVariable String username) {
+
+        try {
+            // Convertir el Long a String si es necesario
+            String usernameString = String.valueOf(username);
+
+            boolean asignacionExistente = arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, username);
+            return new ResponseEntity<>(asignacionExistente, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println("ERROR: "+e.getMessage());
+            e.printStackTrace();
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }*/
+
     private void registrarCriteriosAdminAlResponsable(Usuario responsable, Long adminId, Long modeloId) {
         List<Criterio> listaCriteriosAdm = criterioService.obtenerCriteriosPorUsuarioYModelo(adminId,modeloId);
         for (Criterio criterios : listaCriteriosAdm) {
