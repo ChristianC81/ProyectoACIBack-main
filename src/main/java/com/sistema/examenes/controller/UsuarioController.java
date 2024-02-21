@@ -108,9 +108,10 @@ public class UsuarioController {
             if (usuarioExistente != null) {
                 System.out.println(usuarioExistente.getPersona().getCedula());
                 usuarioExistente.setVisible(true);
+
+                asignarResponsableAdm(usuarioExistente,adminId);
                 //Si el responsable existe se crea nuevamente las asignaciones de los criterios
                 registrarCriteriosAdminAlResponsable(usuarioExistente,adminId,modeloId);
-                asignarResponsableAdm(usuarioExistente,adminId);
                 // Registrar la acción en el seguimiento de usuarios
                 registrarSeguimiento(usuarioExistente);
                 return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
@@ -123,9 +124,9 @@ public class UsuarioController {
             UsuarioRol usuarioRol = new UsuarioRol();
             usuarioRol.setUsuario(r);
             usuarioRol.setRol(rol);
+            usuarioRol.setVisible(true);
+            userrol.save(usuarioRol);
 
-            // Agregar el UsuarioRol a la lista de roles del usuario
-            r.getUsuarioRoles().add(usuarioRol);
             // Guardar el usuario en la base de datos
             Usuario nuevoUsuario = uR.save(r);
             //Una vez que se crea el usuario se debe crear una asignacion con los criterios del admin
@@ -159,6 +160,7 @@ public class UsuarioController {
         }
     }
     private void asignarResponsableAdm(Usuario usuario, Long adminId) {
+
         Asignacion_Responsable asignacionExistente = asigresService.asignacion_existente(adminId, usuario.getId());
         if (asignacionExistente != null) {
             asignacionExistente.setVisible(true);
