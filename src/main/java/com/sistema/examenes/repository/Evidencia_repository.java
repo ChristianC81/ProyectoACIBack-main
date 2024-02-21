@@ -14,7 +14,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     List<Evidencia> listarEvidencia();
 
     @Query(value = "SELECT * from evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
-            "JOIN usuarios u ON ae.usuario_id = u.id where u.username=:username and e.visible =true AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+            "JOIN usuarios u ON ae.usuario_id = u.id where u.username=:username and e.visible =true AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
+            "ORDER BY e.descripcion ASC", nativeQuery = true)
     public List<Evidencia> evidenciaUsuario(String username);
 
     @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion, " +
@@ -87,7 +88,9 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     // FROM public.indicador join public.evidencia ON
     // evidencia.indicador_id_indicador = indicador.id_indicador
     // WHERE evidencia.indicador_id_indicador=6 And evidencia.visible=true;
-    @Query(value = "SELECT evidencia.* FROM public.indicador join public.evidencia ON evidencia.indicador_id_indicador = indicador.id_indicador WHERE evidencia.indicador_id_indicador=:id_indicador And evidencia.visible=true", nativeQuery = true)
+    @Query(value = "SELECT evidencia.* FROM public.indicador JOIN public.evidencia ON evidencia.indicador_id_indicador = indicador.id_indicador " +
+            "WHERE evidencia.indicador_id_indicador=:id_indicador AND evidencia.visible=true " +
+            "ORDER BY evidencia.descripcion ASC", nativeQuery = true)
     List<Evidencia> listarEvidenciaPorIndicador(Long id_indicador);
 
     @Query(value = "SELECT DISTINCT e.id_evidencia AS idev,per.primer_nombre||' '||per.primer_apellido AS enca, " +

@@ -53,7 +53,8 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
         @Query(value = "SELECT c.id_criterio, c.nombre, c.descripcion, c.visible, " +
                 "(SELECT COUNT(s2.id_subcriterio) FROM subcriterio s2 WHERE s2.id_criterio = c.id_criterio AND s2.visible = true) AS cantidadSubcriterios " +
                 "FROM criterio c " +
-                "WHERE c.visible = true", nativeQuery = true)
+                "WHERE c.visible = true " +
+                "ORDER BY c.descripcion ASC", nativeQuery = true)
         List<CriterioSubcriteriosProjection> obtenerCriteriosConCantidadSubcriterios();
 
         @Query(value = "SELECT cri.nombre AS \"Nomcriterio\",CAST(SUM(i.peso) AS NUMERIC(10, 2)) as \"Ponderacio\", " +

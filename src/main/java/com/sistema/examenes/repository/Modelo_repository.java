@@ -72,7 +72,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
             "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "WHERE ai.modelo_id_modelo =:id_modelo AND cri.nombre =:nombre " +
-            "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador", nativeQuery = true)
+            "ORDER BY ev.descripcion ASC", nativeQuery = true)
     List<criteriosdesprojection> listicritedes(Long id_modelo,String nombre);
     @Query(value = "SELECT cri.nombre AS criterionomj, " +
             "sub.nombre AS subcrierioj, " +
