@@ -34,12 +34,26 @@ public class Asignacion_Admin_Controller {
             Long usuario=r.getUsuario().getId();
             Asignacion_Admin asignacionExistente = Service.asignacion_existente(criterio, modelo,usuario);
             if (asignacionExistente != null) {
+                Criterio criterioAdm = asignacionExistente.getCriterio();
+                List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(asignacionExistente.getUsuario().getId());
+                if (responsables!=null) {
+                    for (Asignacion_Responsable responsable : responsables) {
+                        Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
+                        if(asigcriterioResp!=null) {
+                            if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                                responsable.setVisible(true);
+                                asignacionResService.save(responsable);
+                            }
+                        }
+                    }
+                }  
                 asignacionExistente.setVisible(true);
                 return new ResponseEntity<>(Service.save(asignacionExistente), HttpStatus.OK);
             }
             r.setVisible(true);
             return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -92,18 +106,21 @@ public class Asignacion_Admin_Controller {
             }
             Criterio criterioAdm = a.getCriterio();
             List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
-            if (!responsables.isEmpty()) {
+            if (responsables!=null) {
                 for (Asignacion_Responsable responsable : responsables) {
                     Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
-                    if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
-                        responsable.setVisible(false);
-                        asignacionResService.save(responsable);
-                    }
+                   if(asigcriterioResp!=null) {
+                       if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                           responsable.setVisible(false);
+                           asignacionResService.save(responsable);
+                       }
+                   }
                 }
             }
             a.setVisible(false);
             return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Error al cambiar la visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
