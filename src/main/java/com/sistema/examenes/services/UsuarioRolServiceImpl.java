@@ -1,6 +1,8 @@
 package com.sistema.examenes.services;
 
 
+import com.sistema.examenes.entity.Rol;
+import com.sistema.examenes.entity.Usuario;
 import com.sistema.examenes.entity.UsuarioRol;
 import com.sistema.examenes.repository.UsuarioRolRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,5 +32,9 @@ public class UsuarioRolServiceImpl extends GenericServiceImpl<UsuarioRol, Long> 
     @Override
     public List<UsuarioRol> findByUsuarios_UsuarioId(Long usuarioId) {
         return usuarioRolRepository.findByUsuarios_Usuario_Id(usuarioId);
+    }
+    @Override
+    public UsuarioRol findByUsuarioAndRol(Long usuarioId, Long rolId) {
+        return usuarioRolRepository.findByUsuarioAndRol(usuarioId, rolId);
     }
 }

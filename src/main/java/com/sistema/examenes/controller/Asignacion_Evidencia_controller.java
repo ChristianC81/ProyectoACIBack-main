@@ -14,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/asignacionevidencia")
+@RequestMapping("/api/asignacionevidencia")
 public class Asignacion_Evidencia_controller {
     @Autowired
     Asignacion_Evidencia_Service Service;
@@ -32,7 +32,7 @@ public class Asignacion_Evidencia_controller {
             r.setVisible(true);
             Asignacion_Evidencia asignacionGuardada = Service.save(r);
             usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
-
+            System.out.println("Usuario asignador:"+usuarioAsignador.getPersona().getCedula());
             nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
             nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
             nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
@@ -40,6 +40,7 @@ public class Asignacion_Evidencia_controller {
             ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
             return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -125,6 +126,7 @@ public class Asignacion_Evidencia_controller {
     @PutMapping("/elimasig/{id}/{id_evi}/{id_usuario}/{id_modelo}")
     public ResponseEntity<?> eliminarasig(@PathVariable Long id, @PathVariable Long id_evi, @PathVariable Long id_usuario, @PathVariable Long id_modelo) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
+        System.out.println("Prueba asignacion usuario"+id_usuario+" evidencia "+id_evi+" modelo "+id_modelo);
         if (asignacion_evidencia == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -215,29 +217,11 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    //listar las actividades rechazadas
-    @GetMapping("/listEviR")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviR() {
-        try {
-            return new ResponseEntity<>(Service.listaEvidRe(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    @GetMapping("/evidencias/{estado}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado) {
 
-    @GetMapping("/listEviAp")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviAp() {
         try {
-            return new ResponseEntity<>(Service.listaEvidAp(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/listEviPen")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviPen() {
-        try {
-            return new ResponseEntity<>(Service.listaEvidPen(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvideByEstado(estado), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

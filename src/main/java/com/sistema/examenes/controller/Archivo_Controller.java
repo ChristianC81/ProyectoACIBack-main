@@ -21,8 +21,8 @@ import javax.servlet.http.HttpServletRequest;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
-@RequestMapping("/aseguramiento/archivo")
+@CrossOrigin(origins = { "*" })
+@RequestMapping("archivo")
 @AllArgsConstructor
 public class Archivo_Controller {
     @Autowired

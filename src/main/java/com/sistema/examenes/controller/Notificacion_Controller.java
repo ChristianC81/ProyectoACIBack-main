@@ -16,9 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/notificacion")
+@RequestMapping("/api/notificacion")
 public class Notificacion_Controller {
     @Autowired
     NotificacionService service;
@@ -85,7 +85,7 @@ public class Notificacion_Controller {
         } else {
             try {
                 notificacion.setVisto(true);
-
+                System.out.println("actualizado");
                 return new ResponseEntity<>(service.save(notificacion), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -101,13 +101,15 @@ public class Notificacion_Controller {
         LocalDate fechaNueva = fechaLocal.plusDays(15);
         String fecha1=String.valueOf(fechaNueva);
         String fechael=fecha1;
-
+            System.out.println("Fecha el "+fechael);
         List<Notificacion> notificacionesAntiguas = service.listarNotifi(fechael);
-
+        System.out.println("notificaciones traidas "+notificacionesAntiguas);
         for (Notificacion notificacion : notificacionesAntiguas) {
             service.eliminar(notificacion.getId());
         }
-       }
+       } else {
+            System.out.println("Sin fecha");
+        }
     }
 //@Scheduled(cron = "segundo minuto hora día-del-mes mes día-de-la-semana")
     @Scheduled(cron = "0 0 10 * * ?") // Ejecutar todos los días a las 10 AM 13PM

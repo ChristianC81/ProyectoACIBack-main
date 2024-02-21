@@ -19,9 +19,9 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
+@CrossOrigin(origins = { "*" })
 @RestController
-@RequestMapping("/aseguramiento/api/modelo")
+@RequestMapping("/api/modelo")
 public class  Modelo_Controller {
     @Autowired
     Modelo_Service Service;
@@ -244,7 +244,7 @@ public class  Modelo_Controller {
             List<criteriosdesprojection> criterios =Service.listicrinom(id_modelo, nombre);
             return new ResponseEntity<>(criterios, HttpStatus.OK);
         } catch (Exception e) {
-
+            System.out.println("Error: " + e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
