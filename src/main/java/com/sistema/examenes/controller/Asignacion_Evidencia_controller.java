@@ -215,29 +215,11 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    //listar las actividades rechazadas
-    @GetMapping("/listEviR")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviR() {
-        try {
-            return new ResponseEntity<>(Service.listaEvidRe(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
+    @GetMapping("/evidencias/{estado}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado) {
 
-    @GetMapping("/listEviAp")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviAp() {
         try {
-            return new ResponseEntity<>(Service.listaEvidAp(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/listEviPen")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerListaEviPen() {
-        try {
-            return new ResponseEntity<>(Service.listaEvidPen(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvideByEstado(estado), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

@@ -101,20 +101,9 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<EvidenciaReApPeAtrProjection> listaEvidRe() {
-        return repository.listarEvideRechazadas();
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
+        return repository.listarEvideByEstado(estado);
     }
-
-    @Override
-    public List<EvidenciaReApPeAtrProjection> listaEvidAp() {
-        return repository.listarEvideAprobadas();
-    }
-
-    @Override
-    public List<EvidenciaReApPeAtrProjection> listaEvidPen() {
-        return repository.listarEvidePendientes();
-    }
-
     @Override
     public List<ActivProyection> listarByActividad() {
         return repository.listarByActividad();
