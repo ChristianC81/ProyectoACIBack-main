@@ -1,9 +1,7 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Notificacion;
-import com.sistema.examenes.services.Actividad_Service;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.NotificacionService;
 import org.springframework.beans.factory.annotation.Autowired;

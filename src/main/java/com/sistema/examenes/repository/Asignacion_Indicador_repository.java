@@ -55,6 +55,7 @@ public interface Asignacion_Indicador_repository extends JpaRepository<Asignacio
             "JOIN indicador i ON i.id_indicador=ai.indicador_id_indicador " +
             "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
             "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
-            "WHERE ai.modelo_id_modelo=:id_modelo", nativeQuery = true)
+            "WHERE ai.modelo_id_modelo=:id_modelo " +
+            "ORDER BY cri.descripcion ASC", nativeQuery = true)
     List<AsignaIndicadorProjection> listarAsignaIndicador(Long id_modelo);
 }

@@ -3,7 +3,9 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.Asignacion_Admin;
 import com.sistema.examenes.entity.Asignacion_Responsable;
 import com.sistema.examenes.entity.Criterio;
+import com.sistema.examenes.projection.ActivAprobadaProjection;
 import com.sistema.examenes.projection.AsignacionProjection;
+import com.sistema.examenes.projection.ActivProyection;
 import com.sistema.examenes.projection.NombreAsigProjection;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
@@ -34,12 +36,26 @@ public class Asignacion_Admin_Controller {
             Long usuario=r.getUsuario().getId();
             Asignacion_Admin asignacionExistente = Service.asignacion_existente(criterio, modelo,usuario);
             if (asignacionExistente != null) {
+                Criterio criterioAdm = asignacionExistente.getCriterio();
+                List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(asignacionExistente.getUsuario().getId());
+                if (responsables!=null) {
+                    for (Asignacion_Responsable responsable : responsables) {
+                        Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
+                        if(asigcriterioResp!=null) {
+                            if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                                responsable.setVisible(true);
+                                asignacionResService.save(responsable);
+                            }
+                        }
+                    }
+                }
                 asignacionExistente.setVisible(true);
                 return new ResponseEntity<>(Service.save(asignacionExistente), HttpStatus.OK);
             }
             r.setVisible(true);
             return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -92,18 +108,21 @@ public class Asignacion_Admin_Controller {
             }
             Criterio criterioAdm = a.getCriterio();
             List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
-            if (!responsables.isEmpty()) {
+            if (responsables!=null) {
                 for (Asignacion_Responsable responsable : responsables) {
                     Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
-                    if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
-                        responsable.setVisible(false);
-                        asignacionResService.save(responsable);
-                    }
+                   if(asigcriterioResp!=null) {
+                       if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                           responsable.setVisible(false);
+                           asignacionResService.save(responsable);
+                       }
+                   }
                 }
             }
             a.setVisible(false);
             return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>("Error al cambiar la visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -220,5 +239,47 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/actividadatrasa/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadAtra(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadAtrasada(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/actividadaprobada/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadApro(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadAprobada(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/actividadpendiente/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadpendiente(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadpendiente(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/listaractiv/{id_modelo}")
+    public ResponseEntity<List<ActivProyection>> obtactiv(@PathVariable("id_modelo")Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.actividadCont(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }

@@ -33,16 +33,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
 
 
         @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
-                "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre, \n" +
-                "CASE WHEN evidencia.descripcion IS NOT NULL THEN evidencia.descripcion ELSE '' END AS evidencianombre \n" +
-                "FROM UsuarioRol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
-                "JOIN persona pe ON u.persona_id_persona=pe.id_persona \n" +
-                "JOIN roles ro ON ur.rol_rolid=ro.rolid\n" +
+                "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre\n" +
+                "FROM usuariorol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
+                "LEFT JOIN persona pe ON u.persona_id_persona=pe.id_persona \n" +
+                "LEFT JOIN roles ro ON ur.rol_rolid=ro.rolid\n" +
                 "LEFT JOIN asignacion_admin aa ON aa.usuario_id = u.id AND aa.visible = true AND aa.id_modelo =:id_modelo\n" +
                 "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
-                "LEFT JOIN asignacion_evidencia ae ON ae.usuario_id = u.id AND ae.visible = true AND ae.id_modelo =:id_modelo\n" +
-                "LEFT JOIN evidencia evidencia ON ae.evidencia_id_evidencia = evidencia.id_evidencia \n" +
-                "WHERE u.visible = true", nativeQuery = true)
+                "WHERE u.visible = true AND ur.visible=true", nativeQuery = true)
         List<UsuariosProjection> listarusercrite(Long id_modelo);
 
       
@@ -225,4 +222,5 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "    a.fecha_inicio;", nativeQuery = true)
         public List<ResponsableProjection> responsablesAdmin(@Param("idAdministrador") Long idAdministrador);
 
+       // boolean existsByUsuarioAdminIdAndUsuarioResponsableUsername(Long adminId, String username);
 }

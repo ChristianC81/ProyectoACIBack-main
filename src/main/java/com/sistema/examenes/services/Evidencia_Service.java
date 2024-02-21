@@ -1,6 +1,5 @@
 package com.sistema.examenes.services;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.projection.*;
 

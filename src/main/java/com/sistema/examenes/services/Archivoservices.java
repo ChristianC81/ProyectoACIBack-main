@@ -14,6 +14,4 @@ public interface Archivoservices {
     public Stream<Path> lIstar();
     public String borrar(String filname);
 
-
-
 }
