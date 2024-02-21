@@ -26,7 +26,8 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
             "LEFT JOIN indicador i " +
             "ON s.id_subcriterio = i.subcriterio_id_subcriterio "+
             "where s.visible =true and s.id_criterio=:id_criterio "+
-            "GROUP BY s.id_subcriterio", nativeQuery = true)
+            "GROUP BY s.id_subcriterio " +
+            "ORDER BY s.descripcion ASC", nativeQuery = true)
     List<SubcriterioIndicadoresProjection> obtenerSubcirteriosConCantidadIndicador(Long id_criterio);
     @Query(value = "SELECT s.id_subcriterio, s.nombre, s.descripcion, s.visible, c.nombre AS nombreCriterio, " +
             "(SELECT COUNT(i2.id_indicador) " +
@@ -46,6 +47,7 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
             "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
             "JOIN indicador i ON i.subcriterio_id_subcriterio=s.id_subcriterio " +
             "JOIN asignacion_indicador ai ON ai.indicador_id_indicador=i.id_indicador AND ai.visible=true " +
-            "WHERE cri.id_criterio=:id_criterio AND ai.modelo_id_modelo=:id_modelo ", nativeQuery = true)
+            "WHERE cri.id_criterio=:id_criterio AND ai.modelo_id_modelo=:id_modelo  " +
+            "ORDER BY s.descripcion ASC", nativeQuery = true)
     List<SubcriterioIndicadoresProjection> obtenerSubcriterios(Long id_criterio,Long id_modelo);
 }

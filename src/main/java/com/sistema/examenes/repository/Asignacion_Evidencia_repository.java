@@ -98,7 +98,8 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
             "WHERE (LOWER(e.estado) = LOWER(:estado)) " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "ORDER BY e.id_evidencia DESC", nativeQuery = true)
     List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
 
 }
