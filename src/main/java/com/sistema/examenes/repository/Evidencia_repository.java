@@ -71,7 +71,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "JOIN asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio AND aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
             "WHERE c.id_criterio=:idcriterio AND e.visible = true " +
             "AND e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia  WHERE visible=true) " +
-            "ORDER BY c.id_criterio,sc.id_subcriterio, i.id_indicador,e.id_evidencia", nativeQuery = true)
+            "ORDER BY sc.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
     List<AsigEvidProjection> evidenciatab(Long idcriterio);
 
     @Query(value = "SELECT cri.id_criterio AS idcri, cri.nombre AS nombcri, s.id_subcriterio AS idsub, s.nombre AS nombsub,i.id_indicador AS idind, i.nombre AS nombind, e.id_evidencia AS idev,e.descripcion AS descripc " +
@@ -82,7 +82,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "LEFT JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true " +
             "WHERE aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) AND aa.usuario_id =:idUser " +
             "AND (e.id_evidencia IS NULL OR e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia WHERE visible = true)) " +
-            "AND e.visible = true ORDER BY cri.id_criterio,s.id_subcriterio, i.id_indicador,e.id_evidencia", nativeQuery = true)
+            "AND e.visible = true " +
+            "ORDER BY  cri.nombre, s.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
     List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser);
     // SELECT evidencia.*
     // FROM public.indicador join public.evidencia ON

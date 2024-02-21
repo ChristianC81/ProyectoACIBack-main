@@ -1,11 +1,8 @@
 package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Asignacion_Evidencia;
-import com.sistema.examenes.projection.ActiCalendarProjection;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
-import com.sistema.examenes.projection.AsignaProjection;
-import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
-import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
 import com.sistema.examenes.repository.Asignacion_Evidencia_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -105,6 +102,11 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
 
     public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
         return repository.listarEvideByEstado(estado);
+    }
+
+    @Override
+    public List<ActivProyection> listarByActividad() {
+        return repository.listarByActividad();
     }
 
 }

@@ -1,10 +1,7 @@
 package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Asignacion_Evidencia;
-import com.sistema.examenes.projection.ActiCalendarProjection;
-import com.sistema.examenes.projection.AsignaProjection;
-import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
-import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
+import com.sistema.examenes.projection.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -133,4 +130,14 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "ORDER BY e.id_evidencia DESC", nativeQuery = true)
     List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
 
+    @Query(value = "SELECT DISTINCT u.id AS idpersona, per.primer_nombre, per.primer_apellido, COALESCE(per.correo, 'Sin correo') AS percorreo " +
+            "FROM asignacion_evidencia ac " +
+            "JOIN evidencia e ON e.id_evidencia = ac.evidencia_id_evidencia " +
+            "JOIN usuarios u ON u.id = ac.usuario_id " +
+            "JOIN persona per ON per.id_persona = u.persona_id_persona " +
+            "JOIN indicador i ON i.id_indicador = e.indicador_id_indicador " +
+            "JOIN ponderacion po ON po.indicador_id_indicador = i.id_indicador " +
+            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
+            "WHERE mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<ActivProyection>listarByActividad();
 }

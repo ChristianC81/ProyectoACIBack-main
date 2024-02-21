@@ -3,11 +3,8 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
-import com.sistema.examenes.projection.ActiCalendarProjection;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
-import com.sistema.examenes.projection.AsignaProjection;
-import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
-import com.sistema.examenes.projection.EvidenciaReApPeAtrProjection;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.Historial_Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.UsuarioService;
@@ -230,6 +227,12 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-
-
+    @GetMapping("/listaractividad")
+    public ResponseEntity<List<ActivProyection>> listarActividad () {
+        try {
+            return new ResponseEntity<>(Service.listarByActividad(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
