@@ -3,7 +3,9 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.Asignacion_Admin;
 import com.sistema.examenes.entity.Asignacion_Responsable;
 import com.sistema.examenes.entity.Criterio;
+import com.sistema.examenes.projection.ActivAprobadaProjection;
 import com.sistema.examenes.projection.AsignacionProjection;
+import com.sistema.examenes.projection.ActivProyection;
 import com.sistema.examenes.projection.NombreAsigProjection;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
@@ -237,5 +239,47 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/actividadatrasa/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadAtra(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadAtrasada(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/actividadaprobada/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadApro(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadAprobada(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/actividadpendiente/{id_modelo}")
+    public ResponseEntity<List<ActivAprobadaProjection>> actividadpendiente(@PathVariable("id_modelo") Long id_modelo) {
+
+        try {
+            return new ResponseEntity<>(Service.actividadpendiente(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+    @GetMapping("/listaractiv/{id_modelo}")
+    public ResponseEntity<List<ActivProyection>> obtactiv(@PathVariable("id_modelo")Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.actividadCont(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getLocalizedMessage().toString());
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
 }
