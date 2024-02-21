@@ -72,7 +72,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
             "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "WHERE ai.modelo_id_modelo =:id_modelo AND cri.nombre =:nombre " +
-            "ORDER BY ev.descripcion ASC", nativeQuery = true)
+            "ORDER BY sub.nombre, i.descripcion , ev.descripcion ASC", nativeQuery = true)
     List<criteriosdesprojection> listicritedes(Long id_modelo,String nombre);
     @Query(value = "SELECT cri.nombre AS criterionomj, " +
             "sub.nombre AS subcrierioj, " +
@@ -135,7 +135,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
             "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true AND aa.id_modelo = :id_modelo " +
             "WHERE ai.modelo_id_modelo = :id_modelo AND aa.usuario_id = :id " +
-            "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador", nativeQuery = true)
+            "ORDER BY cri.nombre,sub.nombre,i.nombre , ev.descripcion ASC", nativeQuery = true)
     List<criteriosdesprojection> criterioadmin(Long id_modelo,Long id);
     @Query(value = "SELECT DISTINCT cri.id_criterio, sub.id_subcriterio, i.id_indicador, ae.evidencia_id_evidencia, " +
             "cri.nombre AS criterionomj, sub.nombre AS subcrierioj, i.id_indicador AS id_indicardorj, " +
