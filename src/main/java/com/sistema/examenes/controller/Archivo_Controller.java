@@ -33,7 +33,6 @@ public class Archivo_Controller {
     Archivo_Service archivoservis;
     @Autowired
     Asignacion_Evidencia_Service actiservis;
-
     @Autowired
     HttpServletRequest request;
 

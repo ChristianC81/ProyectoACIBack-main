@@ -125,9 +125,9 @@ public class UsuarioController {
             UsuarioRol usuarioRol = new UsuarioRol();
             usuarioRol.setUsuario(r);
             usuarioRol.setRol(rol);
+            usuarioRol.setVisible(true);
+            userrol.save(usuarioRol);
 
-            // Agregar el UsuarioRol a la lista de roles del usuario
-            r.getUsuarioRoles().add(usuarioRol);
             // Guardar el usuario en la base de datos
             Usuario nuevoUsuario = uR.save(r);
             //Se crea una asignacion con los criterios del admin
@@ -180,6 +180,7 @@ public class UsuarioController {
         }
     }
     private void asignarResponsableAdm(Usuario usuario, Long adminId) {
+
         Asignacion_Responsable asignacionExistente = asigresService.asignacion_existente(adminId, usuario.getId());
         if (asignacionExistente != null) {
             asignacionExistente.setVisible(true);

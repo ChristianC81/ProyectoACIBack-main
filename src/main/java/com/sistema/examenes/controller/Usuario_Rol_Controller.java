@@ -103,7 +103,6 @@ public class Usuario_Rol_Controller {
                 // Devolver el usuarioRol actualizado
                 return new ResponseEntity<>(usuarioRolExistente, HttpStatus.OK);
             }
-
             // Si no se encuentra el usuarioRol
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } catch (Exception e) {

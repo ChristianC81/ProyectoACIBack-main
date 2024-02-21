@@ -53,7 +53,8 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
         @Query(value = "SELECT c.id_criterio, c.nombre, c.descripcion, c.visible, " +
                 "(SELECT COUNT(s2.id_subcriterio) FROM subcriterio s2 WHERE s2.id_criterio = c.id_criterio AND s2.visible = true) AS cantidadSubcriterios " +
                 "FROM criterio c " +
-                "WHERE c.visible = true", nativeQuery = true)
+                "WHERE c.visible = true " +
+                "ORDER BY c.descripcion ASC", nativeQuery = true)
         List<CriterioSubcriteriosProjection> obtenerCriteriosConCantidadSubcriterios();
 
         @Query(value = "SELECT cri.nombre AS \"Nomcriterio\",CAST(SUM(i.peso) AS NUMERIC(10, 2)) as \"Ponderacio\", " +
@@ -113,7 +114,8 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
         @Query(value = "SELECT c.id_criterio, c.nombre AS nombre_criterio, c.descripcion AS descripcion_criterio " +
                 "FROM criterio c " +
                 "JOIN asignacion_admin aa ON aa.criterio_id_criterio = c.id_criterio " +
-                "WHERE aa.visible = true AND aa.id_modelo = :id_modelo AND aa.usuario_id = :userId", nativeQuery = true)
+                "WHERE aa.visible = true AND aa.id_modelo = :id_modelo AND aa.usuario_id = :userId " +
+                "ORDER BY c.descripcion ASC", nativeQuery = true)
         List<CriterioAdm> getCriteriosByAdmin(Long id_modelo,Long userId);
 
         @Query(value = "SELECT cri.id_criterio AS id_criterio, " +
