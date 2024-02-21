@@ -17,8 +17,9 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
+@RequestMapping("/aseguramiento")
 public class Email_controller {
 @Autowired
 private JavaMailSender mail;
@@ -26,7 +27,6 @@ private JavaMailSender mail;
     private IEmailService emailService;
     @PostMapping("/send-email")
     public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDTO){
-        System.out.println("Mensaje Recibido " + emailDTO);
         emailService.sendEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
         Map<String, String> response = new HashMap<>();
         response.put("estado", "Enviado");

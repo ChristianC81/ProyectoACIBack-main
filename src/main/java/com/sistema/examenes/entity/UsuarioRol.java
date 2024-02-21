@@ -16,10 +16,6 @@ public class UsuarioRol {
     @ManyToOne(fetch = FetchType.EAGER)
     private Rol rol;
 
-    // Columna para el eliminado logico no borrar
-    @Column(name = "visible")
-    private boolean visible;
-
     public Long getUsuarioRolId() {
         return usuarioRolId;
     }
@@ -39,13 +35,8 @@ public class UsuarioRol {
     public Rol getRol() {
         return rol;
     }
+
     public void setRol(Rol rol) {
         this.rol = rol;
-    }
-    public boolean isVisible() {
-        return visible;
-    }
-    public void setVisible(boolean visible) {
-        this.visible = visible;
     }
 }

@@ -19,8 +19,8 @@ import javax.annotation.PostConstruct;
 import java.util.*;
 
 @RestController
-@RequestMapping("/usuarios")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/usuarios")
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 public class UsuarioController {
 
     @Autowired
@@ -84,7 +84,6 @@ public class UsuarioController {
                 UsuarioRol usuarioRol = new UsuarioRol();
                 usuarioRol.setUsuario(r);
                 usuarioRol.setRol(nRol);
-                usuarioRol.setVisible(true);
                 r.getUsuarioRoles().add(usuarioRol);
             }
 
@@ -368,8 +367,7 @@ public class UsuarioController {
                 // Obtener los registros del usuariorol relacionadas con el usuario
                 List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
                 for (UsuarioRol usuarioconRol : usuarioRols) {
-                    usuarioconRol.setVisible(false);
-                    userrol.save(usuarioconRol);
+                    userrol.delete(usuarioconRol.getUsuarioRolId());
                 }
 
                 // Registrar la acción en el seguimiento de usuarios

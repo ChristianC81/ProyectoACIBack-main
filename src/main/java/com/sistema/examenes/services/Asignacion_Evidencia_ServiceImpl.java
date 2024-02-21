@@ -100,8 +100,19 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporUsuarioxd(userId);
     }
 
-    public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
-        return repository.listarEvideByEstado(estado);
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidRe() {
+        return repository.listarEvideRechazadas();
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidAp() {
+        return repository.listarEvideAprobadas();
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listaEvidPen() {
+        return repository.listarEvidePendientes();
     }
 
     @Override
