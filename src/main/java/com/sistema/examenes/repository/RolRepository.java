@@ -11,6 +11,6 @@ public interface RolRepository extends JpaRepository<Rol,Long> {
     @Query(value = "SELECT DISTINCT r.* FROM roles r " +
             "JOIN usuariorol ur ON r.rolid = ur.rol_rolid " +
             "JOIN usuarios u ON ur.usuario_id = u.id " +
-            "WHERE u.visible=true AND u.username = :username", nativeQuery = true)
+            "WHERE ur.visible=true AND u.visible=true AND u.username = :username", nativeQuery = true)
     List<Rol> listaRolesPorUsername(@Param("username") String username);
 }
