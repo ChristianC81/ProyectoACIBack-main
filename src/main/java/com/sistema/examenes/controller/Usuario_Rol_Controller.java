@@ -73,13 +73,13 @@ public class Usuario_Rol_Controller {
                 if (!nuevaContraseña.equals(usuarioRolExistente.getUsuario().getPassword())) {
                         usuarioRolExistente.getUsuario().setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
                 }
-
+                System.out.println("ROLES "+usuarioRolExistente.getUsuario().getUsuarioRoles().toString());
                 // Marcar todos los roles existentes como no visibles (eliminados lógicamente)
                 List<UsuarioRol> usuarioRols = usuarioService.findByUsuarios_UsuarioId(usuarioRolExistente.getUsuario().getId());
                 for (UsuarioRol rolUsuario : usuarioRols) {
                         rolUsuario.setVisible(false);
                         usuarioService.save(rolUsuario);
-                } 
+                }
                 // Asociar los nuevos roles proporcionados en la solicitud
                 for (Long idRol : rolIds) {
                     // Verificar si el rol ya está asociado al usuario
