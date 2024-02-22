@@ -79,7 +79,7 @@ public class Usuario_Rol_Controller {
                 for (UsuarioRol rolUsuario : usuarioRols) {
                         rolUsuario.setVisible(false);
                         usuarioService.save(rolUsuario);
-                }
+                } 
                 // Asociar los nuevos roles proporcionados en la solicitud
                 for (Long idRol : rolIds) {
                     // Verificar si el rol ya está asociado al usuario
