@@ -20,6 +20,4 @@ public interface UsuarioService extends GenericService<Usuario, Long> {
     public List<Usuario>listaSOLORESPONSABLES();
     public List<ResponsableProjection> responsablesAdmin(Long idAdministrador);
     List<UsuariosProjection> listarusercrite(Long id_modelo);
-
-    //boolean existsByUsuarioAdminIdAndUsuarioResponsableId(Long adminId, String username);
 }

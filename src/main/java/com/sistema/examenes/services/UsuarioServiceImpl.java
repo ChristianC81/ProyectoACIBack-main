@@ -67,8 +67,4 @@ public class UsuarioServiceImpl extends GenericServiceImpl<Usuario, Long> implem
     public List<UsuariosProjection> listarusercrite(Long id_modelo) {
         return usuarioRepository.listarusercrite(id_modelo);
     }
-
-   /* public boolean existsByUsuarioAdminIdAndUsuarioResponsableId(Long adminId, String username) {
-        return arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, username);
-    }*/
 }

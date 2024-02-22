@@ -126,40 +126,18 @@ public class UsuarioController {
             usuarioRol.setUsuario(r);
             usuarioRol.setRol(rol);
             usuarioRol.setVisible(true);
-            userrol.save(usuarioRol);
+            r.getUsuarioRoles().add(usuarioRol);
 
-            // Guardar el usuario en la base de datos
-            Usuario nuevoUsuario = uR.save(r);
-            //Se crea una asignacion con los criterios del admin
-            registrarCriteriosAdminAlResponsable(nuevoUsuario, adminId, modeloId);
-            //Registra la asignacion del responsable con el admin
-            asignarResponsableAdm(nuevoUsuario,adminId);
-            // Registra la acción en el seguimiento de usuarios
-            registrarSeguimiento(nuevoUsuario);
+            Usuario nuevoUsuario = uR.save(r);// Guardar el usuario en la base de datos
+            registrarCriteriosAdminAlResponsable(nuevoUsuario, adminId, modeloId);//Asignacion con los criterios del admin
+            asignarResponsableAdm(nuevoUsuario,adminId);//Registra la asignacion del responsable con el admin
+            registrarSeguimiento(nuevoUsuario);// Registra la acción en el seguimiento de usuarios
 
             return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    /*@GetMapping("/verificar-asignacion/{adminId}/{username}")
-    public ResponseEntity<Boolean> verificarAsignacionUsuario(
-            @PathVariable Long adminId,
-            @PathVariable String username) {
-
-        try {
-            // Convertir el Long a String si es necesario
-            String usernameString = String.valueOf(username);
-
-            boolean asignacionExistente = arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, username);
-            return new ResponseEntity<>(asignacionExistente, HttpStatus.OK);
-        } catch (Exception e) {
-            System.out.println("ERROR: "+e.getMessage());
-            e.printStackTrace();
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }*/
 
     private void registrarCriteriosAdminAlResponsable(Usuario responsable, Long adminId, Long modeloId) {
         List<Criterio> listaCriteriosAdm = criterioService.obtenerCriteriosPorUsuarioYModelo(adminId,modeloId);
