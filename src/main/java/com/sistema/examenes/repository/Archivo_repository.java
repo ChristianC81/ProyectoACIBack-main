@@ -49,4 +49,6 @@ public interface Archivo_repository extends JpaRepository<Archivo_s, Long> {
             "AND ev.indicador_id_indicador = :id_indicador " +
             "ORDER BY i.id_indicador", nativeQuery = true)
     List<Archivo_s> archivoporindicador(Long id_criterio,Long id_modelo,Long id_indicador);
+
+    boolean existsByNombre(String nombre);
 }
