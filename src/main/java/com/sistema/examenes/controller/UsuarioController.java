@@ -76,29 +76,30 @@ public class UsuarioController {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
                 usuarioExistente.setVisible(true);
+                
                 return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+            }else{
+                //Se recorre los roles
+                for (Long rol : rolIds) {
+                    Rol nRol = rolService.findById(rol);
+                    UsuarioRol usuarioRol = new UsuarioRol();
+                    usuarioRol.setUsuario(r);
+                    usuarioRol.setRol(nRol);
+                    usuarioRol.setVisible(true);
+                    r.getUsuarioRoles().add(usuarioRol);
+                }
+                // Codificar la contraseña antes de guardar el usuario
+                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+                //Setear Visible para que este activo en el sistema
+                r.setVisible(true);
+                // Guardar el usuario en la base de datos
+                return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
             }
-
-            for (Long rol : rolIds) {
-                Rol nRol = rolService.findById(rol);
-                UsuarioRol usuarioRol = new UsuarioRol();
-                usuarioRol.setUsuario(r);
-                usuarioRol.setRol(nRol);
-                usuarioRol.setVisible(true);
-                r.getUsuarioRoles().add(usuarioRol);
-            }
-
-            // Codificar la contraseña antes de guardar el usuario
-            r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
-            r.setVisible(true);
-
-            // Guardar el usuario en la base de datos
-            return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
-
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @PostMapping("/crearadm/{rolId}/{adminId}/{modeloId}")
     public ResponseEntity<Usuario> crearadm(@RequestBody Usuario r, @PathVariable Long rolId,@PathVariable Long adminId,@PathVariable Long modeloId) {
