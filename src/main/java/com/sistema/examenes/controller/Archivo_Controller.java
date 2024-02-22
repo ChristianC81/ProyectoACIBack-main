@@ -5,6 +5,7 @@ import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.mensajes.Archivosmensajes;
 import com.sistema.examenes.projection.ArchivoProjection;
+import com.sistema.examenes.repository.Archivo_repository;
 import com.sistema.examenes.services.*;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,7 @@ import org.springframework.web.servlet.mvc.method.annotation.MvcUriComponentsBui
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
@@ -38,31 +40,58 @@ public class Archivo_Controller {
 
     @PostMapping("/upload")
     public ResponseEntity<Archivosmensajes> upload(@RequestParam("file") MultipartFile[] files,
-                                                   @RequestParam("descripcion") String describcion,
+                                                   @RequestParam("descripcion") String descripcion,
                                                    @RequestParam("id_evidencia") Long id_evidencia) {
-        String meNsaje = "";
+        String mensaje = "";
         try {
             Asignacion_Evidencia actividad = actiservis.findById(id_evidencia);
             if (actividad == null) {
-                meNsaje = "No se encontró la evidencia con id " + id_evidencia;
-                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Archivosmensajes(meNsaje));
+                mensaje = "No se encontró la evidencia con id " + id_evidencia;
+                return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Archivosmensajes(mensaje));
             }
             List<String> fileNames = new ArrayList<>();
             Arrays.asList(files).stream().forEach(file -> {
-                servis.guardar(file);
-                fileNames.add(file.getOriginalFilename());
+                String nombreOriginal = file.getOriginalFilename();
+                String nombreArchivoUnico = generarNombreUnico(nombreOriginal);
+
+                // Verificar si el nombre ya existe y, si es así, generar uno nuevo
+                while (servis.existsByNombre(nombreArchivoUnico)) {
+                    nombreArchivoUnico = generarNombreUnico(nombreOriginal);
+                }
+
+                servis.guardar(file, nombreArchivoUnico);
+                fileNames.add(nombreArchivoUnico);
             });
             String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
             String url = ServletUriComponentsBuilder.fromHttpUrl(host)
                     .scheme("https") // Agrega este método para establecer el protocolo HTTPS
                     .path("/aseguramiento/archivo/").path(fileNames.get(0)).toUriString();
-            archivoservis.save(new Archivo_s(url.toString(), fileNames.toString().join(",",fileNames), describcion, true, actividad));
-            meNsaje = "Se subieron correctamente " + fileNames;
-            return ResponseEntity.status(HttpStatus.OK).body(new Archivosmensajes(meNsaje + "url:" + url));
+            archivoservis.save(new Archivo_s(url, String.join(",", fileNames), descripcion, true, actividad));
+            mensaje = "Se subieron correctamente " + fileNames;
+            return ResponseEntity.status(HttpStatus.OK).body(new Archivosmensajes(mensaje + "url:" + url));
         } catch (Exception e) {
-            meNsaje = "Fallo al subir";
-            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new Archivosmensajes(meNsaje));
+            mensaje = "Fallo al subir";
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new Archivosmensajes(mensaje));
         }
+    }
+
+    private String generarNombreUnico(String nombreOriginal) {
+        // Obtenemos la fecha y hora actual
+        Date fechaHoraActual = new Date();
+        // Creamos un formato de fecha
+        SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyyMMddHHmmss");
+        // Obtenemos la fecha y hora formateada
+        String fechaHoraFormateada = formatoFecha.format(fechaHoraActual);
+        // Obtenemos la extensión del archivo original (si tiene)
+        String extension = "";
+        int indicePunto = nombreOriginal.lastIndexOf(".");
+        if (indicePunto != -1) {
+            extension = nombreOriginal.substring(indicePunto);
+            nombreOriginal = nombreOriginal.substring(0, indicePunto);
+        }
+        // Concatenamos la fecha y hora al nombre original y agregamos la extensión (si existe)
+        return nombreOriginal + fechaHoraFormateada + extension;
     }
 
     @GetMapping("/listarv")
@@ -157,21 +186,3 @@ public class Archivo_Controller {
     }
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
