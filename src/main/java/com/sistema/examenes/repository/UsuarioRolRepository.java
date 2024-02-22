@@ -1,7 +1,5 @@
 package com.sistema.examenes.repository;
 
-import com.sistema.examenes.entity.Rol;
-import com.sistema.examenes.entity.Usuario;
 import com.sistema.examenes.entity.UsuarioRol;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -16,7 +14,4 @@ public interface UsuarioRolRepository extends JpaRepository<UsuarioRol,Long> {
     UsuarioRol findByUsuario_Id(Long usuarioId);
     @Query(value = "SELECT ur.* FROM UsuarioRol ur JOIN usuarios u ON u.id = ur.usuario_id WHERE u.visible=true AND ur.usuario_id = :usuarioId", nativeQuery = true)
     List<UsuarioRol> findByUsuarios_Usuario_Id(Long usuarioId);
-
-    @Query(value = "SELECT ur.* FROM UsuarioRol ur JOIN usuarios u ON u.id = ur.usuario_id WHERE ur.usuario_id = :usuarioId AND ur.rol_rolid= :rolId AND  u.visible=true", nativeQuery = true)
-    UsuarioRol findByUsuarioAndRol(Long usuarioId, Long rolId);
 }

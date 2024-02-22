@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.Optional;
 
 @RestController
-@RequestMapping("/api/usuariorol")
-@CrossOrigin("*")
+@RequestMapping("/aseguramiento/api/usuariorol")
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 public class Usuario_Rol_Controller {
     @Autowired
     private UsuarioRolService usuarioService;
@@ -28,7 +28,7 @@ public class Usuario_Rol_Controller {
     @GetMapping("/listarv")
     public ResponseEntity<List<UsuarioRol>> obtenerLista() {
         try {
-            System.out.println(usuarioService.listarv());
+
 
             return new ResponseEntity<>(usuarioService.listarv(), HttpStatus.OK);
         } catch (Exception e) {
@@ -38,7 +38,11 @@ public class Usuario_Rol_Controller {
     @GetMapping("/listarrolesporusername/{username}")
         public ResponseEntity<List<Rol>> listaRolesPorUsername( @PathVariable String username) {
         try {
-            return new ResponseEntity<>(rolService.listaRolesPorUsername(username), HttpStatus.OK);
+            if(!username.isEmpty()){
+                return new ResponseEntity<>(rolService.listaRolesPorUsername(username), HttpStatus.OK);
+            }else{
+                return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -110,5 +114,4 @@ public class Usuario_Rol_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
