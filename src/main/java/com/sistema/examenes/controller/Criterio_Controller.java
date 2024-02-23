@@ -92,6 +92,15 @@ public class Criterio_Controller {
         }
     }
 
+    @GetMapping("/listarcriteriosUsuarios/{id}/{id_modelo}")
+    public ResponseEntity<List<CriteProjection>> listarcriusers(@PathVariable("id") Long id, @PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.listarcriusers(id,id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/datosuser/{id}/{id_modelo}")
     public ResponseEntity<List<CriteProjection>> criterioadmi(@PathVariable("id") Long id, @PathVariable("id_modelo") Long id_modelo) {
         try {
