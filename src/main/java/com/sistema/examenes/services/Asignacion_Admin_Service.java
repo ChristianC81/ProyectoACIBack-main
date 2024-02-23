@@ -1,6 +1,8 @@
 package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Asignacion_Admin;
+import com.sistema.examenes.projection.ActivAprobadaProjection;
+import com.sistema.examenes.projection.ActivProyection;
 import com.sistema.examenes.projection.AsignacionProjection;
 import com.sistema.examenes.projection.NombreAsigProjection;
 
@@ -21,4 +23,16 @@ public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admi
    public List<AsignacionProjection> veradminsporcriterio(Long id_modelo, Long id_criterio);
 
     public List<AsignacionProjection> verresponsablesporcriterio (Long id_modelo, Long id_criterio);
+
+    public List<Asignacion_Admin> listaAsignacionAdminPorIdUsuario(Long id_usuario);
+
+    public List<ActivAprobadaProjection> actividadAtrasada(Long id_modelo);
+    public List<ActivAprobadaProjection> actividadAprobada(Long id_modelo);
+
+    List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
+    public List<ActivProyection> actividadCont(Long id_modelo);
+
+
+
+
 }

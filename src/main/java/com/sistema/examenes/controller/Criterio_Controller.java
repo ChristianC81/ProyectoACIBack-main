@@ -17,9 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/criterio")
+@RequestMapping("/aseguramiento/api/criterio")
 public class Criterio_Controller {
     @Autowired
     Criterio_Service Service;
@@ -225,10 +225,10 @@ public class Criterio_Controller {
         return Service.obtenerDatosCriterios();
     }
 
-    @GetMapping("/listCriAdmin/{id}")
-    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id") Long id) {
+    @GetMapping("/listCriAdmin/{id_modelo}/{id}")
+    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id_modelo") Long id_modelo,@PathVariable("id") Long id) {
         try {
-            return new ResponseEntity<>(Service.listarCriterioAdms(id), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarCriterioAdms(id_modelo,id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

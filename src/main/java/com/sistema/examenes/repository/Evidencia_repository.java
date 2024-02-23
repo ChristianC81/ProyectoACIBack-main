@@ -1,6 +1,5 @@
 package com.sistema.examenes.repository;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.projection.*;
@@ -15,7 +14,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     List<Evidencia> listarEvidencia();
 
     @Query(value = "SELECT * from evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
-            "JOIN usuarios u ON ae.usuario_id = u.id where u.username=:username and e.visible =true AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+            "JOIN usuarios u ON ae.usuario_id = u.id where u.username=:username and e.visible =true AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
+            "ORDER BY e.descripcion ASC", nativeQuery = true)
     public List<Evidencia> evidenciaUsuario(String username);
 
     @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion, " +
@@ -26,6 +26,16 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "JOIN usuarios u ON u.id=ae.usuario_id " +
             "WHERE u.username=:username ", nativeQuery = true)
     public List<EvidenciaProjection> evidenUsuario(String username);
+
+    @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion AS descripcion, " +
+            "e.estado AS estado FROM evidencia e JOIN indicador i ON i.id_indicador=e.indicador_id_indicador " +
+            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
+            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia=e.id_evidencia " +
+            "AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
+            "JOIN usuarios u ON u.id=ae.usuario_id " +
+            "WHERE u.username=:username AND LOWER(e.estado)='pendiente'", nativeQuery = true)
+    public List<EvidenciaProjection> evidenUserPendiente(String username);
 
    /* @Query(value = " SELECT e.* FROM evidencia e  \n" +
             "               LEFT JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia \n" +
@@ -61,7 +71,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "JOIN asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio AND aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
             "WHERE c.id_criterio=:idcriterio AND e.visible = true " +
             "AND e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia  WHERE visible=true) " +
-            "ORDER BY c.id_criterio,sc.id_subcriterio, i.id_indicador,e.id_evidencia", nativeQuery = true)
+            "ORDER BY sc.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
     List<AsigEvidProjection> evidenciatab(Long idcriterio);
 
     @Query(value = "SELECT cri.id_criterio AS idcri, cri.nombre AS nombcri, s.id_subcriterio AS idsub, s.nombre AS nombsub,i.id_indicador AS idind, i.nombre AS nombind, e.id_evidencia AS idev,e.descripcion AS descripc " +
@@ -72,13 +82,16 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "LEFT JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true " +
             "WHERE aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) AND aa.usuario_id =:idUser " +
             "AND (e.id_evidencia IS NULL OR e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia WHERE visible = true)) " +
-            "AND e.visible = true ORDER BY cri.id_criterio,s.id_subcriterio, i.id_indicador,e.id_evidencia", nativeQuery = true)
+            "AND e.visible = true " +
+            "ORDER BY  cri.nombre, s.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
     List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser);
     // SELECT evidencia.*
     // FROM public.indicador join public.evidencia ON
     // evidencia.indicador_id_indicador = indicador.id_indicador
     // WHERE evidencia.indicador_id_indicador=6 And evidencia.visible=true;
-    @Query(value = "SELECT evidencia.* FROM public.indicador join public.evidencia ON evidencia.indicador_id_indicador = indicador.id_indicador WHERE evidencia.indicador_id_indicador=:id_indicador And evidencia.visible=true", nativeQuery = true)
+    @Query(value = "SELECT evidencia.* FROM public.indicador JOIN public.evidencia ON evidencia.indicador_id_indicador = indicador.id_indicador " +
+            "WHERE evidencia.indicador_id_indicador=:id_indicador AND evidencia.visible=true " +
+            "ORDER BY evidencia.descripcion ASC", nativeQuery = true)
     List<Evidencia> listarEvidenciaPorIndicador(Long id_indicador);
 
     @Query(value = "SELECT DISTINCT e.id_evidencia AS idev,per.primer_nombre||' '||per.primer_apellido AS enca, " +

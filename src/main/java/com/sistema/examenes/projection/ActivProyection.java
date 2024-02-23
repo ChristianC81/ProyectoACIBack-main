@@ -5,4 +5,8 @@ public interface ActivProyection {
     String getprimer_nombre();
     String getprimer_apellido();
     String getpercorreo();
+
+    String getNombres();
+    Long getTotal();
+    Double getAvance();
 }

@@ -8,9 +8,14 @@ import java.util.List;
 
 public interface UsuarioRolRepository extends JpaRepository<UsuarioRol,Long> {
 
+
     @Query("SELECT ur FROM UsuarioRol ur JOIN FETCH ur.usuario u WHERE u.visible = true")
     List<UsuarioRol> listarv();
 
     UsuarioRol findByUsuario_Id(Long usuarioId);
+    @Query(value = "SELECT ur.* FROM UsuarioRol ur JOIN usuarios u ON u.id = ur.usuario_id WHERE u.visible=true AND ur.usuario_id = :usuarioId", nativeQuery = true)
+    List<UsuarioRol> findByUsuarios_Usuario_Id(Long usuarioId);
 
+    @Query(value = "SELECT ur.* FROM UsuarioRol ur JOIN usuarios u ON u.id = ur.usuario_id WHERE ur.usuario_id = :usuarioId AND ur.rol_rolid= :rolId AND  u.visible=true", nativeQuery = true)
+    UsuarioRol findByUsuarioAndRol(Long usuarioId, Long rolId);
 }

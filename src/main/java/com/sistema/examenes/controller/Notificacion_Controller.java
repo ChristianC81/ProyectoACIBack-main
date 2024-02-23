@@ -1,9 +1,7 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Notificacion;
-import com.sistema.examenes.services.Actividad_Service;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.NotificacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,9 +16,9 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/notificacion")
+@RequestMapping("/aseguramiento/api/notificacion")
 public class Notificacion_Controller {
     @Autowired
     NotificacionService service;
@@ -32,6 +30,15 @@ public class Notificacion_Controller {
         try {
             not.setVisto(false);
             return new ResponseEntity<>(service.save(not), HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listarTodasNotificaciones")
+    public ResponseEntity<List<Notificacion>>listarTodasNotificaciones(){
+        try {
+            return new ResponseEntity<>(service.listarTodasNotificaciones(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -62,10 +69,10 @@ public class Notificacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listartodo2/{roluser}")
-    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser) {
+    @GetMapping("/listartodo2/{roluser}/{userId}")
+    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser, @PathVariable("userId") Long userId) {
         try {
-            return new ResponseEntity<>(service.all2(roluser), HttpStatus.OK);
+            return new ResponseEntity<>(service.all2(roluser,userId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -78,7 +85,7 @@ public class Notificacion_Controller {
         } else {
             try {
                 notificacion.setVisto(true);
-                System.out.println("actualizado");
+
                 return new ResponseEntity<>(service.save(notificacion), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -94,15 +101,13 @@ public class Notificacion_Controller {
         LocalDate fechaNueva = fechaLocal.plusDays(15);
         String fecha1=String.valueOf(fechaNueva);
         String fechael=fecha1;
-            System.out.println("Fecha el "+fechael);
+
         List<Notificacion> notificacionesAntiguas = service.listarNotifi(fechael);
-        System.out.println("notificaciones traidas "+notificacionesAntiguas);
+
         for (Notificacion notificacion : notificacionesAntiguas) {
             service.eliminar(notificacion.getId());
         }
-       } else {
-            System.out.println("Sin fecha");
-        }
+       }
     }
 //@Scheduled(cron = "segundo minuto hora día-del-mes mes día-de-la-semana")
     @Scheduled(cron = "0 0 10 * * ?") // Ejecutar todos los días a las 10 AM 13PM

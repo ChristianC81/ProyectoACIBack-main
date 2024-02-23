@@ -1,11 +1,8 @@
 package com.sistema.examenes.services;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
-import com.sistema.examenes.projection.ActiCalendarProjection;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
-import com.sistema.examenes.projection.AsignaProjection;
-import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
 import com.sistema.examenes.repository.Asignacion_Evidencia_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -45,6 +42,14 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     public List<AsignaProjection> listarAsigEvidencia() {
         return repository.listarAsigEvidencia();
     }
+
+    @Override
+    public List<AsignaProjection> listarAsigEvidenciaPorUsuario(Long usuarioId) {
+        return repository.listarAsigEvidenciaPorUsuario(usuarioId);
+    }
+
+
+
 
     @Override
     public Asignacion_Evidencia fechaactividades(Long id_evidencia, Long id_modelo) {
@@ -89,4 +94,19 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporEvidencia(idEvidencia);
 
     }
+
+    @Override
+    public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId) {
+        return repository.listarporUsuarioxd(userId);
+    }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
+        return repository.listarEvideByEstado(estado);
+    }
+    @Override
+    public List<ActivProyection> listarByActividad() {
+        return repository.listarByActividad();
+    }
+
 }

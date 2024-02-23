@@ -17,30 +17,16 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 import java.util.HashMap;
 import java.util.Map;
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
+@RequestMapping("/aseguramiento")
 public class Email_controller {
 @Autowired
 private JavaMailSender mail;
     @Autowired
     private IEmailService emailService;
-
-    /*@PostMapping("/send-email")
-    public ResponseEntity<?>enviarcorreo(){
-        SimpleMailMessage email= new SimpleMailMessage();
-        email.setTo("claudio.velecela.est@tecazuay.edu.ec");
-        email.setFrom("jhonloja771@gmail.com");
-        email.setSubject("HABLANDO SERIO");
-        email.setText("SACA DEL GRUOO A LOS DOS ZHUNIO Y GUITAMA ");
-        mail.send(email);
-        return  new ResponseEntity<>(true, HttpStatus.OK);
-
-
-    }*/
-
     @PostMapping("/send-email")
     public ResponseEntity<?> receiveRequestEmail(@RequestBody EmailDTO emailDTO){
-        System.out.println("Mensaje Recibido " + emailDTO);
         emailService.sendEmail(emailDTO.getToUser(), emailDTO.getSubject(), emailDTO.getMessage());
         Map<String, String> response = new HashMap<>();
         response.put("estado", "Enviado");
@@ -48,7 +34,6 @@ private JavaMailSender mail;
     }
     @PostMapping("/sendMessageFile")
     public ResponseEntity<?> receiveRequestEmailWithFile(@ModelAttribute EmailFileDTO emailFileDTO){
-
         try {
             String fileName = emailFileDTO.getFile().getOriginalFilename();
             Path path = Paths.get("src/mail/resources/files/" + fileName);

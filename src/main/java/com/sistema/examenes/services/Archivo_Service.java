@@ -9,10 +9,8 @@ import java.util.List;
 
 public interface Archivo_Service extends GenericService<Archivo_s, Long>{
     public List<Archivo_s> listar() ;
-
     public List<Archivo_s> listararchivouser(String username);
     public List<Archivo_s> listararchivoActividad(Long idActividad);
-
     public List<ArchivoProjection> listararchi() ;
     List<Archivo_s> archivoporindicador(Long id_criterio,Long id_modelo,Long id_indicador);
 }

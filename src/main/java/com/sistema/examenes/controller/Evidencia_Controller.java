@@ -11,9 +11,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/evidencia")
+@RequestMapping("/aseguramiento/api/evidencia")
 public class Evidencia_Controller {
     @Autowired
     Evidencia_Service Service;
@@ -28,7 +28,6 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/listar")
     public ResponseEntity<List<Evidencia>> obtenerLista() {
         try {
@@ -46,7 +45,6 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/listarvAsigna/{id}")
     public ResponseEntity<List<Evidencia>> obtenerListavAsigna(@PathVariable("id") Long id) {
         try {
@@ -55,7 +53,6 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/evidenciaprobada/{id_modelo}")
     public ResponseEntity<List<EvidenciasProjection>> evidenciaprobada(@PathVariable("id_modelo") Long id_modelo) {
         try {
@@ -90,7 +87,6 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/eviasigadmin/{idUser}")
     public ResponseEntity<List<AsigEvidProjection>> evidenciaadmintabla(@PathVariable("idUser") Long idUser) {
         try {
@@ -107,7 +103,6 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/buscarev/{username}")
     public ResponseEntity<List<Evidencia>> buscarEvidencia(@PathVariable("username") String username) {
         try {
@@ -116,11 +111,19 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     @GetMapping("/evidenuser/{username}")
     public ResponseEntity<List<EvidenciaProjection>> evidenciauser(@PathVariable("username") String username) {
         try {
             return new ResponseEntity<>(Service.evidenUsuario(username), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/evidenuserpendiente/{username}")
+    public ResponseEntity<List<EvidenciaProjection>> evidenUserPendiente(@PathVariable("username") String username) {
+        try {
+            return new ResponseEntity<>(Service.evidenUserPendiente(username), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -137,7 +140,6 @@ public class Evidencia_Controller {
     public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Evidencia evidencia) {
         return Service.delete(id);
     }
-
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Evidencia a = Service.findById(id);

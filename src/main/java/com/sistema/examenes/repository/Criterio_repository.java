@@ -53,7 +53,8 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
         @Query(value = "SELECT c.id_criterio, c.nombre, c.descripcion, c.visible, " +
                 "(SELECT COUNT(s2.id_subcriterio) FROM subcriterio s2 WHERE s2.id_criterio = c.id_criterio AND s2.visible = true) AS cantidadSubcriterios " +
                 "FROM criterio c " +
-                "WHERE c.visible = true", nativeQuery = true)
+                "WHERE c.visible = true " +
+                "ORDER BY c.descripcion ASC", nativeQuery = true)
         List<CriterioSubcriteriosProjection> obtenerCriteriosConCantidadSubcriterios();
 
         @Query(value = "SELECT cri.nombre AS \"Nomcriterio\",CAST(SUM(i.peso) AS NUMERIC(10, 2)) as \"Ponderacio\", " +
@@ -111,26 +112,30 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
 
         @Query(value = "SELECT c.id_criterio, c.nombre AS nombre_criterio, c.descripcion AS descripcion_criterio " +
-                "FROM asignacion_admin a " +
-                "JOIN criterio c ON c.id_criterio = a.criterio_id_criterio " +
-                "JOIN modelo m ON m.id_modelo = a.id_modelo " +
-                "JOIN usuarios u ON u.id = a.usuario_id " +
-                "JOIN persona ON persona.id_persona = u.persona_id_persona " +
-                "WHERE a.usuario_id = :userId", nativeQuery = true)
-        List<CriterioAdm> getCriteriosByAdmin(Long userId);
+                "FROM criterio c " +
+                "JOIN asignacion_admin aa ON aa.criterio_id_criterio = c.id_criterio " +
+                "WHERE aa.visible = true AND aa.id_modelo = :id_modelo AND aa.usuario_id = :userId " +
+                "ORDER BY c.descripcion ASC", nativeQuery = true)
+        List<CriterioAdm> getCriteriosByAdmin(Long id_modelo,Long userId);
 
-        @Query(value = "SELECT cri.nombre AS criterio, cri.descripcion AS descripcion\n" +
-                "                FROM indicador i JOIN subcriterio sub ON sub.id_subcriterio=i.subcriterio_id_subcriterio \n" +
-                "                JOIN criterio cri ON cri.id_criterio =sub.id_criterio \n" +
-                "                JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true \n" +
-                "                AND aa.id_modelo=?2 AND aa.criterio_id_criterio IN \n" +
-                "                (SELECT DISTINCT cri.id_criterio FROM asignacion_evidencia ae \n" +
-                "                JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible=true \n" +
-                "                JOIN indicador i ON i.id_indicador = e.indicador_id_indicador \n" +
-                "                JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio \n" +
-                "                JOIN criterio cri ON cri.id_criterio = s.id_criterio \n" +
-                "                WHERE ae.usuario_id =?1 AND ae.id_modelo =?2 ) GROUP BY cri.nombre,cri.id_criterio ORDER BY cri.id_criterio", nativeQuery = true)
-        List<CriteRespProjection> criterioporresp(Long id, Long id_modelo);
+        @Query(value = "SELECT cri.id_criterio AS id_criterio, " +
+                "       cri.nombre AS criterio, " +
+                "       cri.descripcion AS descripcion " +
+                "FROM indicador i " +
+                "JOIN subcriterio sub ON sub.id_subcriterio = i.subcriterio_id_subcriterio " +
+                "JOIN criterio cri ON cri.id_criterio = sub.id_criterio " +
+                "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true " +
+                "                          AND aa.id_modelo = ?2 AND aa.criterio_id_criterio IN " +
+                "                          (SELECT DISTINCT cri.id_criterio " +
+                "                           FROM asignacion_evidencia ae " +
+                "                           JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible = true " +
+                "                           JOIN indicador i ON i.id_indicador = e.indicador_id_indicador " +
+                "                           JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
+                "                           JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
+                "                           WHERE ae.usuario_id = ?1 AND ae.id_modelo = ?2) " +
+                "GROUP BY cri.id_criterio, cri.nombre, cri.descripcion " +
+                "ORDER BY cri.id_criterio", nativeQuery = true)
+        List<CriteRespProjection> criterioporresp(Long userId, Long idModelo);
   
   
         @Query(value = "SELECT c.id_criterio, c.descripcion, c.nombre, c.visible " +

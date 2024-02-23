@@ -1,13 +1,10 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Actividad;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
-import com.sistema.examenes.projection.ActiCalendarProjection;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
-import com.sistema.examenes.projection.AsignaProjection;
-import com.sistema.examenes.projection.AsignacionEvidenciaProyeccion;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.Historial_Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.UsuarioService;
@@ -17,9 +14,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
-@CrossOrigin(origins = { "*" })
+@CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
-@RequestMapping("/api/asignacionevidencia")
+@RequestMapping("/aseguramiento/api/asignacionevidencia")
 public class Asignacion_Evidencia_controller {
     @Autowired
     Asignacion_Evidencia_Service Service;
@@ -34,9 +31,8 @@ public class Asignacion_Evidencia_controller {
         try {
             r.setVisible(true);
             Asignacion_Evidencia asignacionGuardada = Service.save(r);
-            usuarioAsignador= new Usuario();
             usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
-            System.out.println("Usuario asignador:"+usuarioAsignador.getPersona().getCedula());
+
             nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
             nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
             nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
@@ -44,7 +40,6 @@ public class Asignacion_Evidencia_controller {
             ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
             return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -69,6 +64,16 @@ public class Asignacion_Evidencia_controller {
     public ResponseEntity<List<AsignaProjection>> obtenerListaasig() {
         try {
             return new ResponseEntity<>(Service.listarAsigEvidencia(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listasignacioneviporuser/{usuarioId}")
+    public ResponseEntity<List<AsignaProjection>> obtenerListaAsignacion(@PathVariable("usuarioId") Long usuarioId) {
+        try {
+            List<AsignaProjection> asignaciones = Service.listarAsigEvidenciaPorUsuario(usuarioId);
+            return new ResponseEntity<>(asignaciones, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -100,10 +105,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Actividad actividad) {
-        return Service.delete(id);
-    }
+
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarloginc(@PathVariable Long id) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
@@ -123,7 +125,6 @@ public class Asignacion_Evidencia_controller {
     @PutMapping("/elimasig/{id}/{id_evi}/{id_usuario}/{id_modelo}")
     public ResponseEntity<?> eliminarasig(@PathVariable Long id, @PathVariable Long id_evi, @PathVariable Long id_usuario, @PathVariable Long id_modelo) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
-        System.out.println("Prueba asignacion usuario"+id_usuario+" evidencia "+id_evi+" modelo "+id_modelo);
         if (asignacion_evidencia == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -214,4 +215,22 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
+    @GetMapping("/evidencias/{estado}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado) {
+
+        try {
+            return new ResponseEntity<>(Service.listarEvideByEstado(estado), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @GetMapping("/listaractividad")
+    public ResponseEntity<List<ActivProyection>> listarActividad () {
+        try {
+            return new ResponseEntity<>(Service.listarByActividad(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
