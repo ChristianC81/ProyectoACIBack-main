@@ -76,9 +76,13 @@ public class UsuarioController {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
                 usuarioExistente.setVisible(true);
-                
+                activaroRegistrarRoles(usuarioExistente,rolIds);
                 return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
             }else{
+                // Codificar la contraseña antes de guardar el usuario
+                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+                //Setear Visible para que este activo en el sistema
+                r.setVisible(true);
                 //Se recorre los roles
                 for (Long rol : rolIds) {
                     Rol nRol = rolService.findById(rol);
@@ -88,10 +92,6 @@ public class UsuarioController {
                     usuarioRol.setVisible(true);
                     r.getUsuarioRoles().add(usuarioRol);
                 }
-                // Codificar la contraseña antes de guardar el usuario
-                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
-                //Setear Visible para que este activo en el sistema
-                r.setVisible(true);
                 // Guardar el usuario en la base de datos
                 return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
             }
@@ -106,7 +106,6 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-
                 if (!arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, usuarioExistente.getId())) {
                     // Si no lo ha asignado, realizar la asignación
                     usuarioExistente.setVisible(true);
@@ -171,6 +170,29 @@ public class UsuarioController {
         asigres.setUsuarioResponsable(usuario);
         asigres.setVisible(true);
         asigresService.save(asigres);
+    }
+    private void activaroRegistrarRoles(Usuario usuario,List<Long> rolIds) {
+        if(rolIds!=null) {
+            for (Long idRol : rolIds) {
+                // Verificar si el rol ya está asociado al usuario
+                Rol rolListado = rolService.findById(idRol);
+                UsuarioRol rolUsuarioExistente = userrol.findByUsuarioAndRol(usuario.getId(), rolListado.getRolId());
+                if (rolUsuarioExistente != null) {
+                    rolUsuarioExistente.setVisible(true); // Marcar como visible
+                    userrol.save(rolUsuarioExistente);
+                }else {
+                    // Si el rol no está asociado, entonces asociarlo creando uno nuevo
+                    Rol rol = rolService.findById(idRol);
+                    if (rol != null) {
+                        UsuarioRol nuevoUsuarioRol = new UsuarioRol();
+                        nuevoUsuarioRol.setUsuario(usuario);
+                        nuevoUsuarioRol.setRol(rol);
+                        nuevoUsuarioRol.setVisible(true); // Marcar como visible
+                        userrol.save(nuevoUsuarioRol);
+                    }
+                }
+            }
+        }
     }
     private void registrarSeguimiento(Usuario usuario) {
         SeguimientoUsuario seguimiento = new SeguimientoUsuario();
@@ -347,7 +369,8 @@ public class UsuarioController {
                 // Obtener los registros del usuariorol relacionadas con el usuario
                 List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
                 for (UsuarioRol usuarioconRol : usuarioRols) {
-                    userrol.delete(usuarioconRol.getUsuarioRolId());
+                    usuarioconRol.setVisible(false);
+                    userrol.save(usuarioconRol);
                 }
 
                 // Registrar la acción en el seguimiento de usuarios

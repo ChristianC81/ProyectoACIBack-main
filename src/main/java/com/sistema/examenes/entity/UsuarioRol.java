@@ -11,9 +11,11 @@ public class UsuarioRol {
     private Long usuarioRolId;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol_rolid", unique = true)
     private Rol rol;
 
     // Columna para el eliminado logico no borrar
