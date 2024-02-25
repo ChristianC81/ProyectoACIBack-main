@@ -242,7 +242,16 @@ public class Criterio_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-  
+    @GetMapping("/listCriAdminultimodel/{id}")
+    public ResponseEntity<List<CriterioAdm>> listarCriterioByAdm(@PathVariable("id") Long id) {
+        try {
+            List<CriterioAdm> criterios = Service.criteriosadmultimomodelo(id);
+            return new ResponseEntity<>(criterios, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/criteriosporusuarioymodelo/{usuarioId}/{modeloId}")
     public ResponseEntity<List<Criterio>> obtenerCriteriosPorUsuarioYModelo(
             @PathVariable("usuarioId") Long usuarioId,

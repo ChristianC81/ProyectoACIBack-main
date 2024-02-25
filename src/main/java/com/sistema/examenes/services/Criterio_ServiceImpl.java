@@ -107,5 +107,9 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     public List<CriteProjection> listarcriusers(Long id_usuariorol, Long id_modelo) {
         return repository.listarcriusers(id_usuariorol, id_modelo);
     }
+    @Override
+    public List<CriterioAdm> criteriosadmultimomodelo(Long userId) {
+        return repository.criteriosadmultimomodelo(userId);
+    }
 
 }

@@ -187,4 +187,15 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
                 ") GROUP BY ur.usuariorolid, ro.rolnombre,criterio.nombre", nativeQuery = true)
         List<CriteProjection> listarcriusers(Long id_usuariorol, Long id_modelo);
 
+        @Query(value = "SELECT c.id_criterio, " +
+                "       c.nombre AS nombre_criterio, " +
+                "       c.descripcion AS descripcion_criterio " +
+                "FROM criterio c " +
+                "JOIN asignacion_admin aa ON aa.criterio_id_criterio = c.id_criterio " +
+                "JOIN modelo m ON m.id_modelo = aa.id_modelo " +
+                "WHERE aa.visible = true " +
+                "  AND aa.id_modelo = (SELECT MAX(m2.id_modelo) FROM modelo m2) " +
+                "  AND aa.usuario_id = ?1", nativeQuery = true)
+        List<CriterioAdm> criteriosadmultimomodelo(Long userId);
+
 }

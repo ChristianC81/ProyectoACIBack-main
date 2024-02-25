@@ -18,4 +18,5 @@ public interface UsuarioRolRepository extends JpaRepository<UsuarioRol,Long> {
 
     @Query(value = "SELECT ur.* FROM UsuarioRol ur JOIN usuarios u ON u.id = ur.usuario_id WHERE ur.usuario_id = :usuarioId AND ur.rol_rolid= :rolId AND  u.visible=true", nativeQuery = true)
     UsuarioRol findByUsuarioAndRol(Long usuarioId, Long rolId);
+
 }
