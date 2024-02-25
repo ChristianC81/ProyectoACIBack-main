@@ -224,6 +224,14 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/evidenciasAdm/{estado}/{id_admin}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstadoAdm(@PathVariable("estado") String estado, @PathVariable("id_admin") Long id_admin) {
+        try {
+            return new ResponseEntity<>(Service.listarEvideByEstadoAdm(estado,id_admin), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @GetMapping("/listaractividad")
     public ResponseEntity<List<ActivProyection>> listarActividad () {

@@ -104,6 +104,11 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
         return repository.listarEvideByEstado(estado);
     }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(String estado, Long id_admin) {
+        return repository.listarEvideByEstadoAdm(estado,id_admin);
+    }
     @Override
     public List<ActivProyection> listarByActividad() {
         return repository.listarByActividad();
