@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
@@ -27,18 +29,25 @@ public class Asignacion_Evidencia_controller {
     Historial_Asignacion_Evidencia nuevoRegistroAsignacion;
     Usuario usuarioAsignador;
     @PostMapping("/crear")
-    public ResponseEntity<Asignacion_Evidencia> crear(@RequestBody Asignacion_Evidencia r) {
+    public ResponseEntity<List<Asignacion_Evidencia>> crear(@RequestBody List<Asignacion_Evidencia> evidencias) {
         try {
-            r.setVisible(true);
-            Asignacion_Evidencia asignacionGuardada = Service.save(r);
-            usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
+            List<Asignacion_Evidencia> asignacionesGuardadas = new ArrayList<>();
 
-            nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
-            nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
-            nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
-            nuevoRegistroAsignacion.setVisible(true);
-            ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
-            return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
+            for (Asignacion_Evidencia evidencia : evidencias) {
+                evidencia.setVisible(true);
+                Asignacion_Evidencia asignacionGuardada = Service.save(evidencia);
+                usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
+
+                nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
+                nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
+                nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
+                nuevoRegistroAsignacion.setVisible(true);
+                ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
+
+                asignacionesGuardadas.add(asignacionGuardada);
+            }
+
+            return new ResponseEntity<>(asignacionesGuardadas, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
