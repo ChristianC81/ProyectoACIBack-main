@@ -18,6 +18,28 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "ORDER BY e.descripcion ASC", nativeQuery = true)
     public List<Evidencia> evidenciaUsuario(String username);
 
+    @Query(value = "SELECT e.* " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
+            "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +
+            "JOIN persona pe_resp ON pe_resp.id_persona = u_resp.persona_id_persona " +
+            "JOIN usuarios u_asig ON u_asig.id = ae.id_usuario_asignador " +
+            "JOIN persona pe_asig ON pe_asig.id_persona = u_asig.persona_id_persona " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
+            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador " +
+            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
+            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "WHERE ae.visible = true " +
+            "AND aa.usuario_id = :usuarioId " +
+            "AND aa.visible = true " +
+            "AND u.username = :username " +
+            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador", nativeQuery = true)
+    List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId);
+
     @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, e.descripcion, e.estado, ae.id_asignacion_evidencia, " +
             "(SELECT count(id_archivo) from archivo where id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS countarchivos " +
             "FROM evidencia e " +
