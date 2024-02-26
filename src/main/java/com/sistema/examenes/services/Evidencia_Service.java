@@ -9,6 +9,9 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     public List<Evidencia> listar();
 
     public List<Evidencia> evidenciaUsuario(String username);
+
+    public List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId);
+
     public List<Evidencia> listarEvidenciaAsigna(Long idUsuario) ;
 
     List<Evidencia> listarEvidenciaPorIndicador(Long id_indicador);

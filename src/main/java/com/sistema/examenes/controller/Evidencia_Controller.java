@@ -111,6 +111,17 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}")
+    public ResponseEntity<List<Evidencia>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
+        try {
+            return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping("/evidenuser/{username}")
     public ResponseEntity<List<EvidenciaProjection>> evidenciauser(@PathVariable("username") String username) {
         try {
