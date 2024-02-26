@@ -98,10 +98,12 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "WHERE a.usuario_id = :usuarioId AND a.visible = true AND LOWER(e.estado)='pendiente'", nativeQuery = true)
     List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId);
 
-    @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia " +
+    @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia, de.observacion, " +
+            "(SELECT count(id_archivo) from archivo where id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS countarchivos " +
             "FROM asignacion_evidencia ae " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "LEFT JOIN detalle_evaluacion de ON e.id_evidencia = de.evidencia_id_evidencia " +
             "WHERE u.username = :username AND ae.evidencia_id_evidencia=:id_evidencia AND ae.visible=true", nativeQuery = true)
     List<Object[]> listarAsigEviUser(String username, Long id_evidencia);
 
@@ -126,9 +128,35 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
             "WHERE (LOWER(e.estado) = LOWER(:estado)) " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)" +
+            "AND u.visible= true  AND ae.visible=true AND e.visible=true " +
             "ORDER BY e.id_evidencia DESC", nativeQuery = true)
     List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
+
+    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, " +
+            "s.nombre AS nombre_subcriterio, " +
+            "i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, " +
+            "ae.fecha_fin, " +
+            "ae.fecha_inicio, " +
+            "e.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE LOWER(e.estado) = LOWER(:estado) " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "AND u.visible = true " +
+            "AND ae.visible = true " +
+            "AND e.visible = true " +
+            "AND ae.id_usuario_asignador = :id_admin " +
+            "ORDER BY e.id_evidencia DESC", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(@Param("estado") String estado, @Param("id_admin") Long id_admin);
 
     @Query(value = "SELECT DISTINCT u.id AS idpersona, per.primer_nombre, per.primer_apellido, COALESCE(per.correo, 'Sin correo') AS percorreo " +
             "FROM asignacion_evidencia ac " +
@@ -140,4 +168,7 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
             "WHERE mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
     List<ActivProyection>listarByActividad();
+
+    @Query(value = "SELECT count(id_archivo) FROM archivo WHERE id_asignacion_evidencia = ?1 AND visible = true", nativeQuery = true)
+    int countArchivosByIdAsigEv(Long idAsignacionEvidencia);
 }

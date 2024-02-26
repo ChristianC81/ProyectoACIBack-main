@@ -31,6 +31,9 @@ public class UsuarioController {
     @Autowired
     private Asignacion_Admin_Service asigadmservice;
     @Autowired
+    Asignacion_Responsable_Service ServiceResponsable;
+
+    @Autowired
     private Modelo_Service modeloService;
 
     @Autowired
@@ -384,6 +387,34 @@ public class UsuarioController {
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+    }
+
+    @PutMapping("/eliminarlogicResp/{id_usuarioResponsable}")
+    public ResponseEntity<?> eliminarlogicResp(@PathVariable Long id_usuarioResponsable) {
+        Asignacion_Responsable a = ServiceResponsable.asignacionByIdUsuarioResponsable(id_usuarioResponsable);
+        if (a == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                //Usuario u = usuarioService.findById(id_usuarioResponsable);
+                //u.setVisible(false);
+                a.setVisible(false);
+
+                // lista de las asignaciones
+                List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id_usuarioResponsable);
+                for (Asignacion_Evidencia asignacion : asignaciones) {
+                    asignacion.setVisible(false);
+                    // Guardar los cambios en cada asignación de evidencia
+                    asigeviservice.save(asignacion);
+                }
+                //usuarioService.save(u);
+                return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.NO_CONTENT);
+            } catch (Exception e) {
+
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
         }
     }
 

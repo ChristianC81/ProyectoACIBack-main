@@ -80,6 +80,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
             ae.setFecha_fin((Date) fila[3]);
             ae.setEstado_evidencia((String) fila[4]);
             ae.setId_evidencia(((BigInteger) fila[5]).longValue());
+            ae.setObservacion((String) fila[6]);
+            ae.setCountarchivos(((BigInteger) fila[7]).intValue());
             asignaciones.add(ae);
         }
         return asignaciones;
@@ -104,9 +106,19 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
         return repository.listarEvideByEstado(estado);
     }
+
+    @Override
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(String estado, Long id_admin) {
+        return repository.listarEvideByEstadoAdm(estado,id_admin);
+    }
     @Override
     public List<ActivProyection> listarByActividad() {
         return repository.listarByActividad();
+    }
+
+    @Override
+    public int countArchivosByIdAsigEv(Long idAsignacionEv) {
+        return repository.countArchivosByIdAsigEv(idAsignacionEv);
     }
 
 }

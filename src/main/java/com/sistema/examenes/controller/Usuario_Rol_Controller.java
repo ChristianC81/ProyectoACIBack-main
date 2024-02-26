@@ -12,8 +12,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/aseguramiento/api/usuariorol")
@@ -39,7 +41,7 @@ public class Usuario_Rol_Controller {
         public ResponseEntity<List<Rol>> listaRolesPorUsername( @PathVariable String username) {
         try {
             if(!username.isEmpty()){
-                return new ResponseEntity<>(rolService.listaRolesPorUsername(username), HttpStatus.OK);
+                return new ResponseEntity<>(rolService.listaRolesPorUsername(username.trim()), HttpStatus.OK);
             }else{
                 return new ResponseEntity<>(HttpStatus.NOT_FOUND);
             }
@@ -72,18 +74,20 @@ public class Usuario_Rol_Controller {
             // Buscar el usuarioRol existente por su ID
             UsuarioRol usuarioRolExistente = usuarioService.findById(usuarioRolId);
             if (usuarioRolExistente != null) {
-                String nuevaContraseña = usuarioRol.getUsuario().getPassword();
+                String nuevaContraseña =  usuarioRol.getUsuario().getPassword(); // La contraseña proporcionada por el usuario
+                String contraseñaAlmacenada = usuarioRolExistente.getUsuario().getPassword(); // La contraseña almacenada en la base de datos
                 // Actualizar la contraseña en el usuario existente
-                if (!nuevaContraseña.equals(usuarioRolExistente.getUsuario().getPassword())) {
-                        usuarioRolExistente.getUsuario().setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
+                    usuarioRolExistente.getUsuario().setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
                 }
-                System.out.println("ROLES "+usuarioRolExistente.getUsuario().getUsuarioRoles().toString());
-                // Marcar todos los roles existentes como no visibles (eliminados lógicamente)
+
+                 //Marcar todos los roles existentes como no visibles (eliminados lógicamente)
                 List<UsuarioRol> usuarioRols = usuarioService.findByUsuarios_UsuarioId(usuarioRolExistente.getUsuario().getId());
                 for (UsuarioRol rolUsuario : usuarioRols) {
                         rolUsuario.setVisible(false);
                         usuarioService.save(rolUsuario);
                 }
+
                 // Asociar los nuevos roles proporcionados en la solicitud
                 for (Long idRol : rolIds) {
                     // Verificar si el rol ya está asociado al usuario
@@ -103,8 +107,9 @@ public class Usuario_Rol_Controller {
                             usuarioService.save(nuevoUsuarioRol);
                         }
                     }
-                }
+                }   
                 // Devolver el usuarioRol actualizado
+                usuarioService.save(usuarioRolExistente);
                 return new ResponseEntity<>(usuarioRolExistente, HttpStatus.OK);
             }
             // Si no se encuentra el usuarioRol

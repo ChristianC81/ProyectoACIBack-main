@@ -12,6 +12,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
@@ -27,18 +29,27 @@ public class Asignacion_Evidencia_controller {
     Historial_Asignacion_Evidencia nuevoRegistroAsignacion;
     Usuario usuarioAsignador;
     @PostMapping("/crear")
-    public ResponseEntity<Asignacion_Evidencia> crear(@RequestBody Asignacion_Evidencia r) {
+    public ResponseEntity<List<Asignacion_Evidencia>> crear(@RequestBody List<Asignacion_Evidencia> evidencias) {
         try {
-            r.setVisible(true);
-            Asignacion_Evidencia asignacionGuardada = Service.save(r);
-            usuarioAsignador= usuarioService.findById(r.getId_usuario_asignador());
 
-            nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
-            nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
-            nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
-            nuevoRegistroAsignacion.setVisible(true);
-            ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
-            return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
+            List<Asignacion_Evidencia> asignacionesGuardadas = new ArrayList<>();
+
+            for (Asignacion_Evidencia evidencia : evidencias) {
+                evidencia.setVisible(true);
+                evidencia.setArchsubido(false);
+                Asignacion_Evidencia asignacionGuardada = Service.save(evidencia);
+                usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
+
+                nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
+                nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
+                nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
+                nuevoRegistroAsignacion.setVisible(true);
+                ServiceHistorialAsignacion.save(nuevoRegistroAsignacion);
+
+                asignacionesGuardadas.add(asignacionGuardada);
+            }
+
+            return new ResponseEntity<>(asignacionesGuardadas, HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -191,6 +202,27 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
+    @PutMapping("/editarArchSubido/{id}/{estado}")
+    public ResponseEntity<Asignacion_Evidencia> editarArchSubido(@PathVariable Long id, @PathVariable boolean estado) {
+        Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
+        if (asignacion_evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                // Aquí actualizamos el estado de archsubido a true
+                asignacion_evidencia.setArchsubido(estado);
+                return new ResponseEntity<>(Service.save(asignacion_evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @GetMapping("/countArchivos/{idAsignacionEv}")
+    public int countArchivos(@PathVariable("idAsignacionEv") Long idAsignacionEv) {
+        return Service.countArchivosByIdAsigEv(idAsignacionEv);
+    }
+
     @GetMapping("/listarAsigEviUser/{username}/{id_evidencia}")
     public List<Asignacion_EvidenciaDTO> listarAsigEviUser(@PathVariable("username") String username,@PathVariable("id_evidencia") Long id_evidencia) {
         return Service.listarAsigEviUser(username,id_evidencia);
@@ -220,6 +252,14 @@ public class Asignacion_Evidencia_controller {
 
         try {
             return new ResponseEntity<>(Service.listarEvideByEstado(estado), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/evidenciasAdm/{estado}/{id_admin}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstadoAdm(@PathVariable("estado") String estado, @PathVariable("id_admin") Long id_admin) {
+        try {
+            return new ResponseEntity<>(Service.listarEvideByEstadoAdm(estado,id_admin), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
