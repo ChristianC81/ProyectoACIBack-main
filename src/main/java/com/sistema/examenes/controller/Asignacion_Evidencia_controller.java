@@ -31,10 +31,12 @@ public class Asignacion_Evidencia_controller {
     @PostMapping("/crear")
     public ResponseEntity<List<Asignacion_Evidencia>> crear(@RequestBody List<Asignacion_Evidencia> evidencias) {
         try {
+
             List<Asignacion_Evidencia> asignacionesGuardadas = new ArrayList<>();
 
             for (Asignacion_Evidencia evidencia : evidencias) {
                 evidencia.setVisible(true);
+                evidencia.setArchsubido(false);
                 Asignacion_Evidencia asignacionGuardada = Service.save(evidencia);
                 usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
 
@@ -198,6 +200,27 @@ public class Asignacion_Evidencia_controller {
             }
 
         }
+    }
+
+    @PutMapping("/editarArchSubido/{id}/{estado}")
+    public ResponseEntity<Asignacion_Evidencia> editarArchSubido(@PathVariable Long id, @PathVariable boolean estado) {
+        Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
+        if (asignacion_evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                // Aquí actualizamos el estado de archsubido a true
+                asignacion_evidencia.setArchsubido(estado);
+                return new ResponseEntity<>(Service.save(asignacion_evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
+    @GetMapping("/countArchivos/{idAsignacionEv}")
+    public int countArchivos(@PathVariable("idAsignacionEv") Long idAsignacionEv) {
+        return Service.countArchivosByIdAsigEv(idAsignacionEv);
     }
 
     @GetMapping("/listarAsigEviUser/{username}/{id_evidencia}")

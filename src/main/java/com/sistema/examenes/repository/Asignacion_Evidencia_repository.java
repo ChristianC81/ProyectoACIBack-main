@@ -98,10 +98,12 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "WHERE a.usuario_id = :usuarioId AND a.visible = true AND LOWER(e.estado)='pendiente'", nativeQuery = true)
     List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId);
 
-    @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia " +
+    @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia, de.observacion, " +
+            "(SELECT count(id_archivo) from archivo where id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS countarchivos " +
             "FROM asignacion_evidencia ae " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "LEFT JOIN detalle_evaluacion de ON e.id_evidencia = de.evidencia_id_evidencia " +
             "WHERE u.username = :username AND ae.evidencia_id_evidencia=:id_evidencia AND ae.visible=true", nativeQuery = true)
     List<Object[]> listarAsigEviUser(String username, Long id_evidencia);
 
@@ -166,4 +168,7 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
             "WHERE mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
     List<ActivProyection>listarByActividad();
+
+    @Query(value = "SELECT count(id_archivo) FROM archivo WHERE id_asignacion_evidencia = ?1 AND visible = true", nativeQuery = true)
+    int countArchivosByIdAsigEv(Long idAsignacionEvidencia);
 }
