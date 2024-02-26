@@ -128,9 +128,35 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
             "WHERE (LOWER(e.estado) = LOWER(:estado)) " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)" +
+            "AND u.visible= true  AND ae.visible=true AND e.visible=true " +
             "ORDER BY e.id_evidencia DESC", nativeQuery = true)
     List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
+
+    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, " +
+            "s.nombre AS nombre_subcriterio, " +
+            "i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, " +
+            "ae.fecha_fin, " +
+            "ae.fecha_inicio, " +
+            "e.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE LOWER(e.estado) = LOWER(:estado) " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "AND u.visible = true " +
+            "AND ae.visible = true " +
+            "AND e.visible = true " +
+            "AND ae.id_usuario_asignador = :id_admin " +
+            "ORDER BY e.id_evidencia DESC", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(@Param("estado") String estado, @Param("id_admin") Long id_admin);
 
     @Query(value = "SELECT DISTINCT u.id AS idpersona, per.primer_nombre, per.primer_apellido, COALESCE(per.correo, 'Sin correo') AS percorreo " +
             "FROM asignacion_evidencia ac " +
