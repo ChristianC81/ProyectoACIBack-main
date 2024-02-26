@@ -21,6 +21,9 @@ public class Asignacion_Evidencia implements Serializable {
     @Column(name = "id_asignacion_evidencia")
     private Long id_asignacion_evidencia;
 
+    @Column (name = "archsubido")
+    private boolean archsubido;
+
     private boolean visible;
     @Column(name = "id_modelo")
     private Long id_modelo;
