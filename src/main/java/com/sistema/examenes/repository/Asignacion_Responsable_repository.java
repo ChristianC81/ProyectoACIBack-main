@@ -64,6 +64,7 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "        )) " +
             "    ) " +
             "    AND u.visible = true " +
+            "    AND asigres.visible = true "+
             "    AND ( " +
             "        (asigres.usuarioadmin_id IS NULL AND ae.count_evidencias IS NOT NULL) " +
             "        OR " +

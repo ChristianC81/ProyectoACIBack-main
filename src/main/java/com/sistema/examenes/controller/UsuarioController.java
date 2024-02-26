@@ -397,8 +397,8 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
-                Usuario u = usuarioService.findById(id_usuarioResponsable);
-                u.setVisible(false);
+                //Usuario u = usuarioService.findById(id_usuarioResponsable);
+                //u.setVisible(false);
                 a.setVisible(false);
 
                 // lista de las asignaciones
@@ -408,7 +408,7 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigeviservice.save(asignacion);
                 }
-                usuarioService.save(u);
+                //usuarioService.save(u);
                 return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.NO_CONTENT);
             } catch (Exception e) {
 
