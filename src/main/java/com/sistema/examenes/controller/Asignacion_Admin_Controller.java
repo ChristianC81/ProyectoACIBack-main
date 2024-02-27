@@ -281,5 +281,25 @@ public class Asignacion_Admin_Controller {
         }
     }
 
+    @GetMapping("/actividadescumplidas")
+    public ResponseEntity<List<ActivProyection>> actividadcumplidas() {
+
+        try {
+            return new ResponseEntity<>(Service.listarActividadCumplidas(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/actividadusuario/{id}")
+    public ResponseEntity<List<ActivProyection>> actividadusuario(@PathVariable("id")Long id) {
+        try {
+            return new ResponseEntity<>(Service.actividadUsu(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
+
 
 }

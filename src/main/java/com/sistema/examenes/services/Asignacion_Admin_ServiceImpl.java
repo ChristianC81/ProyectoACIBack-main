@@ -92,5 +92,14 @@ public class Asignacion_Admin_ServiceImpl extends GenericServiceImpl<Asignacion_
         return repository.actividadCont(id_modelo);
 
     }
+    @Override
+    public List<ActivProyection> listarActividadCumplidas() {
+        return  repository.listarActividadCumplidas();
+    }
+    @Override
+    public List<ActivProyection> actividadUsu(Long id) {
+        return  repository.actividadUsu(id);
+    }
+
 
 }

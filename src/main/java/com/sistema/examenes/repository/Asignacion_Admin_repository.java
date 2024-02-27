@@ -146,7 +146,26 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "GROUP BY per.primer_nombre, per.primer_apellido;", nativeQuery = true)
     List<ActivProyection> actividadCont(Long id_modelo);
 
+    @Query(value = "SELECT distinct u.id as idusuario, ac.nombre as nombre, ac.fecha_inicio as fechainicio, ac.fecha_fin as fechafin, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable\n" +
+            "FROM actividad ac JOIN evidencia e \n" +
+            "ON ac.id_evidencia = e.id_evidencia\n" +
+            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia\n" +
+            "JOIN usuarios u ON u.id = ae.usuario_id\n" +
+            "JOIN persona pe ON pe.id_persona = u.persona_id_persona\n" +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador \n" +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador \n" +
+            "WHERE ac.estado = 'Aprobada' AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<ActivProyection> listarActividadCumplidas();
 
+
+    @Query(value = "SELECT distinct ac.nombre as nombreactividad,  ac.fecha_inicio as inicio, ac.fecha_fin as fin \n" +
+            "FROM actividad ac JOIN evidencia ev ON ac.id_evidencia=ev.id_evidencia \n" +
+            "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador \n" +
+            "JOIN asignacion_indicador po ON po.indicador_id_indicador=i.id_indicador \n" +
+            "JOIN modelo mo ON mo.id_modelo=po.modelo_id_modelo WHERE \n" +
+            "mo.id_modelo=(SELECT MAX(id_modelo) FROM modelo) \n" +
+            "AND ac.visible=true AND ac.usuario_id=:id", nativeQuery = true)
+    List<ActivProyection> actividadUsu(Long id);
 
 
 }
