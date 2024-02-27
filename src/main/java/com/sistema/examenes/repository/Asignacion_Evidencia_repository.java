@@ -95,7 +95,7 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
     @Query(value = "SELECT e.descripcion, a.fecha_inicio, a.fecha_fin " +
             "FROM asignacion_evidencia a " +
             "JOIN evidencia e ON e.id_evidencia = a.evidencia_id_evidencia " +
-            "WHERE a.usuario_id = :usuarioId AND a.visible = true AND LOWER(e.estado)='pendiente'", nativeQuery = true)
+            "WHERE a.usuario_id = :usuarioId AND a.visible = true AND LOWER(e.estado)='pendiente' ", nativeQuery = true)
     List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId);
 
     @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia, de.observacion, " +
