@@ -59,14 +59,14 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
         @Query(value = "SELECT c.nombre AS Nomcriterio, " +
                 "CAST(SUM(i.peso) AS NUMERIC(10, 2)) AS Ponderacio, " +
-                "CAST(SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS VlObtenido, " +
-                "CAST(SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS Vlobtener " +
+                "CAST(SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 3)) AS VlObtenido, " +
+                "CAST(SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 3)) AS Vlobtener " +
                 "FROM indicador i " +
                 "JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
                 "JOIN subcriterio sb ON i.subcriterio_id_subcriterio = sb.id_subcriterio " +
                 "JOIN criterio c ON sb.id_criterio = c.id_criterio " +
                 "JOIN modelo m ON m.id_modelo = ai.modelo_id_modelo " +
-                "WHERE m.visible = true AND ai.modelo_id_modelo = ?1 " +
+                "WHERE m.visible = true AND i.visible=true AND ai.modelo_id_modelo = ?1 " +
                 "GROUP BY c.nombre, c.id_criterio " +
                 "ORDER BY c.id_criterio", nativeQuery = true)
         List<ValoresProjection> listarvalores(Long id_modelo);
