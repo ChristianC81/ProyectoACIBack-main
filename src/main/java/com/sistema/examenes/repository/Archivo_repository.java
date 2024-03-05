@@ -2,6 +2,7 @@ package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.projection.ArchivoProjection;
+import com.sistema.examenes.projection.ArchivoResProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -11,13 +12,17 @@ import java.util.List;
 public interface Archivo_repository extends JpaRepository<Archivo_s, Long> {
     @Query("SELECT a FROM Archivo_s a WHERE a.visible = true")
     List<Archivo_s> listararchivo();
-    @Query("SELECT ar FROM Archivo_s ar " +
+    @Query("SELECT ar.id_archivo AS id_archivo," +
+            "ar.enlace AS enlace, " +
+            "ar.nombre AS nombre, " +
+            "ar.descripcion AS descripcion " +
+            "FROM Archivo_s ar " +
             "JOIN ar.actividad asig " +
             "JOIN asig.usuario u " +
-            "WHERE u.username = :username AND ar.visible = true")
-    public List<Archivo_s> listararchivouser(@Param("username") String username);
+            "WHERE u.username = :username AND ar.visible = true AND asig.id_asignacion_evidencia= :id_asignacion_evi")
+    List<ArchivoResProjection> listararchivouser(@Param("username") String username, @Param("id_asignacion_evi") Long id_asignacion_evi);
     @Query("SELECT ar FROM Archivo_s ar WHERE ar.visible = true AND ar.actividad.id_asignacion_evidencia = :idActividad")
-    public List<Archivo_s> listararchivoActividad(@Param("idActividad") Long idActividad);
+    List<Archivo_s> listararchivoActividad(@Param("idActividad") Long idActividad);
     @Query(value = "SELECT u.id AS idper, " +
             "per.primer_nombre || ' ' || per.primer_apellido AS resp, " +
             "COALESCE(per.correo, 'Sin correo') AS correo, " +
