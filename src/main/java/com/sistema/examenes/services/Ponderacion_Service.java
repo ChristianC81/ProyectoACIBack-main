@@ -9,7 +9,7 @@ import java.util.List;
 public interface Ponderacion_Service extends GenericService<Ponderacion, Long> {
     public List<Ponderacion> listar();
 
-    public List<Ponderacion> listarPonderacionPorModelo(Long id_modelo);
+    //public List<Ponderacion> listarPonderacionPorModelo(Long id_modelo);
     public List<PonderacionProjection> listarPonderacionModelo(Long id_modelo);
     public List<Ponderacion> listarPonderacionPorFecha(String fecha,Long contador);
 
