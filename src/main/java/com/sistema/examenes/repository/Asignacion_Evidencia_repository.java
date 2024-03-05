@@ -9,28 +9,34 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacion_Evidencia, Long> {
-    @Query(value = "SELECT ae.* from asignacion_evidencia ae JOIN evidencia e ON e.id_evidencia=ae.evidencia_id_evidencia AND ae.visible =true\n" +
-            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador\n" +
-            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador\n" +
-            "JOIN modelo mo ON mo.id_modelo=po.modelo_id_modelo\n" +
-            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) \n" +
-            "WHERE ae.visible=true ORDER BY ae.usuario_id,ae.evidencia_id_evidencia;",nativeQuery = true)
+    @Query("SELECT ae FROM Asignacion_Evidencia ae " +
+            "JOIN ae.evidencia e " +
+            "JOIN e.indicador i " +
+            "JOIN i.lista_asignacion po " +
+            "JOIN po.modelo mo " +
+            "WHERE ae.visible = true " +
+            "AND mo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m) " +
+            "ORDER BY ae.usuario.id, ae.evidencia.id_evidencia")
     List<Asignacion_Evidencia> listarAsignacionEvidencia();
-    @Query(value = "SELECT * FROM asignacion_evidencia " +
-            "WHERE evidencia_id_evidencia=:id_evidencia AND visible=true AND id_modelo=:id_modelo ",nativeQuery = true)
-    Asignacion_Evidencia fechaactividades(Long id_evidencia,Long id_modelo);
-    @Query(value = "SELECT ae.id_asignacion_evidencia AS idevid, e.id_evidencia AS ideviden, cri.nombre AS crite,s.nombre AS subcrite,i.nombre AS indi, " +
-            "pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido AS respon, e.descripcion AS descev,ae.fecha_inicio AS ini, ae.fecha_fin AS fini " +
-            "FROM asignacion_evidencia ae JOIN evidencia e ON e.id_evidencia=ae.evidencia_id_evidencia AND ae.visible =true\n" +
-            "JOIN usuarios u ON u.id=ae.usuario_id \n" +
-            "JOIN persona pe ON pe.id_persona=u.persona_id_persona \n" +
-            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador \n" +
-            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio \n" +
-            "JOIN criterio cri ON cri.id_criterio = s.id_criterio \n" +
-            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador\n" +
-            "JOIN modelo mo ON mo.id_modelo=po.modelo_id_modelo\n" +
-            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) \n" +
-            "WHERE ae.visible=true ORDER BY ae.usuario_id,cri.id_criterio, s.id_subcriterio,i.id_indicador;",nativeQuery = true)
+    @Query("SELECT ae FROM Asignacion_Evidencia ae " +
+            "WHERE ae.evidencia.id_evidencia = :id_evidencia " +
+            "AND ae.visible = true " +
+            "AND ae.id_modelo = :id_modelo")
+    Asignacion_Evidencia fechaactividades(Long id_evidencia, Long id_modelo);
+    @Query("SELECT ae.id_asignacion_evidencia AS idevid, e.id_evidencia AS ideviden, cri.nombre AS crite, s.nombre AS subcrite, i.nombre AS indi, " +
+            "CONCAT(pe.primer_nombre, ' ', pe.segundo_nombre, ' ', pe.primer_apellido, ' ', pe.segundo_apellido) AS respon, e.descripcion AS descev, ae.fecha_inicio AS ini, ae.fecha_fin AS fini " +
+            "FROM Asignacion_Evidencia ae " +
+            "JOIN ae.evidencia e " +
+            "JOIN ae.usuario u " +
+            "JOIN u.persona pe " +
+            "JOIN e.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cri " +
+            "JOIN i.lista_asignacion po " +
+            "JOIN po.modelo mo " +
+            "WHERE ae.visible = true " +
+            "AND mo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m) " +
+            "ORDER BY u.id, cri.id_criterio, s.id_subcriterio, i.id_indicador")
     List<AsignaProjection> listarAsigEvidencia();
 
     @Query(value = "SELECT ae.id_asignacion_evidencia AS idevid, " +
