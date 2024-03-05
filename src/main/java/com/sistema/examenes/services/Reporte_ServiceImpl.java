@@ -15,8 +15,8 @@ public class Reporte_ServiceImpl extends GenericServiceImpl<Reporte, Long> imple
     public CrudRepository<Reporte, Long > getDao() {
         return repository;
     }
-    @Override
+  /*  @Override
     public List<Reporte> listar() {
         return repository.listarReporte();
-    }
+    }   */
 }
