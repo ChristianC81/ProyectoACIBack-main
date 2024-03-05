@@ -10,7 +10,7 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Admin, Long> {
-    @Query(value = "SELECT * from asignacion_admin where visible =true", nativeQuery = true)
+    @Query("SELECT aa FROM Asignacion_Admin aa WHERE aa.visible = true")
     List<Asignacion_Admin> listarAsignacion_Admin();
     @Query(value = "SELECT DISTINCT u.id as enc, per.primer_nombre||' '||per.primer_apellido as nombrescri, cri.nombre as actividasi " +
             "FROM asignacion_admin aa JOIN usuarios u ON aa.usuario_id=u.id " +
@@ -23,13 +23,25 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "WHERE aa.visible=CAST(:veri AS BOOLEAN) AND aa.id_modelo=:id_modelo ORDER BY u.id;", nativeQuery = true)
     List<AsignacionProjection> asignacionAdmin(Long id_modelo, String veri);
 
-    @Query(value = "SELECT * from asignacion_admin where usuario_id = ?1 and id_modelo = ?2 and visible =true ", nativeQuery = true)
-    Asignacion_Admin listarAsignacion_AdminPorUsuario(Long id_usuario,Long id_modelo);
-    @Query(value = "SELECT * from asignacion_admin where criterio_id_criterio = ?1 and id_modelo = ?2 AND visible=true", nativeQuery = true)
+    @Query("SELECT aa FROM Asignacion_Admin aa " +
+            "WHERE aa.usuario.id = :id_usuario " +
+            "AND aa.id_modelo.id_modelo = :id_modelo " +
+            "AND aa.visible = true")
+    Asignacion_Admin listarAsignacion_AdminPorUsuario(Long id_usuario, Long id_modelo);
+    @Query("SELECT aa FROM Asignacion_Admin aa " +
+            "JOIN aa.criterio c " +
+            "WHERE c.id_criterio = :id_criterio " +
+            "AND aa.id_modelo.id_modelo = :id_modelo " +
+            "AND aa.visible = true")
     List<Asignacion_Admin> listarAsignacion_AdminPorUsuarioCriterio(Long id_criterio, Long id_modelo);
 
-    @Query(value = "SELECT * from asignacion_admin where criterio_id_criterio = ?1 and id_modelo = ?2 and usuario_id = ?3", nativeQuery = true)
-    Asignacion_Admin asignacion_existente(Long id_criterio, Long id_modelo,Long id_usuario);
+    @Query("SELECT aa FROM Asignacion_Admin aa " +
+            "WHERE aa.criterio.id_criterio = :id_criterio " +
+            "AND aa.id_modelo.id_modelo = :id_modelo " +
+            "AND aa.usuario.id = :id_usuario")
+    Asignacion_Admin asignacion_existente(Long id_criterio, Long id_modelo, Long id_usuario);
+
+    //no se utiliza
     @Query(value = "SELECT per.primer_nombre ||' '|| per.segundo_nombre||' '||per.primer_apellido||' '||per.segundo_apellido AS nombreaa FROM persona per\n" +
             "JOIN usuarios u ON u.persona_id_persona=per.id_persona\n" +
             "JOIN asignacion_admin aa ON aa.usuario_id=u.id AND aa.visible=true\n" +
@@ -81,7 +93,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
 
     List<Asignacion_Admin> findAsignacion_AdminByUsuario_Id(Long id_usuario);
 
-    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS encargado, " +
+    @Query("SELECT CONCAT(pe.primer_nombre, ' ', pe.primer_apellido) AS encargado, " +
             "ac.fecha_inicio AS inicio, " +
             "cr.nombre AS criterio, " +
             "s.nombre AS subcriterio, " +
@@ -90,23 +102,25 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "ar.enlace AS enlace, " +
             "ar.nombre AS nomb, " +
             "ev.descripcion AS evidencia " +
-            "FROM asignacion_evidencia ac " +
-            "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia AND ac.visible = true " +
-            "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador AND i.visible = true " +
-            "JOIN asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :id_modelo " +
-            "JOIN modelo mo ON mo.id_modelo = ai.modelo_id_modelo " +
-            "JOIN usuarios u ON u.id = ac.usuario_id " +
-            "LEFT JOIN archivo ar ON ar.id_asignacion_evidencia = ac.id_asignacion_evidencia AND ar.visible = true " +
-            "JOIN persona pe ON pe.id_persona = u.persona_id_persona " +
-            "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
-            "JOIN criterio cr ON cr.id_criterio = s.id_criterio " +
+            "FROM Asignacion_Evidencia ac " +
+            "JOIN ac.evidencia ev " +
+            "JOIN ev.indicador i " +
+            "JOIN i.lista_asignacion ai " +
+            "JOIN ai.modelo mo " +
+            "JOIN ac.usuario u " +
+            "LEFT JOIN ac.lista_archivo ar " +
+            "JOIN u.persona pe " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cr " +
             "WHERE ac.fecha_inicio BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND ac.fecha_fin BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND LOWER(ev.estado) = 'rechazada' " +
-            "AND ac.visible = true", nativeQuery = true)
+            "AND ac.visible = true " +
+            "AND ai.visible = true " +
+            "AND mo.id_modelo = :id_modelo")
     List<ActivAprobadaProjection> actividadRechazada(Long id_modelo);
 
-    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS encargado, " +
+    @Query("SELECT CONCAT(pe.primer_nombre, ' ', pe.primer_apellido) AS encargado, " +
             "ac.fecha_inicio AS inicio, " +
             "cr.nombre AS criterio, " +
             "s.nombre AS subcriterio, " +
@@ -115,20 +129,22 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "ar.enlace AS enlace, " +
             "ar.nombre AS nomb, " +
             "ev.descripcion AS evidencia " +
-            "FROM asignacion_evidencia ac " +
-            "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia AND ac.visible = true " +
-            "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador AND i.visible = true " +
-            "JOIN asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :id_modelo " +
-            "JOIN modelo mo ON mo.id_modelo = ai.modelo_id_modelo " +
-            "JOIN usuarios u ON u.id = ac.usuario_id " +
-            "LEFT JOIN archivo ar ON ar.id_asignacion_evidencia = ac.id_asignacion_evidencia AND ar.visible = true " +
-            "JOIN persona pe ON pe.id_persona = u.persona_id_persona " +
-            "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
-            "JOIN criterio cr ON cr.id_criterio = s.id_criterio " +
+            "FROM Asignacion_Evidencia ac " +
+            "JOIN ac.evidencia ev " +
+            "JOIN ev.indicador i " +
+            "JOIN i.lista_asignacion ai " +
+            "JOIN ai.modelo mo " +
+            "JOIN ac.usuario u " +
+            "LEFT JOIN ac.lista_archivo ar " +
+            "JOIN u.persona pe " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cr " +
             "WHERE ac.fecha_inicio BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND ac.fecha_fin BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND LOWER(ev.estado) = 'pendiente' " +
-            "AND ac.visible = true", nativeQuery = true)
+            "AND ac.visible = true " +
+            "AND ai.visible = true " +
+            "AND mo.id_modelo = :id_modelo")
     List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
 
     @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS encargado, " +

@@ -156,6 +156,7 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
     @GetMapping("/listarnombre_admin/{id_modelo}/{id_criterio}")
     public ResponseEntity<NombreAsigProjection> listarnombre_Admin(
             @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
@@ -165,7 +166,7 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+            **/
     @GetMapping("/veradminsporcriterio/{id_modelo}/{id_criterio}")
     public ResponseEntity<List<AsignacionProjection>> veradminsporcriterio(
             @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
@@ -271,6 +272,7 @@ public class Asignacion_Admin_Controller {
     }
 
 
+    /**
     @GetMapping("/listaractiv/{id_modelo}")
     public ResponseEntity<List<ActivProyection>> obtactiv(@PathVariable("id_modelo")Long id_modelo) {
         try {
@@ -280,7 +282,9 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     **/
 
+    /**
     @GetMapping("/actividadescumplidas")
     public ResponseEntity<List<ActivProyection>> actividadcumplidas() {
 
@@ -290,6 +294,7 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/actividadusuario/{id}")
     public ResponseEntity<List<ActivProyection>> actividadusuario(@PathVariable("id")Long id) {
         try {
@@ -298,7 +303,7 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+**/
 
 
 

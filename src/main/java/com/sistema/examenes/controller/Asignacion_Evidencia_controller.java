@@ -89,6 +89,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
     @GetMapping("/listarpruebasevi")
     public ResponseEntity<List<AsignacionEvidenciaProyeccion>> listarpruebasevi() {
         try {
@@ -97,7 +98,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+**/
     @GetMapping("/actCalendar/{id}")
     public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id) {
         try {
@@ -153,6 +154,7 @@ public class Asignacion_Evidencia_controller {
             }
         }
     }
+    /**
     @GetMapping("/listarEviUsua/{username}")
     public ResponseEntity<List<Asignacion_Evidencia>> listarAsigEvi(@PathVariable("username") String  username) {
         try {
@@ -161,6 +163,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     **/
     @GetMapping("/fecha/{id_evidencia}/{id_modelo}")
     public ResponseEntity<Asignacion_Evidencia> listarfecha(@PathVariable("id_evidencia") Long id_evidencia, @PathVariable("id_modelo") Long id_modelo) {
         try {
@@ -228,6 +231,7 @@ public class Asignacion_Evidencia_controller {
         return Service.listarAsigEviUser(username,id_evidencia);
     }
 
+    //no se utiliza la de abajo
     @GetMapping("/buscarusuario/{username}")
     public ResponseEntity <List<Asignacion_Evidencia>> listaractiUsuario(@PathVariable("username") String username) {
 
@@ -237,7 +241,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+//no se utiliza la de abajo
     @GetMapping("/buscarporEvide/{idEviden}")
     public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
         try {
@@ -246,7 +250,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+//el de abajo no se utiliza
     @GetMapping("/evidencias/{estado}")
     public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado) {
 
@@ -264,7 +268,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+//no se utiliza abajo
     @GetMapping("/listaractividad")
     public ResponseEntity<List<ActivProyection>> listarActividad () {
         try {
