@@ -4,6 +4,7 @@ import com.sistema.examenes.entity.Asignacion_Indicador;
 import com.sistema.examenes.entity.Modelo;
 
 import com.sistema.examenes.projection.AsignaIndicadorProjection;
+import com.sistema.examenes.projection.AsignacionIndicadorProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,7 +19,18 @@ public interface Asignacion_Indicador_repository extends JpaRepository<Asignacio
     List<Asignacion_Indicador> listarAsignacionIndicador();
 
     // metodo para lista asignacion_indicador por objeto modelo
-    List<Asignacion_Indicador> findByModelo(Modelo modelo);
+    @Query( "Select i.id_indicador AS id_indicador, c.nombre AS criterio, s.nombre AS subcriterio,  " +
+            "       i.nombre AS indicador, " +
+            "       i.peso AS peso, i.porc_obtenido AS porc_obtenido, " +
+            "       i.porc_utilida_obtenida AS porc_utilida_obtenida, " +
+            "       i.valor_obtenido  AS valor_obtenido " +
+            "FROM Asignacion_Indicador ai " +
+            "JOIN ai.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio c " +
+            "WHERE ai.modelo.id_modelo=:id_modelo AND ai.visible= true ")
+    List<AsignacionIndicadorProjection> listarAsignacionIndicador(Long id_modelo);
+
 
     @Query(value = "SELECT * FROM asignacion_indicador WHERE modelo_id_modelo=:id_modelo", nativeQuery = true)
     List<Asignacion_Indicador> listarAsignacion(Long id_modelo);
