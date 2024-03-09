@@ -78,10 +78,10 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "    evidencias", nativeQuery = true)
     List<ResponsableProjection> listadeResponsablesByAdmin(@Param("idAdministrador") Long idAdministrador);
 
-    @Query(value = "SELECT * from asignacion_responsable where usuarioresponsable_id = ?1", nativeQuery = true)
-    Asignacion_Responsable asignacionByIdUsuarioResponsable(Long id_usuarioResponsable);
-    @Query(value = "SELECT * from asignacion_responsable where usuarioadmin_id = ?1", nativeQuery = true)
-    List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(Long idAdministrador);
+    @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioResponsable.id = :id_usuarioResponsable")
+    Asignacion_Responsable asignacionByIdUsuarioResponsable(@Param("id_usuarioResponsable") Long id_usuarioResponsable);
+    @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioAdmin.id = :idAdministrador")
+    List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(@Param("idAdministrador") Long idAdministrador);
 
     boolean existsByUsuarioAdminIdAndUsuarioResponsableId(Long adminId, Long userId);
 

@@ -14,13 +14,13 @@ import java.util.List;
 
 public interface Asignacion_Indicador_repository extends JpaRepository<Asignacion_Indicador, Long> {
 
-    @Query(value = "SELECT * from asignacion_indicador where visible =true", nativeQuery = true)
+    @Query("SELECT ai FROM Asignacion_Indicador ai WHERE ai.visible = true")
     List<Asignacion_Indicador> listarAsignacionIndicador();
 
     // metodo para lista asignacion_indicador por objeto modelo
     List<Asignacion_Indicador> findByModelo(Modelo modelo);
 
-    @Query(value = "SELECT * FROM asignacion_indicador WHERE modelo_id_modelo=:id_modelo", nativeQuery = true)
+    @Query("SELECT ai FROM Asignacion_Indicador ai WHERE ai.modelo.id_modelo = :id_modelo")
     List<Asignacion_Indicador> listarAsignacion(Long id_modelo);
     @Modifying
     @Transactional
@@ -50,12 +50,12 @@ public interface Asignacion_Indicador_repository extends JpaRepository<Asignacio
             "WHERE ai.modelo_id_modelo=:id_modelo AND cri.nombre=:nombre", nativeQuery = true)
     Integer contar(Long id_modelo, String nombre);
 
-    @Query(value = "SELECT DISTINCT cri.id_criterio AS idcriterio, cri.nombre AS nombrecriterio, " +
-            "cri.descripcion AS descripcio FROM asignacion_indicador ai " +
-            "JOIN indicador i ON i.id_indicador=ai.indicador_id_indicador " +
-            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
-            "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
-            "WHERE ai.modelo_id_modelo=:id_modelo " +
-            "ORDER BY cri.descripcion ASC", nativeQuery = true)
+    @Query("SELECT DISTINCT cri.id_criterio AS idcriterio, cri.nombre AS nombrecriterio, " +
+            "cri.descripcion AS descripcio FROM Asignacion_Indicador ai " +
+            "JOIN ai.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cri " +
+            "WHERE ai.modelo.id_modelo = :id_modelo " +
+            "ORDER BY cri.descripcion ASC")
     List<AsignaIndicadorProjection> listarAsignaIndicador(Long id_modelo);
 }
