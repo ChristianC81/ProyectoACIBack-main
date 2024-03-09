@@ -11,23 +11,26 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long> {
-    @Query(value = "SELECT * from subcriterio where visible =true", nativeQuery = true)
+    @Query("SELECT s from Subcriterio s where s.visible =true")
     List<Subcriterio> listarSubcriterio();
 
     // un query para buscar por id_criterio
-    @Query(value = "SELECT * from subcriterio where id_criterio = :id_criterio and visible =true", nativeQuery = true)
+    @Query("SELECT s FROM Subcriterio s " +
+            "WHERE s.criterio.id_criterio = :id_criterio " +
+            "AND s.visible =true")
     List<Subcriterio> listarSubcriterioPorCriterio(Long id_criterio);
 
-    @Query(value = "SELECT s.id_subcriterio, s.nombre, s.descripcion, s.visible, " +
+    @Query("SELECT s.id_subcriterio AS id_subcriterio, s.nombre AS nombre, s.descripcion AS descripcion, s.visible AS visible, " +
             "(SELECT COUNT(i2.id_indicador) " +
-            "FROM indicador i2 WHERE i2.subcriterio_id_subcriterio = s.id_subcriterio AND i2.visible = true) " +
-            "AS cantidadIndicadores " +
-            "FROM subcriterio s " +
-            "LEFT JOIN indicador i " +
-            "ON s.id_subcriterio = i.subcriterio_id_subcriterio "+
-            "where s.visible =true and s.id_criterio=:id_criterio "+
+            "FROM Indicador i2 " +
+            "WHERE i2.subcriterio.id_subcriterio = s.id_subcriterio " +
+            "AND i2.visible = true) AS cantidadIndicadores " +
+            "FROM Subcriterio s " +
+            "LEFT JOIN Indicador i " +
+            "ON s.id_subcriterio = i.subcriterio.id_subcriterio "+
+            "where s.visible =true and s.criterio.id_criterio=:id_criterio "+
             "GROUP BY s.id_subcriterio " +
-            "ORDER BY s.descripcion ASC", nativeQuery = true)
+            "ORDER BY s.descripcion ASC")
     List<SubcriterioIndicadoresProjection> obtenerSubcirteriosConCantidadIndicador(Long id_criterio);
     @Query(value = "SELECT s.id_subcriterio, s.nombre, s.descripcion, s.visible, c.nombre AS nombreCriterio, " +
             "(SELECT COUNT(i2.id_indicador) " +

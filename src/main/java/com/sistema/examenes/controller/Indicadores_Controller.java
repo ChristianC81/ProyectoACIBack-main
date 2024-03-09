@@ -195,7 +195,7 @@ public class Indicadores_Controller {
         }
     }
 
-    @GetMapping("/indicadoresPorCriteriosCuali")
+  /*  @GetMapping("/indicadoresPorCriteriosCuali")
     public ResponseEntity<List<Indicador>> indicadoresPorCriteriosCuali() {
         try {
             List<Indicador> indicadores = Service.indicadoresPorCriteriosCuali();
@@ -213,17 +213,17 @@ public class Indicadores_Controller {
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
-    }
+    }*/
 
     @GetMapping("/datosIndicadores/{id_subcriterio}")
     public List<IndicadorEvidenciasProjection> obtenerDatosSubcriterios(@PathVariable("id_subcriterio") Long id_subcriterio) {
         return Service.obtenerDatosIndicadores(id_subcriterio);
     }
 
-    @GetMapping("/datosIndicadoresFull")
+    /*@GetMapping("/datosIndicadoresFull")
     public List<IndicadorEvidenciasProjectionFull> obtenerDatosSubcriteriosFull() {
         return Service.obtenerDatosIndicadoresFull();
-    }
+    }*/
 
     @GetMapping("/indicadorespormodelo/{id_modelo}")
     public ResponseEntity<List<Indicador>> indicadoresPorModelo(
