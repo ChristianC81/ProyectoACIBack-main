@@ -9,6 +9,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface Evaluar_Cualitativa_repository extends JpaRepository<Evaluar_Cualitativa, Long> {
-    @Query(value = "SELECT * from evaluar_cualitativa where visible =true",nativeQuery = true)
+    @Query("SELECT ec FROM Evaluar_Cualitativa ec WHERE ec.visible = true")
     List<Evaluar_Cualitativa> listarEvaluarCualiativa();
 }
