@@ -64,13 +64,14 @@ public class Asignacion_Evidencia_controller {
         }
     }
     @GetMapping("/listarv")
-    public ResponseEntity<List<Asignacion_Evidencia>> obtenerListav() {
+    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav() {
         try {
             return new ResponseEntity<>(Service.listar(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/listasignacion")
     public ResponseEntity<List<AsignaProjection>> obtenerListaasig() {
         try {

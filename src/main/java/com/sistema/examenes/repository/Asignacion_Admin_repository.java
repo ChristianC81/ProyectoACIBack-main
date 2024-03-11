@@ -1,10 +1,7 @@
 package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Asignacion_Admin;
-import com.sistema.examenes.projection.ActivAprobadaProjection;
-import com.sistema.examenes.projection.ActivProyection;
-import com.sistema.examenes.projection.AsignacionProjection;
-import com.sistema.examenes.projection.NombreAsigProjection;
+import com.sistema.examenes.projection.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import java.util.List;
@@ -184,7 +181,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "AND mo.fecha_fin AND ac.fecha_fin  BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND ac.visible = true " +
             "GROUP BY per.primer_nombre, per.primer_apellido;", nativeQuery = true)
-    List<ActivProyection> actividadCont(Long id_modelo);
+    List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
 
     @Query(value = "SELECT distinct u.id as idusuario, ac.nombre as nombre, ac.fecha_inicio as fechainicio, ac.fecha_fin as fechafin, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable\n" +
             "FROM actividad ac JOIN evidencia e \n" +

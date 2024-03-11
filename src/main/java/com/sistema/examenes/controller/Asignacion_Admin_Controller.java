@@ -3,10 +3,7 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.Asignacion_Admin;
 import com.sistema.examenes.entity.Asignacion_Responsable;
 import com.sistema.examenes.entity.Criterio;
-import com.sistema.examenes.projection.ActivAprobadaProjection;
-import com.sistema.examenes.projection.AsignacionProjection;
-import com.sistema.examenes.projection.ActivProyection;
-import com.sistema.examenes.projection.NombreAsigProjection;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
 import com.sistema.examenes.services.Asignacion_Responsable_Service;
@@ -272,9 +269,8 @@ public class Asignacion_Admin_Controller {
     }
 
 
-    /**
     @GetMapping("/listaractiv/{id_modelo}")
-    public ResponseEntity<List<ActivProyection>> obtactiv(@PathVariable("id_modelo")Long id_modelo) {
+    public ResponseEntity<List<ActividadesAvanceProjection>> obtactiv(@PathVariable("id_modelo")Long id_modelo) {
         try {
             return new ResponseEntity<>(Service.actividadCont(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
@@ -282,7 +278,7 @@ public class Asignacion_Admin_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-     **/
+
 
     /**
     @GetMapping("/actividadescumplidas")
