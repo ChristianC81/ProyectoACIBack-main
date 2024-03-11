@@ -84,6 +84,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
         public List<Usuario> listaResponsablesDatos();
 
+        /*
+         @Query( "SELECT u.id AS id, p.primer_nombre ||' '|| p.primer_apellido AS nombres," +
+                " u.username AS username, p.correo AS correo " +
+                "FROM Usuario u " +
+                "JOIN Asignacion_Evidencia ae ON u.id = ae.usuario.id " +
+                "JOIN Persona p  ON u.persona.id_persona = p.id_persona " +
+                "WHERE u.visible = true AND ae.visible = true")
+        public List<UsuariosResProjection> listaResponsablesDatos();
+*/
         @Query(value = "SELECT u.* FROM usuarios u " +
                         "JOIN usuariorol ur ON u.id = ur.usuario_id " +
                         "LEFT JOIN asignacion_evidencia ae ON u.id = ae.usuario_id " +
