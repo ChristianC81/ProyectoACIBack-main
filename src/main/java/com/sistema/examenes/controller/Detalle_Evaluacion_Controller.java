@@ -67,6 +67,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
     @GetMapping("/listarv")
     public ResponseEntity<List<Detalle_Evaluacion>> obtenerListav() {
         try {
@@ -75,6 +76,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/buscar/{id}")
     public ResponseEntity<Detalle_Evaluacion> getById(@PathVariable("id") Long id) {
         try {
@@ -83,6 +85,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     **/
     @GetMapping("/listarporEviRecha/{idEvi}")
     public ResponseEntity<List<Detalle_Evaluacion>> listarPorEvidencia(@PathVariable("idEvi") Long idEvidencia) {
         try {

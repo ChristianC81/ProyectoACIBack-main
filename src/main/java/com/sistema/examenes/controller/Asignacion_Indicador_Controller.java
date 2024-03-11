@@ -39,7 +39,7 @@ public class Asignacion_Indicador_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
+/**
     @GetMapping("/listar")
     public ResponseEntity<List<Asignacion_Indicador>> obtenerLista() {
         try {
@@ -48,6 +48,7 @@ public class Asignacion_Indicador_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
 
     @GetMapping("/listarv")
     public ResponseEntity<List<Asignacion_Indicador>> obtenerListav() {
@@ -104,7 +105,7 @@ public class Asignacion_Indicador_Controller {
 
         }
     }
-
+ **/
     // metodo post para crear un nuevo Asignacion_Indicador
     @PostMapping("/crearAsignacion")
     public ResponseEntity<Asignacion_Indicador> crearAsignacion(@RequestBody Asignacion_Indicador r) {
