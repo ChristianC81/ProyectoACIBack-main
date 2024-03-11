@@ -2,7 +2,6 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.*;
 import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
-import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.projection.UsuariosProjection;
 import com.sistema.examenes.repository.Asignacion_Responsable_repository;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.PostConstruct;
 import java.util.*;
 
@@ -450,7 +448,6 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     // public List<Usuario> listaAdminDatos();
     @GetMapping("/listarAdminDatos")
     public ResponseEntity<List<Usuario>> obtenerListaAdminDatos() {
@@ -488,5 +485,4 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }
