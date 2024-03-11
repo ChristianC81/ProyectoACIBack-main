@@ -62,7 +62,7 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<Asignacion_Evidencia> listar() {
+    public List<AsignacionEvidenciaCalendarProjection> listar() {
         return repository.listarAsignacionEvidencia();
     }
 

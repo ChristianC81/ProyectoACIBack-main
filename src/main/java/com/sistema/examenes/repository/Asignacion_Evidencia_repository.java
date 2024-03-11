@@ -9,7 +9,9 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacion_Evidencia, Long> {
-    @Query("SELECT ae FROM Asignacion_Evidencia ae " +
+    @Query("SELECT e.descripcion AS descripcion, ae.fecha_inicio AS fecha_inicio," +
+            "ae.fecha_fin AS fecha_fin " +
+            "FROM Asignacion_Evidencia ae " +
             "JOIN ae.evidencia e " +
             "JOIN e.indicador i " +
             "JOIN i.lista_asignacion po " +
@@ -17,7 +19,8 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "WHERE ae.visible = true " +
             "AND mo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m) " +
             "ORDER BY ae.usuario.id, ae.evidencia.id_evidencia")
-    List<Asignacion_Evidencia> listarAsignacionEvidencia();
+    List<AsignacionEvidenciaCalendarProjection> listarAsignacionEvidencia();
+
     @Query("SELECT ae FROM Asignacion_Evidencia ae " +
             "WHERE ae.evidencia.id_evidencia = :id_evidencia " +
             "AND ae.visible = true " +
