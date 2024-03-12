@@ -36,5 +36,6 @@ public class SistemaExamenesBackendApplication implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
 		servis.init();
+		System.out.println("Se realiza la creacion del directorio para archivos");
 	}
 }
