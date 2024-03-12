@@ -14,9 +14,8 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-        @Query(value = "SELECT *\n" +
-                        "\tFROM usuarios WHERE username = :username AND visible=true", nativeQuery = true)
-        public Usuario findByUsername(String username);
+       // @Query(value = "SELECT * FROM usuarios WHERE username = :username AND visible=true", nativeQuery = true)
+        Usuario findByUsernameAndVisibleTrue(String username);
 
         @Query(value = "SELECT * FROM usuarios WHERE username = :username", nativeQuery = true)
         public Usuario findAllByUsername(String username);
@@ -151,10 +150,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT u.* FROM public.usuarios u JOIN public.usuariorol ur ON ur.usuario_id = u.id WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
         List<Usuario> responsables();
 
-        @Modifying
-        @Transactional
-        @Query(value = "UPDATE actividad SET fecha_fin =:nuevaFecha WHERE usuario_id =:usuarioId", nativeQuery = true)
-        void actualizarFechaFin(String nuevaFecha, Long usuarioId);
 
         @Query(value = "SELECT u.*\n" +
                         "FROM public.usuarios u\n" +

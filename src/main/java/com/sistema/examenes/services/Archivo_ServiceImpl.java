@@ -23,7 +23,7 @@ public class Archivo_ServiceImpl extends GenericServiceImpl<Archivo_s, Long> imp
 
     @Override
     public List<Archivo_s> listar() {
-        return repository.listararchivo();
+        return repository.findByVisibleTrue();
     }
 
     @Override

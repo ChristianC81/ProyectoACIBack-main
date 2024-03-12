@@ -10,8 +10,8 @@ import java.util.List;
 public interface Detalle_Evaluacion_repository extends JpaRepository<Detalle_Evaluacion, Long> {
 
     //el de abajo no se utiliza
-    @Query(value = "SELECT * from detalle_evaluacion where visible =true",nativeQuery = true)
-    List<Detalle_Evaluacion> listarDetalleEvaluacion();
+    /*@Query(value = "SELECT * from detalle_evaluacion where visible =true",nativeQuery = true)
+    List<Detalle_Evaluacion> listarDetalleEvaluacion();*/
     @Query("SELECT d FROM Detalle_Evaluacion d " +
             "WHERE d.evidencia.id_evidencia = :id_evidencia " +
             "AND d.id_modelo = :id_modelo " +

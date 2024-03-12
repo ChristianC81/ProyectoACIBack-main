@@ -10,8 +10,10 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Archivo_repository extends JpaRepository<Archivo_s, Long> {
-    @Query("SELECT a FROM Archivo_s a WHERE a.visible = true")
-    List<Archivo_s> listararchivo();
+   /*@Query("SELECT a FROM Archivo_s a WHERE a.visible = true")
+    List<Archivo_s> listararchivo();*/
+    List<Archivo_s> findByVisibleTrue();
+   //List<ArchivoResProjection> findByActividadUsuarioUsernameAndVisibleTrueAndActividad_Id_asignacion_evidencia(String username, Long id_asignacion_evi);
     @Query("SELECT ar.id_archivo AS id_archivo," +
             "ar.enlace AS enlace, " +
             "ar.nombre AS nombre, " +
