@@ -29,9 +29,9 @@ public class Detalle_Evaluacion implements Serializable {
     private boolean visible;
     @Column(name = "id_modelo")
     private Long id_modelo;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Evidencia evidencia;
 
     public boolean isEstado() {

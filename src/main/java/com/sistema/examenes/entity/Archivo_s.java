@@ -29,7 +29,7 @@ public class Archivo_s implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_asignacion_evidencia")
     private Asignacion_Evidencia actividad;
 

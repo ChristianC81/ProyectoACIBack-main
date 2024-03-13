@@ -251,6 +251,7 @@ public class UsuarioController {
         try {
             return new ResponseEntity<>(uR.listar(), HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
