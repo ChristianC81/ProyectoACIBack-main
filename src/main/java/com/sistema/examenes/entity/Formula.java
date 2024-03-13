@@ -27,7 +27,7 @@ public class Formula implements Serializable {
     //Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "formula")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "formula")
     @JsonIgnore
     private Set<Encabezado_Evaluar> lista_enc_eva = new HashSet<>();
 }

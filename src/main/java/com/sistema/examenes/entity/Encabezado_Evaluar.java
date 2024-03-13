@@ -25,13 +25,13 @@ public class  Encabezado_Evaluar implements Serializable {
     private boolean visible;
 
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Formula formula;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Indicador indicador;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "encabezado_evaluar")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "encabezado_evaluar")
     @JsonIgnore
     private Set<Evaluar_Cuantitativa> lista_cuantitativa = new HashSet<>();
 }

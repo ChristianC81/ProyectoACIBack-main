@@ -41,23 +41,23 @@ public class Indicador implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private Subcriterio subcriterio;
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "indicador")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
     @JsonIgnore
     private Set<Evaluar_Cualitativa> lista_eva_cual = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "indicador")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
     @JsonIgnore
     private Set<Evidencia> lista_evidencia = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "indicador")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
     @JsonIgnore
     private Set<Encabezado_Evaluar> lista_enc_eva = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "indicador")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
     @JsonIgnore
     private Set<Asignacion_Indicador> lista_asignacion = new HashSet<>();
 
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "indicador")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
     @JsonIgnore
     private Set<Ponderacion> lista_ponderacion = new HashSet<>();
 

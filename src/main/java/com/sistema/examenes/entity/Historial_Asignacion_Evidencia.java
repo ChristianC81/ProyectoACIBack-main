@@ -31,10 +31,10 @@ public class Historial_Asignacion_Evidencia implements Serializable {
         fecha = new Date();
     }
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario_asignador;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
     private Asignacion_Evidencia asignacion_evi;
 
 }
