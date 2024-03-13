@@ -28,8 +28,8 @@ public class Criterio implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "criterio")
     @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "criterio")
     private Set<Subcriterio> lista_subcriterios = new HashSet<>();
 
     public Criterio() {

@@ -10,6 +10,7 @@ public class UsuarioRol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioRolId;
 
+    //PROBLEMA
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;

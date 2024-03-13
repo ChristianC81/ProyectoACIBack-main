@@ -22,6 +22,6 @@ public class Reporte implements Serializable {
     private Date fecha;
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Modelo modelo ;
 }

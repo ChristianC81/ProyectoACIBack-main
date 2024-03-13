@@ -20,9 +20,8 @@ public class Evaluar_Cualitativa implements Serializable {
     private boolean visible;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_cualitativa")
     private Cualitativa cualitativa;
+
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_indicador")
     private Indicador indicador;
 }

@@ -39,7 +39,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "ORDER BY cri.id_criterio")
     List<IndicadoresProjection> Indicadores(Long id_modelo);
 
-    @Query("SELECT cri.nombre AS nombre, " +
+    @Query( "SELECT cri.nombre AS nombre, " +
             "SUM(i.porc_utilida_obtenida)  AS total, " +
             "SUM(i.peso)  AS faltante " +
             "FROM Indicador i " +

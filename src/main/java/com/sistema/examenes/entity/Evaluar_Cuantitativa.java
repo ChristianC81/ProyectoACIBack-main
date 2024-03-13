@@ -21,9 +21,9 @@ public class Evaluar_Cuantitativa implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Encabezado_Evaluar encabezado_evaluar;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Cuantitativa cuantitativa;
 }

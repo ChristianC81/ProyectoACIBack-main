@@ -29,7 +29,7 @@ public class Cualitativa implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cualitativa")
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "cualitativa")
     @JsonIgnore
     private Set<Evaluar_Cualitativa> lista_eva_cual = new HashSet<>();
 }

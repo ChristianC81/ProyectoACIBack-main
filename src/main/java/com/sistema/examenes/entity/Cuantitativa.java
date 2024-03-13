@@ -27,7 +27,7 @@ public class Cuantitativa implements Serializable {
     //Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
-    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "cuantitativa")
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.EAGER,mappedBy = "cuantitativa")
     @JsonIgnore
     private Set<Evaluar_Cuantitativa> lista_eva_indicador = new HashSet<>();
 }

@@ -16,17 +16,16 @@ public class Asignacion_Admin implements Serializable {
     @Column(name = "id_asignacion")
     private Long id_asignacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Criterio criterio;
     // Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id_modelo") // Columna en Asignacion_Admin que referencia a Modelo
+    @ManyToOne(fetch = FetchType.EAGER)
     private Modelo id_modelo;
     public Asignacion_Admin() {
     }

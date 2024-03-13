@@ -21,6 +21,6 @@ public class SeguimientoUsuario implements Serializable {
     @Column(name = "fecha")
     private Date fecha;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
 }

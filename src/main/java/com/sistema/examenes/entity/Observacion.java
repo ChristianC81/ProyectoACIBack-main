@@ -18,8 +18,8 @@ public class Observacion implements Serializable {
     @Column(name = "observacion", length = 10000 )
     private String observacion;
     private boolean visible;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuario;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Asignacion_Evidencia actividad;
 }
