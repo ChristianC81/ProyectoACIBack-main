@@ -25,11 +25,10 @@ public class Cualitativa implements Serializable {
     @Column(name = "escala")
     private String escala;
 
-    // Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cualitativa")
     @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "cualitativa")
     private Set<Evaluar_Cualitativa> lista_eva_cual = new HashSet<>();
 }

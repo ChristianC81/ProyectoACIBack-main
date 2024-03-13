@@ -31,6 +31,7 @@ public class Evidencia implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Indicador indicador;
+
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "evidencia")
     @JsonIgnore
     private Set<Detalle_Evaluacion> detalleEvaluaciones = new HashSet<>();

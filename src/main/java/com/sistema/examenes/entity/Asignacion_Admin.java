@@ -20,7 +20,9 @@ public class Asignacion_Admin implements Serializable {
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "criterio_id_criterio", referencedColumnName = "id_criterio")
     private Criterio criterio;
+
     // Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
