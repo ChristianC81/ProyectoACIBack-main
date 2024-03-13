@@ -26,10 +26,11 @@ public class Subcriterio implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_criterio")
     private Criterio criterio;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "subcriterio")
+
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subcriterio")
     @JsonIgnore
     private Set<Indicador> lista_indicadores = new HashSet<>();
 }

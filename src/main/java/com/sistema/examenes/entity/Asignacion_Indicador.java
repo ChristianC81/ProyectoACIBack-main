@@ -18,9 +18,9 @@ public class Asignacion_Indicador implements Serializable {
     // Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Indicador indicador;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Modelo modelo;
 
 }

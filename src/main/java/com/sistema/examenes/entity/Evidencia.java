@@ -29,7 +29,7 @@ public class Evidencia implements Serializable {
     @Column(name = "visible")
     private Boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Indicador indicador;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "evidencia")
     @JsonIgnore

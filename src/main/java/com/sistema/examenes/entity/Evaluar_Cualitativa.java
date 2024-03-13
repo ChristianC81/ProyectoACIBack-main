@@ -19,10 +19,10 @@ public class Evaluar_Cualitativa implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_cualitativa")
     private Cualitativa cualitativa;
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_indicador")
     private Indicador indicador;
 }

@@ -55,7 +55,7 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
         List<Criterio> listarCriterioPorIndicador(Long id_indicador);
 
         //
-        @Query("SELECT c.id_criterio AS idCriterio, c.nombre AS nombre, c.descripcion AS descripcion, c.visible AS visible, " +
+        @Query("SELECT c.id_criterio AS id_criterio, c.nombre AS nombre, c.descripcion AS descripcion, c.visible AS visible, " +
                 "(SELECT COUNT(s2) FROM Subcriterio s2 WHERE s2.criterio.id_criterio = c.id_criterio AND s2.visible = true) AS cantidadSubcriterios " +
                 "FROM Criterio c " +
                 "WHERE c.visible = true " +
