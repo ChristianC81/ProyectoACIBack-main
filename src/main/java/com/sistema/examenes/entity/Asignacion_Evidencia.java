@@ -37,7 +37,8 @@ public class Asignacion_Evidencia implements Serializable {
     @ManyToOne(fetch = FetchType.EAGER)
     private Evidencia evidencia;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
 
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "asignacion_evi")
