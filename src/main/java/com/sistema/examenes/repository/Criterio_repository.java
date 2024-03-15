@@ -169,17 +169,33 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "AND aa.visible = true")
     List<Criterio> obtenerCriteriosPorUsuarioYModelo(Long usuarioId, Long modeloId);
 
-        @Query(value = "SELECT ur.usuariorolid AS usuariorol, \n" +
-                "    COALESCE(criterio.nombre, 'SIN CRITERIOS') AS criterionombre\n" +
-                "FROM usuariorol ur \n" +
-                "JOIN usuarios u ON ur.usuario_id = u.id\n" +
-                "JOIN roles ro ON ur.rol_rolid = ro.rolid\n" +
-                "LEFT JOIN asignacion_admin aa ON aa.usuario_id = u.id AND aa.id_modelo = :id_modelo AND aa.visible = true\n" +
-                "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
-                "WHERE ur.visible = true AND ur.usuariorolid = :id_usuariorol\n" +
-                "AND ro.rolnombre IN ('ADMIN', 'SUPERADMIN', 'RESPONSABLE')\n" +
-                "GROUP BY ur.usuariorolid, ro.rolnombre, criterio.nombre\n", nativeQuery = true)
-        List<CriteProjection> listarcriusers(Long id_usuariorol, Long id_modelo);
+    @Query(value = "SELECT DISTINCT ur.usuariorolid AS usuariorol, \n" +
+            "    CASE \n" +
+            "        WHEN ro.rolnombre = 'RESPONSABLE' THEN\n" +
+            "            COALESCE((SELECT cri.nombre\n" +
+            "                    FROM evidencia e \n" +
+            "                    JOIN indicador i ON e.indicador_id_indicador = i.id_indicador\n" +
+            "                    JOIN subcriterio sub ON i.subcriterio_id_subcriterio = sub.id_subcriterio\n" +
+            "                    JOIN criterio cri ON sub.id_criterio = cri.id_criterio\n" +
+            "                    JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia\n" +
+            "                    WHERE ae.usuario_id = ur.usuario_id AND ae.visible = true AND ae.id_modelo = :id_modelo\n" +
+            "                    GROUP BY ur.usuariorolid, cri.nombre\n" +
+            "                )\n" +
+            "                , 'SIN CRITERIOS'\n" +
+            "            )\n" +
+            "        ELSE COALESCE(criterio.nombre, 'SIN CRITERIOS')\n" +
+            "    END AS criterionombre\n" +
+            "FROM usuariorol ur \n" +
+            "JOIN usuarios u ON ur.usuario_id = u.id\n" +
+            "JOIN roles ro ON ur.rol_rolid = ro.rolid\n" +
+            "LEFT JOIN asignacion_admin aa ON aa.usuario_id = u.id AND aa.id_modelo = :id_modelo AND aa.visible = true\n" +
+            "LEFT JOIN criterio criterio ON aa.criterio_id_criterio = criterio.id_criterio \n" +
+            "WHERE ur.visible = true AND ur.usuariorolid = :id_usuariorol\n" +
+            "AND ((ro.rolnombre='ADMIN' AND ur.usuariorolid = :id_usuariorol)\n" +
+            "    OR (ro.rolnombre='SUPERADMIN' AND ur.usuariorolid = :id_usuariorol)\n" +
+            "    OR (ro.rolnombre='RESPONSABLE' AND ur.usuariorolid = :id_usuariorol)\n" +
+            ") GROUP BY ur.usuariorolid, ro.rolnombre, criterio.nombre", nativeQuery = true)
+    List<CriteProjection> listarcriusers(Long id_usuariorol, Long id_modelo);
 
     @Query("SELECT c.id_criterio AS id_criterio, " +
             "       c.nombre AS nombre_criterio, " +
