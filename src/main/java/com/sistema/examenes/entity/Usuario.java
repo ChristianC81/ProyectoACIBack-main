@@ -11,7 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "usuarios")
-@JsonIgnoreProperties({"hiberalizer",nateLazyIniti "handler"})
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Usuario implements UserDetails {
 
     @Id
