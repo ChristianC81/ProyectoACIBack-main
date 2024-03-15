@@ -31,6 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         public Usuario buscarId(String user);
 
 
+        //aquiii lista completa
         @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
                 "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre\n" +
                 "FROM usuariorol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
