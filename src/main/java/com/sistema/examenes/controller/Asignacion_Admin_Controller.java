@@ -274,33 +274,27 @@ public class Asignacion_Admin_Controller {
         try {
             return new ResponseEntity<>(Service.actividadCont(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
-            System.out.println(e.getLocalizedMessage().toString());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-
-    /**
-    @GetMapping("/actividadescumplidas")
-    public ResponseEntity<List<ActivProyection>> actividadcumplidas() {
+    @GetMapping("/evidenciascumplidas")
+    public ResponseEntity<List<ActivProyection>> evidenciascumplidas() {
 
         try {
-            return new ResponseEntity<>(Service.listarActividadCumplidas(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvidenciasCumplidas(), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/actividadusuario/{id}")
-    public ResponseEntity<List<ActivProyection>> actividadusuario(@PathVariable("id")Long id) {
+    @GetMapping("/evidenciausuario/{id}")
+    public ResponseEntity<List<ActivProyection>> evidenciausuario(@PathVariable("id")Long id) {
         try {
-            return new ResponseEntity<>(Service.actividadUsu(id), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenciaUsu(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-**/
-
-
 
 }

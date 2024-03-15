@@ -17,7 +17,7 @@ public interface ActivProyection {
     String getNombreresponsable();
 
     //
-    String getNombreactividad();
+    String getNombreevidencia();
     String getInicio();
     String getFin();
 
