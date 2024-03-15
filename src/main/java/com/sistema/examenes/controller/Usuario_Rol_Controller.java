@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
@@ -66,7 +67,10 @@ public class Usuario_Rol_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+
     @PutMapping("/actualizarsup/{usuarioRolId}")
+    @Transactional
     public ResponseEntity<UsuarioRol> actualizarRolSup(@RequestBody UsuarioRol usuarioRol, @PathVariable Long usuarioRolId, @RequestParam("rolIds") List<Long> rolIds) {
         try {
             // Buscar el usuarioRol existente por su ID

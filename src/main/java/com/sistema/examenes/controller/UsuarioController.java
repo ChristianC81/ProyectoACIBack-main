@@ -366,6 +366,7 @@ public class UsuarioController {
         }
     }
 
+
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Usuario a = usuarioService.findById(id);
@@ -373,6 +374,14 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
+                //Marcar todos los roles existentes como no visibles (eliminados lógicamente)
+                List<UsuarioRol> usuarioRols = userrol.findByUsuarios_UsuarioId(id);
+                for (UsuarioRol rolUsuario : usuarioRols) {
+                    rolUsuario.setVisible(false);
+                    userrol.save(rolUsuario);
+                    System.out.println("Entro aqui y elimino logicamente los roles del usuario " + rolUsuario.getRol().getRolNombre() +" Estado: "+rolUsuario.isVisible());
+                }
+
                 // Obtener las asignaciones de evidencia relacionadas con el usuario
                 List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id);
                 for (Asignacion_Evidencia asignacion : asignaciones) {
@@ -388,13 +397,7 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigadmservice.save(asignacion);
                 }
-                //Marcar todos los roles existentes como no visibles (eliminados lógicamente)
-                List<UsuarioRol> usuarioRols = userrol.findByUsuarios_UsuarioId(id);
-                for (UsuarioRol rolUsuario : usuarioRols) {
-                    rolUsuario.setVisible(false);
-                    userrol.save(rolUsuario);
-                    System.out.println("Entro aqui y elimino logicamente los roles del usuario " + rolUsuario.getRol().getRolNombre() +" Estado: "+rolUsuario.isVisible());
-                }
+
 
                 // Registrar la acción en el seguimiento de usuarios
                 SeguimientoUsuario seguimiento = new SeguimientoUsuario();
