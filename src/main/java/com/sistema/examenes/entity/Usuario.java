@@ -1,6 +1,7 @@
 package com.sistema.examenes.entity;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -10,6 +11,7 @@ import java.util.*;
 
 @Entity
 @Table(name = "usuarios")
+@JsonIgnoreProperties({"hiberalizer",nateLazyIniti "handler"})
 public class Usuario implements UserDetails {
 
     @Id
