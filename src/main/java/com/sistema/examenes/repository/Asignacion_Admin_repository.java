@@ -59,7 +59,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "JOIN modelo mo ON mo.id_modelo = ai.modelo_id_modelo " +
             "JOIN usuariorol ur ON ur.usuario_id = u.id " +
             "WHERE aa.visible = true " +
-            "AND aa.id_modelo = :id_modelo " +
+            "AND aa.id_modelo = :id_modelo " +  
             "AND cri.id_criterio = :id_criterio " +
             "AND ur.rol_rolid = 1 " +  // Nuevo filtro por rol_rolid
             "ORDER BY u.id;", nativeQuery = true)
@@ -169,9 +169,9 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "AND ac.visible = true", nativeQuery = true)
     List<ActivAprobadaProjection> actividadAprobada(Long id_modelo);
 
-    @Query(value = "SELECT per.primer_nombre || ' ' || per.primer_apellido as nombres, COUNT(ac.id_actividad) " +
-            "as total, ROUND(SUM(CASE WHEN ac.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_actividad), 2) as avance " +
-            "FROM actividad ac JOIN evidencia ev ON ac.id_evidencia = ev.id_evidencia " +
+    @Query(value = "SELECT per.primer_nombre || ' ' || per.primer_apellido as nombres, COUNT(ac.id_asignacion_evidencia) " +
+            "as total, ROUND(SUM(CASE WHEN ev.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_asignacion_evidencia), 2) as avance " +
+            "FROM asignacion_evidencia ac JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia " +
             "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador " +
             "JOIN asignacion_indicador po ON po.indicador_id_indicador = i.id_indicador " +
             "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
