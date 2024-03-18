@@ -1,11 +1,13 @@
 package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Asignacion_Evidencia;
+import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
 import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
+import com.sistema.examenes.services.Evidencia_Service;
 import com.sistema.examenes.services.Historial_Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.UsuarioService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +15,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
@@ -26,6 +30,8 @@ public class Asignacion_Evidencia_controller {
     Historial_Asignacion_Evidencia_Service ServiceHistorialAsignacion;
     @Autowired
     UsuarioService usuarioService;
+    @Autowired
+    Evidencia_Service evidenciaService;
     Historial_Asignacion_Evidencia nuevoRegistroAsignacion;
     Usuario usuarioAsignador;
     @PostMapping("/crear")
@@ -222,6 +228,37 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
+    @PutMapping("/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}")
+    public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario) {
+        List<Asignacion_Evidencia> asignacionEvidenciaList = Service.listarporEvidencia(idEvidencia);
+        Evidencia evidencia = evidenciaService.findById(idEvidencia);
+        Usuario nuevoUsuario = usuarioService.findById(idNuevoUsuario);
+
+        if (!asignacionEvidenciaList.isEmpty() && evidencia != null && nuevoUsuario != null) {
+            // Verificar si el usuario ya está asignado a esta evidencia
+            for (Asignacion_Evidencia asignacion : asignacionEvidenciaList) {
+                if (asignacion.getUsuario().getId() == idNuevoUsuario) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // El usuario ya está asignado a esta evidencia
+                }
+            }
+
+            // Si el usuario no está asignado, procedemos con la actualización
+            Asignacion_Evidencia asignacionEvidencia = asignacionEvidenciaList.get(0); // Tomamos la primera asignación, ya que solo hay una
+
+            // Actualizar el usuario en la asignación de evidencia
+            asignacionEvidencia.setUsuario(nuevoUsuario);
+            Service.save(asignacionEvidencia);
+
+            // Cambiar el estado de la evidencia a "pendiente"
+            evidencia.setEstado("pendiente");
+            evidenciaService.save(evidencia);
+
+            return new ResponseEntity<>(asignacionEvidencia, HttpStatus.OK);
+        } else {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/countArchivos/{idAsignacionEv}")
     public int countArchivos(@PathVariable("idAsignacionEv") Long idAsignacionEv) {
         return Service.countArchivosByIdAsigEv(idAsignacionEv);
@@ -242,7 +279,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//no se utiliza la de abajo
+
     @GetMapping("/buscarporEvide/{idEviden}")
     public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
         try {
