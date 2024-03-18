@@ -1,9 +1,7 @@
 package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Subcriterio;
-import com.sistema.examenes.projection.CriterioSubcriteriosProjection;
-import com.sistema.examenes.projection.SubcriterioIndicadoresProjection;
-import com.sistema.examenes.projection.SubcriterioIndicadoresProjectionFull;
+import com.sistema.examenes.projection.*;
 import com.sistema.examenes.services.Subcriterio_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -103,5 +101,13 @@ public class Subcriterio_Controller {
     @GetMapping("/datosSubcriteriosFull")
     public List<SubcriterioIndicadoresProjectionFull> obtenerDatosSubcriteriosFull() {
         return Service.obtenerDatosSubcriteriosFull();
+    }
+    @GetMapping("/listarporcsubcriterios/{id_modelo}/{id_criterio}")
+    public ResponseEntity<List<SubcriterioPorcProjection>> listaIndi(@PathVariable("id_modelo") Long id_modelo,@PathVariable("id_criterio") Long id_criterio) {
+        try {
+            return new ResponseEntity<>(Service.subcriteriosporCriterio(id_modelo,id_criterio), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 }

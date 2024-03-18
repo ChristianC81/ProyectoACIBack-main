@@ -2,9 +2,7 @@ package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Indicador;
 import com.sistema.examenes.entity.Subcriterio;
-import com.sistema.examenes.projection.CriterioSubcriteriosProjection;
-import com.sistema.examenes.projection.SubcriterioIndicadoresProjection;
-import com.sistema.examenes.projection.SubcriterioIndicadoresProjectionFull;
+import com.sistema.examenes.projection.*;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -53,4 +51,18 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
             "WHERE cri.id_criterio=:id_criterio AND ai.modelo_id_modelo=:id_modelo  " +
             "ORDER BY s.descripcion ASC", nativeQuery = true)
     List<SubcriterioIndicadoresProjection> obtenerSubcriterios(Long id_criterio,Long id_modelo);
+
+    //Grafica de barras, porcentajes de subcriterios por criterio
+    @Query("SELECT sub.nombre AS nombre, " +
+            "SUM(i.porc_utilida_obtenida) AS total, " +
+            "SUM(i.peso) AS faltante " +
+            "FROM Indicador i JOIN i.subcriterio sub " +
+            "JOIN sub.criterio cri " +
+            "JOIN Asignacion_Admin aa ON aa.criterio.id_criterio = cri.id_criterio AND aa.visible = true " +
+            "AND aa.id_modelo.id_modelo = :id_modelo " +
+            "AND cri.id_criterio = :id_criterio " +
+            "GROUP BY sub.nombre, sub.id_subcriterio " +
+            "ORDER BY sub.id_subcriterio")
+    List<SubcriterioPorcProjection> subcriteriosporCriterio(Long id_modelo, Long id_criterio);
+
 }
