@@ -228,13 +228,21 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    @RequestMapping(value = "/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}")
+    @PutMapping("/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}")
     public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario) {
         List<Asignacion_Evidencia> asignacionEvidenciaList = Service.listarporEvidencia(idEvidencia);
         Evidencia evidencia = evidenciaService.findById(idEvidencia);
         Usuario nuevoUsuario = usuarioService.findById(idNuevoUsuario);
 
         if (!asignacionEvidenciaList.isEmpty() && evidencia != null && nuevoUsuario != null) {
+            // Verificar si el usuario ya está asignado a esta evidencia
+            for (Asignacion_Evidencia asignacion : asignacionEvidenciaList) {
+                if (asignacion.getUsuario().getId() == idNuevoUsuario) {
+                    return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // El usuario ya está asignado a esta evidencia
+                }
+            }
+
+            // Si el usuario no está asignado, procedemos con la actualización
             Asignacion_Evidencia asignacionEvidencia = asignacionEvidenciaList.get(0); // Tomamos la primera asignación, ya que solo hay una
 
             // Actualizar el usuario en la asignación de evidencia
@@ -250,7 +258,6 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 
     @GetMapping("/countArchivos/{idAsignacionEv}")
     public int countArchivos(@PathVariable("idAsignacionEv") Long idAsignacionEv) {
@@ -272,7 +279,7 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-//no se utiliza la de abajo
+
     @GetMapping("/buscarporEvide/{idEviden}")
     public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
         try {
