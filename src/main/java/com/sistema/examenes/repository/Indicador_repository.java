@@ -86,7 +86,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "AND (c.id_criterio IN :idCriterios OR COALESCE(:idCriterios, NULL) IS NULL)")
     List<Indicador> indicadoresPorCriterios(List<Long> idCriterios);
 
-    @Query("SELECT DISTINCT i FROM Indicador i " +
+    @Query("SELECT DISTINCT i, c FROM Indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio c " +
             "JOIN Asignacion_Indicador ai ON ai.indicador = i " +
@@ -94,7 +94,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "AND (c.id_criterio IN :idCriterios OR COALESCE(:idCriterios, NULL) IS NULL) AND i.tipo='cualitativa'")
     List<Indicador> indicadoresPorCriteriosPruebaCuali(List<Long> idCriterios);
 
-    @Query("SELECT DISTINCT i FROM Indicador i " +
+    @Query("SELECT DISTINCT i, c FROM Indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio c " +
             "JOIN Asignacion_Indicador ai ON ai.indicador = i " +

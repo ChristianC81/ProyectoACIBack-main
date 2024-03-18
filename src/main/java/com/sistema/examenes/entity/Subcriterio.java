@@ -26,9 +26,8 @@ public class Subcriterio implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_criterio", referencedColumnName = "id_criterio")
+    @JoinColumn(name = "criterio_id_criterio", referencedColumnName = "id_criterio")
     private Criterio criterio;
 
     @JsonIgnore
