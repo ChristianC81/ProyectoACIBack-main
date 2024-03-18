@@ -23,7 +23,7 @@ public class Asignacion_Responsable implements Serializable {
    /* @Column(name = "id_modelo") // Columna para guardar el Modelo que viene del admin
     private Long id_modelo;*/
 
-    @Column(name = "visible") // Columna para el eliminado logico no borrar
+    @Column(name = "visible")
     private boolean visible;
 
 }
