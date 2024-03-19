@@ -24,7 +24,6 @@ public class Cuantitativa implements Serializable {
     private String descripcion;
     @Column(name = "abreviatura")
     private String abreviatura;
-    //Columna para el eliminado logico no borrar
     @Column(name = "visible")
     private boolean visible;
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "cuantitativa")
