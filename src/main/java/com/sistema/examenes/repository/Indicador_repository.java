@@ -233,4 +233,18 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "WHERE ai.modelo_id_modelo =:id_modelo AND aa.usuario_id=:id AND ai.visible = true) " +
             "AS total ON 1=1;", nativeQuery = true)
     List<IndiColProjection> indicadorvaladmin(Long id_modelo,Long id);
+
+    //Grafica de barras, porcentajes de indicadores por subcriterio
+    @Query("SELECT i.id_indicador AS id_indicador, " +
+            "i.nombre AS nombre, " +
+            "SUM(i.porc_utilida_obtenida) AS total, " +
+            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
+            "FROM Indicador i " +
+            "JOIN i.subcriterio sub " +
+            "JOIN sub.criterio cri " +
+            "WHERE i.visible=true AND sub.id_subcriterio =:id_subcriterio " +
+            "GROUP BY i.nombre, i.id_indicador " +
+            "ORDER BY i.id_indicador")
+    List<IndicadorPorcProjection> indicadoreporsubcriterio(Long id_subcriterio);
+
 }
