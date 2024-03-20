@@ -208,4 +208,18 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "  AND aa.usuario.id = ?1")
     List<CriterioAdm> criteriosadmultimomodelo(Long userId);
 
+    @Query("SELECT cri.id_criterio AS id_criterio, " +
+            "cri.nombre AS nombre, " +
+            "SUM(i.porc_utilida_obtenida) AS total, " +
+            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
+            "FROM Indicador i " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            "JOIN i.subcriterio sub " +
+            "JOIN sub.criterio cri " +
+            "JOIN Modelo m ON ai.modelo.id_modelo = m.id_modelo " +
+            "WHERE m.visible =true AND i.visible=true AND ai.modelo.id_modelo =:id_modelo " +
+            "GROUP BY cri.nombre, cri.id_criterio " +
+            "ORDER BY cri.id_criterio")
+    List<CriterioPorcProjection> criteriosporModelo(Long id_modelo);
+
 }

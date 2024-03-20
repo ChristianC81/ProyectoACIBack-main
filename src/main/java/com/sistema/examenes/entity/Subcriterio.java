@@ -18,11 +18,13 @@ public class Subcriterio implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_subcriterio")
     private Long id_subcriterio;
+
     @Column(name = "descripcion", length = 10000)
     private String descripcion;
+
     @Column(name = "nombre")
     private String nombre;
-    // Columna para el eliminado logico no borrar
+
     @Column(name = "visible")
     private boolean visible;
 
