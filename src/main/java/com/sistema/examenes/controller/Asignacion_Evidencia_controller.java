@@ -4,6 +4,7 @@ import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
+import com.sistema.examenes.entity.pdto.AsignacionEvidenciaPDTO;
 import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
@@ -35,18 +36,27 @@ public class Asignacion_Evidencia_controller {
     Historial_Asignacion_Evidencia nuevoRegistroAsignacion;
     Usuario usuarioAsignador;
     @PostMapping("/crear")
-    public ResponseEntity<List<Asignacion_Evidencia>> crear(@RequestBody List<Asignacion_Evidencia> evidencias) {
+    public ResponseEntity<List<Asignacion_Evidencia>> crear(@RequestBody List<AsignacionEvidenciaPDTO> evidencias) {
         try {
 
             List<Asignacion_Evidencia> asignacionesGuardadas = new ArrayList<>();
 
-            for (Asignacion_Evidencia evidencia : evidencias) {
-                evidencia.setVisible(true);
-                evidencia.setArchsubido(false);
-                Asignacion_Evidencia asignacionGuardada = Service.save(evidencia);
-                usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
+            for (AsignacionEvidenciaPDTO evidencia : evidencias) {
+                Asignacion_Evidencia nuevaAsignacion = new Asignacion_Evidencia();
+                nuevaAsignacion.setVisible(true);
+                nuevaAsignacion.setArchsubido(false);
+                nuevaAsignacion.setId_modelo(evidencia.getId_modelo());
+                nuevaAsignacion.setFecha_inicio(evidencia.getFecha_inicio());
+                nuevaAsignacion.setFecha_fin(evidencia.getFecha_fin());
+                nuevaAsignacion.setId_usuario_asignador(evidencia.getId_usuario_asignador());
+                Usuario usuarioAsignado = usuarioService.findById(evidencia.getUsuario_id());
+                nuevaAsignacion.setUsuario(usuarioAsignado);
+                Evidencia evidenciaAsignada = evidenciaService.findById(evidencia.getEvidencia_id());
+                nuevaAsignacion.setEvidencia(evidenciaAsignada);
+                Asignacion_Evidencia asignacionGuardada = Service.save(nuevaAsignacion);
 
                 nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
+                usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
                 nuevoRegistroAsignacion.setUsuario_asignador(usuarioAsignador);
                 nuevoRegistroAsignacion.setAsignacion_evi(asignacionGuardada);
                 nuevoRegistroAsignacion.setVisible(true);
