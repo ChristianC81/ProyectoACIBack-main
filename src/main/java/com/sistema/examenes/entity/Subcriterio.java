@@ -28,7 +28,8 @@ public class Subcriterio implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
     @JoinColumn(name = "id_criterio", referencedColumnName = "id_criterio")
     private Criterio criterio;
 
