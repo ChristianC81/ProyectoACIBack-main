@@ -2,7 +2,6 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.*;
 import com.sistema.examenes.entity.dto.SeguimientoUsuarioDTO;
-import com.sistema.examenes.projection.CriteProjection;
 import com.sistema.examenes.projection.ResponsableProjection;
 import com.sistema.examenes.projection.UsuariosProjection;
 import com.sistema.examenes.repository.Asignacion_Responsable_repository;
@@ -14,7 +13,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
-
 import javax.annotation.PostConstruct;
 import java.util.*;
 
@@ -31,6 +29,9 @@ public class UsuarioController {
     @Autowired
     private Asignacion_Admin_Service asigadmservice;
     @Autowired
+    Asignacion_Responsable_Service ServiceResponsable;
+
+    @Autowired
     private Modelo_Service modeloService;
 
     @Autowired
@@ -38,6 +39,7 @@ public class UsuarioController {
 
     @Autowired
     private UsuarioRepository uR;
+
     @Autowired
     private UsuarioRolService userrol;
 
@@ -76,9 +78,22 @@ public class UsuarioController {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
                 usuarioExistente.setVisible(true);
-                
-                return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
+                usuarioExistente.getUsuarioRoles().clear();
+                //Contraseña nueva ingresada
+                String nuevaContraseña =  r.getPassword(); // La contraseña proporcionada por el usuario
+                String contraseñaAlmacenada = usuarioExistente.getPassword(); // La contraseña almacenada en la base de datos
+                // Actualizar la contraseña en el usuario existente
+                if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
+                    usuarioExistente.setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                }
+                activaroRegistrarRoles(usuarioExistente,rolIds);
+                usuarioService.save(usuarioExistente);
+                return new ResponseEntity<>(usuarioExistente, HttpStatus.OK);
             }else{
+                // Codificar la contraseña antes de guardar el usuario
+                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
+                //Setear Visible para que este activo en el sistema
+                r.setVisible(true);
                 //Se recorre los roles
                 for (Long rol : rolIds) {
                     Rol nRol = rolService.findById(rol);
@@ -88,14 +103,11 @@ public class UsuarioController {
                     usuarioRol.setVisible(true);
                     r.getUsuarioRoles().add(usuarioRol);
                 }
-                // Codificar la contraseña antes de guardar el usuario
-                r.setPassword(this.bCryptPasswordEncoder.encode(r.getPassword()));
-                //Setear Visible para que este activo en el sistema
-                r.setVisible(true);
                 // Guardar el usuario en la base de datos
                 return new ResponseEntity<>(usuarioService.save(r), HttpStatus.CREATED);
             }
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -106,7 +118,6 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-
                 if (!arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, usuarioExistente.getId())) {
                     // Si no lo ha asignado, realizar la asignación
                     usuarioExistente.setVisible(true);
@@ -172,6 +183,41 @@ public class UsuarioController {
         asigres.setVisible(true);
         asigresService.save(asigres);
     }
+    private void activaroRegistrarRoles(Usuario usuario,List<Long> rolIds) {
+        if(rolIds!=null) {
+            List<UsuarioRol> usuarioRols = userrol.findByUsuarios_UsuarioId(usuario.getId());
+            if (usuarioRols != null) {
+                //Marcar todos los roles existentes como no visibles (eliminados lógicamente)
+                for (UsuarioRol rolUsuario : usuarioRols) {
+                    rolUsuario.setVisible(false);
+                    userrol.save(rolUsuario);
+                    System.out.println("Entro aqui y elimino logicamente los roles del usuario " + rolUsuario.getRol().getRolNombre() + " Estado: " + rolUsuario.isVisible());
+                }
+                for (Long idRol : rolIds) {
+                    //Traer los roles del usuario y si coinciden con el id del array de roles colocar en true
+                    //su visibilidad caso contrario si no tiene ese rol el usuario deberia crearse
+                    for (UsuarioRol rolUsuario : usuarioRols) {
+                        if (rolUsuario.getRol().getRolId().equals(idRol)) {
+                            System.out.println("Activando el rol: " + rolUsuario.getRol().getRolNombre() + " estado: " + rolUsuario.isVisible());
+                            rolUsuario.setVisible(true);
+                            userrol.save(rolUsuario);
+                        } else {
+                            System.out.println("Entro aqui para crear el rol: ");
+                            Rol rol = rolService.findById(idRol);
+                            if (rol != null) {
+                                UsuarioRol nuevoUsuarioRol = new UsuarioRol();
+                                nuevoUsuarioRol.setUsuario(usuario);
+                                nuevoUsuarioRol.setRol(rol);
+                                nuevoUsuarioRol.setVisible(true); // Marcar como visible
+                                userrol.save(nuevoUsuarioRol);
+                                System.out.println("ROL CREADO: " + nuevoUsuarioRol.getRol().getRolNombre());
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
     private void registrarSeguimiento(Usuario usuario) {
         SeguimientoUsuario seguimiento = new SeguimientoUsuario();
         seguimiento.setUsuario(usuario);
@@ -205,6 +251,7 @@ public class UsuarioController {
         try {
             return new ResponseEntity<>(uR.listar(), HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
@@ -319,6 +366,7 @@ public class UsuarioController {
         }
     }
 
+
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Usuario a = usuarioService.findById(id);
@@ -326,9 +374,13 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
-                a.setVisible(false);
-                // Guardar los cambios en el usuario
-                usuarioService.save(a);
+                //Marcar todos los roles existentes como no visibles (eliminados lógicamente)
+                List<UsuarioRol> usuarioRols = userrol.findByUsuarios_UsuarioId(id);
+                for (UsuarioRol rolUsuario : usuarioRols) {
+                    rolUsuario.setVisible(false);
+                    userrol.save(rolUsuario);
+                    System.out.println("Entro aqui y elimino logicamente los roles del usuario " + rolUsuario.getRol().getRolNombre() +" Estado: "+rolUsuario.isVisible());
+                }
 
                 // Obtener las asignaciones de evidencia relacionadas con el usuario
                 List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id);
@@ -337,6 +389,7 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigeviservice.save(asignacion);
                 }
+
                 // Obtener las asignaciones de admins con criterios relacionadas con el usuario
                 List<Asignacion_Admin> asignaciones_admin = asigadmservice.listaAsignacionAdminPorIdUsuario(id);
                 for (Asignacion_Admin asignacion : asignaciones_admin) {
@@ -344,11 +397,7 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigadmservice.save(asignacion);
                 }
-                // Obtener los registros del usuariorol relacionadas con el usuario
-                List<UsuarioRol> usuarioRols =userrol.findByUsuarios_UsuarioId(id);
-                for (UsuarioRol usuarioconRol : usuarioRols) {
-                    userrol.delete(usuarioconRol.getUsuarioRolId());
-                }
+
 
                 // Registrar la acción en el seguimiento de usuarios
                 SeguimientoUsuario seguimiento = new SeguimientoUsuario();
@@ -357,10 +406,41 @@ public class UsuarioController {
                 seguimiento.setFecha(new Date());
                 seguimientoUsuarioRepository.save(seguimiento);
 
-                return new ResponseEntity<>(HttpStatus.OK);
+                // Guardar los cambios en el usuario
+                a.setVisible(false);
+                usuarioService.save(a);
+                return new ResponseEntity<>(a,HttpStatus.OK);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
+        }
+    }
+
+    @PutMapping("/eliminarlogicResp/{id_usuarioResponsable}")
+    public ResponseEntity<?> eliminarlogicResp(@PathVariable Long id_usuarioResponsable) {
+        Asignacion_Responsable a = ServiceResponsable.asignacionByIdUsuarioResponsable(id_usuarioResponsable);
+        if (a == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                //Usuario u = usuarioService.findById(id_usuarioResponsable);
+                //u.setVisible(false);
+                a.setVisible(false);
+
+                // lista de las asignaciones
+                List<Asignacion_Evidencia> asignaciones = asigeviservice.listarporUsuarioxd(id_usuarioResponsable);
+                for (Asignacion_Evidencia asignacion : asignaciones) {
+                    asignacion.setVisible(false);
+                    // Guardar los cambios en cada asignación de evidencia
+                    asigeviservice.save(asignacion);
+                }
+                //usuarioService.save(u);
+                return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.NO_CONTENT);
+            } catch (Exception e) {
+
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
         }
     }
 
@@ -372,7 +452,6 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
     // public List<Usuario> listaAdminDatos();
     @GetMapping("/listarAdminDatos")
     public ResponseEntity<List<Usuario>> obtenerListaAdminDatos() {
@@ -410,5 +489,4 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
 }

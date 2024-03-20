@@ -1,6 +1,5 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Encabezado_Evaluar;
 import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.projection.*;
 import com.sistema.examenes.services.Evidencia_Service;
@@ -15,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/aseguramiento/api/evidencia")
 public class Evidencia_Controller {
+
     @Autowired
     Evidencia_Service Service;
 
@@ -111,6 +111,17 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}")
+    public ResponseEntity<List<Evidencia>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
+        try {
+            return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     @GetMapping("/evidenuser/{username}")
     public ResponseEntity<List<EvidenciaProjection>> evidenciauser(@PathVariable("username") String username) {
         try {
@@ -137,13 +148,13 @@ public class Evidencia_Controller {
         }
     }
     @DeleteMapping("/eliminar/{id}")
-    public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Evidencia evidencia) {
+    public ResponseEntity<?> eliminar(@PathVariable Long id) {
         return Service.delete(id);
     }
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         Evidencia a = Service.findById(id);
-        if (a == null) {
+        if (a==null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {

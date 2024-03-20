@@ -10,32 +10,67 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
-    @Query(value = "SELECT * from evidencia where visible =true", nativeQuery = true)
+    @Query("SELECT e FROM Evidencia e WHERE e.visible = true")
     List<Evidencia> listarEvidencia();
 
-    @Query(value = "SELECT * from evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
-            "JOIN usuarios u ON ae.usuario_id = u.id where u.username=:username and e.visible =true AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
-            "ORDER BY e.descripcion ASC", nativeQuery = true)
-    public List<Evidencia> evidenciaUsuario(String username);
+    @Query("SELECT e FROM Evidencia e " +
+            "JOIN e.lista_evidencias ae " +
+            "JOIN ae.usuario u " +
+            "WHERE u.username = :username " +
+            "AND e.visible = true " +
+            "AND ae.visible = true " +
+            "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
+    public List<Evidencia> evidenciaUsuario(@Param("username") String username);
 
-    @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion, " +
-            "e.estado FROM evidencia e JOIN indicador i ON i.id_indicador=e.indicador_id_indicador " +
-            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
-            "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
-            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia=e.id_evidencia AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
-            "JOIN usuarios u ON u.id=ae.usuario_id " +
-            "WHERE u.username=:username ", nativeQuery = true)
-    public List<EvidenciaProjection> evidenUsuario(String username);
+    @Query(value = "SELECT e.* " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
+            "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +
+            "JOIN persona pe_resp ON pe_resp.id_persona = u_resp.persona_id_persona " +
+            "JOIN usuarios u_asig ON u_asig.id = ae.id_usuario_asignador " +
+            "JOIN persona pe_asig ON pe_asig.id_persona = u_asig.persona_id_persona " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
+            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador " +
+            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
+            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "WHERE ae.visible = true " +
+            "AND aa.usuario_id = :usuarioId " +
+            "AND aa.visible = true " +
+            "AND u.username = :username " +
+            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador", nativeQuery = true)
+    List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId);
 
-    @Query(value = "SELECT e.id_evidencia, cri.nombre AS criterio,s.nombre AS subcriterio,i.nombre AS indicador,e.descripcion AS descripcion, " +
-            "e.estado AS estado FROM evidencia e JOIN indicador i ON i.id_indicador=e.indicador_id_indicador " +
-            "JOIN subcriterio s ON s.id_subcriterio=i.subcriterio_id_subcriterio " +
-            "JOIN criterio cri ON cri.id_criterio=s.id_criterio " +
-            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia=e.id_evidencia " +
-            "AND ae.visible=true AND ae.id_modelo=(SELECT MAX(id_modelo) FROM modelo) " +
-            "JOIN usuarios u ON u.id=ae.usuario_id " +
-            "WHERE u.username=:username AND LOWER(e.estado)='pendiente'", nativeQuery = true)
-    public List<EvidenciaProjection> evidenUserPendiente(String username);
+    @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
+            "e.descripcion AS descripcion, e.estado AS estado, ae.id_asignacion_evidencia AS id_asignacion_evidencia, " +
+            "(SELECT COUNT(a.id_archivo) FROM Archivo_s a WHERE a.actividad.id_asignacion_evidencia = ae.id_asignacion_evidencia AND a.visible = true) AS countarchivos " +
+            "FROM Evidencia e " +
+            "JOIN e.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cri " +
+            "JOIN e.lista_evidencias ae " +
+            "JOIN ae.usuario u " +
+            "WHERE u.username = :username " +
+            "AND ae.visible = true " +
+            "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
+    public List<EvidenciaProjection> evidenUsuario(@Param("username") String username);
+
+    @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
+            "e.descripcion AS descripcion, e.estado AS estado " +
+            "FROM Evidencia e " +
+            "JOIN e.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cri " +
+            "JOIN e.lista_evidencias ae " +
+            "JOIN ae.usuario u " +
+            "WHERE u.username = :username " +
+            "AND ae.visible = true " +
+            "AND ae.archsubido = false " +
+            "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
+    public List<EvidenciaProjection> evidenUserPendiente(@Param("username") String username);
 
    /* @Query(value = " SELECT e.* FROM evidencia e  \n" +
             "               LEFT JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia \n" +

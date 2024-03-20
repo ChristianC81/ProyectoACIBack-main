@@ -21,7 +21,6 @@ public class Formula_Controller {
     public ResponseEntity<Formula> crear(@RequestBody Formula r) {
         try {
             r.setVisible(true);
-
             return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

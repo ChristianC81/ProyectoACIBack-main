@@ -5,6 +5,7 @@ import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.mensajes.Archivosmensajes;
 import com.sistema.examenes.projection.ArchivoProjection;
+import com.sistema.examenes.projection.ArchivoResProjection;
 import com.sistema.examenes.repository.Archivo_repository;
 import com.sistema.examenes.services.*;
 import lombok.AllArgsConstructor;
@@ -153,10 +154,10 @@ public class Archivo_Controller {
     }
 
 
-    @GetMapping("/buscarev/{username}")
-    public ResponseEntity<List<Archivo_s>> listararchi(@PathVariable("username") String username) {
-        try {
-            return new ResponseEntity<>(archivoservis.listararchivouser(username), HttpStatus.OK);
+    @GetMapping("/buscarev/{username}/{id_asignacion_evi}")
+    public ResponseEntity<List<ArchivoResProjection>> listararchi(@PathVariable("username") String username, @PathVariable("id_asignacion_evi") Long id_asignacion_evi) {
+        try {   
+            return new ResponseEntity<>(archivoservis.listararchivouser(username,id_asignacion_evi), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

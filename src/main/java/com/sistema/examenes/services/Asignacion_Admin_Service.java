@@ -1,10 +1,7 @@
 package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Asignacion_Admin;
-import com.sistema.examenes.projection.ActivAprobadaProjection;
-import com.sistema.examenes.projection.ActivProyection;
-import com.sistema.examenes.projection.AsignacionProjection;
-import com.sistema.examenes.projection.NombreAsigProjection;
+import com.sistema.examenes.projection.*;
 
 import java.util.List;
 
@@ -30,7 +27,9 @@ public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admi
     public List<ActivAprobadaProjection> actividadAprobada(Long id_modelo);
 
     List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
-    public List<ActivProyection> actividadCont(Long id_modelo);
+    public List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
+    public List<ActivProyection> listarEvidenciasCumplidas();
+    public List<ActivProyection> evidenciaUsu(Long id);
 
 
 

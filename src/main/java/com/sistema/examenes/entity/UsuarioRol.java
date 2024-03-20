@@ -10,10 +10,12 @@ public class UsuarioRol {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long usuarioRolId;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "usuario_id", unique = true)
     private Usuario usuario;
 
     @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "rol_rolid", unique = true)
     private Rol rol;
 
     // Columna para el eliminado logico no borrar

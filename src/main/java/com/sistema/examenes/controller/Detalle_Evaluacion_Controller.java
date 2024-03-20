@@ -21,9 +21,11 @@ public class Detalle_Evaluacion_Controller {
 
     @PostMapping("/crear")
     public ResponseEntity<Detalle_Evaluacion> crear(@RequestBody Detalle_Evaluacion r) {
-        Boolean existe = Service.existeeva(r.getEvidencia().getId_evidencia(), r.getUsuario().getId(), r.getId_modelo());
+        //boolean existe = Service.existeeva(r.getEvidencia().getId_evidencia(), r.getUsuario().getId(), r.getId_modelo());
         try {
-            if (existe) {
+            r.setVisible(true);
+            return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
+           /* if (existe) {
                 Long iddet=Service.iddetalle(r.getEvidencia().getId_evidencia(), r.getUsuario().getId(), r.getId_modelo());
                 Detalle_Evaluacion detalleExistente = Service.findById(iddet);
 
@@ -43,7 +45,7 @@ public class Detalle_Evaluacion_Controller {
             } else {
                 r.setVisible(true);
                 return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
-            }
+            }*/
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -67,6 +69,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    /**
     @GetMapping("/listarv")
     public ResponseEntity<List<Detalle_Evaluacion>> obtenerListav() {
         try {
@@ -75,6 +78,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/buscar/{id}")
     public ResponseEntity<Detalle_Evaluacion> getById(@PathVariable("id") Long id) {
         try {
@@ -83,6 +87,7 @@ public class Detalle_Evaluacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     **/
     @GetMapping("/listarporEviRecha/{idEvi}")
     public ResponseEntity<List<Detalle_Evaluacion>> listarPorEvidencia(@PathVariable("idEvi") Long idEvidencia) {
         try {

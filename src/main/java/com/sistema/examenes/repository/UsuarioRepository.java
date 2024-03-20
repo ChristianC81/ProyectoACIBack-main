@@ -14,9 +14,8 @@ import org.springframework.data.repository.query.Param;
 import javax.transaction.Transactional;
 
 public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
-        @Query(value = "SELECT *\n" +
-                        "\tFROM usuarios WHERE username = :username AND visible=true", nativeQuery = true)
-        public Usuario findByUsername(String username);
+       // @Query(value = "SELECT * FROM usuarios WHERE username = :username AND visible=true", nativeQuery = true)
+        Usuario findByUsernameAndVisibleTrue(String username);
 
         @Query(value = "SELECT * FROM usuarios WHERE username = :username", nativeQuery = true)
         public Usuario findAllByUsername(String username);
@@ -32,6 +31,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         public Usuario buscarId(String user);
 
 
+        //aquiii lista completa
         @Query(value = "SELECT u.id as id,ur.usuariorolid as userrolid, pe.primer_nombre||' '||pe.segundo_nombre||' '||pe.primer_apellido||' '||pe.segundo_apellido as nombres, u.username as usuario, ro.rolnombre as rolnombre,\n" +
                 "u.password as contrasenia, CASE WHEN criterio.nombre IS NOT NULL THEN criterio.nombre ELSE '' END AS criterionombre\n" +
                 "FROM usuariorol ur JOIN usuarios u ON ur.usuario_id=u.id\n" +
@@ -84,6 +84,15 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
         public List<Usuario> listaResponsablesDatos();
 
+        /*
+         @Query( "SELECT u.id AS id, p.primer_nombre ||' '|| p.primer_apellido AS nombres," +
+                " u.username AS username, p.correo AS correo " +
+                "FROM Usuario u " +
+                "JOIN Asignacion_Evidencia ae ON u.id = ae.usuario.id " +
+                "JOIN Persona p  ON u.persona.id_persona = p.id_persona " +
+                "WHERE u.visible = true AND ae.visible = true")
+        public List<UsuariosResProjection> listaResponsablesDatos();
+*/
         @Query(value = "SELECT u.* FROM usuarios u " +
                         "JOIN usuariorol ur ON u.id = ur.usuario_id " +
                         "LEFT JOIN asignacion_evidencia ae ON u.id = ae.usuario_id " +
@@ -91,7 +100,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         public List<Usuario> listaResponsablesAdmin();
         @Query(value = "SELECT " +
                 "    u.id, " +
-                "    CONCAT(per.primer_nombre, ' ', per.primer_apellido) AS nombres, " +
+                "    CONCAT(per.primer_nombre, ' ', per.segundo_nombre, ' ', per.primer_apellido, ' ', per.segundo_apellido) AS nombres, " +
                 "    u.username AS usua, " +
                 "    r.rolnombre AS rol, " +
                 "    CASE " +
@@ -131,7 +140,9 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "GROUP BY " +
                 "    u.id, " +
                 "    per.primer_nombre, " +
+                "    per.segundo_nombre, " +
                 "    per.primer_apellido, " +
+                "    per.segundo_apellido, " +
                 "    u.username, " +
                 "    r.rolnombre, " +
                 "    ae.count_evidencias", nativeQuery = true)
@@ -140,10 +151,6 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         @Query(value = "SELECT u.* FROM public.usuarios u JOIN public.usuariorol ur ON ur.usuario_id = u.id WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
         List<Usuario> responsables();
 
-        @Modifying
-        @Transactional
-        @Query(value = "UPDATE actividad SET fecha_fin =:nuevaFecha WHERE usuario_id =:usuarioId", nativeQuery = true)
-        void actualizarFechaFin(String nuevaFecha, Long usuarioId);
 
         @Query(value = "SELECT u.*\n" +
                         "FROM public.usuarios u\n" +

@@ -8,6 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 import java.util.List;
 
 public interface Formula_repository extends JpaRepository<Formula, Long> {
-    @Query(value = "SELECT * from formula where visible =true",nativeQuery = true)
+    @Query("SELECT f from Formula f where f.visible =true")
     List<Formula> listarFormula();
 }

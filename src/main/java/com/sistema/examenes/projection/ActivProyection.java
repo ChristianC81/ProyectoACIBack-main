@@ -9,4 +9,16 @@ public interface ActivProyection {
     String getNombres();
     Long getTotal();
     Double getAvance();
+
+    //AUTORIDAD
+    String getNombre();
+    String getFechainicio();
+    String getFechafin();
+    String getNombreresponsable();
+
+    //
+    String getNombreevidencia();
+    String getInicio();
+    String getFin();
+
 }

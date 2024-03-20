@@ -26,10 +26,12 @@ public class Subcriterio implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_criterio")
-    private Criterio criterio;
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subcriterio")
     @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_criterio", referencedColumnName = "id_criterio")
+    private Criterio criterio;
+
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER, mappedBy = "subcriterio")
     private Set<Indicador> lista_indicadores = new HashSet<>();
 }

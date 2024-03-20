@@ -17,10 +17,10 @@ public class Detalle_Evaluacion_ServiceImpl extends GenericServiceImpl<Detalle_E
         return repository;
     }
 
-    @Override
+/*    @Override
     public List<Detalle_Evaluacion> listar() {
         return repository.listarDetalleEvaluacion();
-    }
+    }*/
 
     @Override
     public List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia) {

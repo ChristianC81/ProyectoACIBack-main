@@ -44,7 +44,7 @@ public class Notificacion_Controller {
         }
     }
 
-    @GetMapping("/listarnotificaciones/{id}")
+        @GetMapping("/listarnotificaciones/{id}")
     public ResponseEntity<List<Notificacion>>listar(@PathVariable("id") Long id){
         try {
             return new ResponseEntity<>(service.listar(id), HttpStatus.OK);
@@ -93,7 +93,7 @@ public class Notificacion_Controller {
 
         }
     }
-    @Scheduled(cron = "0 0 0 * * ?")
+   /* @Scheduled(cron = "0 0 0 * * ?")
     public void eliminarNotificacionesAntiguas() {
         java.sql.Date fe=service.fechaeliminar();
         if(fe!=null){
@@ -108,7 +108,7 @@ public class Notificacion_Controller {
             service.eliminar(notificacion.getId());
         }
        }
-    }
+    }*/
 //@Scheduled(cron = "segundo minuto hora día-del-mes mes día-de-la-semana")
     @Scheduled(cron = "0 0 10 * * ?") // Ejecutar todos los días a las 10 AM 13PM
     public void CrearNotificaciones() {
@@ -142,8 +142,8 @@ public class Notificacion_Controller {
             }
         }
     }
-    @PostConstruct
+    /*@PostConstruct
     public void iniciarServidor() {
         eliminarNotificacionesAntiguas();
-    }
+    }*/
 }
