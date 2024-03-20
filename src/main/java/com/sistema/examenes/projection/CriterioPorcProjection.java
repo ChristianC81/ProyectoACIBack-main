@@ -1,7 +1,7 @@
 package com.sistema.examenes.projection;
 
-public interface SubcriterioPorcProjection {
-    Long getId_subcriterio();
+public interface CriterioPorcProjection {
+    Long getId_criterio();
     String getNombre();
     Double getFaltante();
     Double getTotal();

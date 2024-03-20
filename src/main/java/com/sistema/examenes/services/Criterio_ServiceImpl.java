@@ -112,4 +112,9 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
         return repository.criteriosadmultimomodelo(userId);
     }
 
+    @Override
+    public List<CriterioPorcProjection> criteriosporModelo(Long id_modelo) {
+        return repository.criteriosporModelo(id_modelo);
+    }
+
 }

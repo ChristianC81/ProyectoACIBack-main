@@ -40,7 +40,7 @@ public class Subcriterio_ServiceImpl extends GenericServiceImpl<Subcriterio, Lon
         return repository.obtenerSubcriterios(id_criterio, id_modelo);
     }
     @Override
-    public List<SubcriterioPorcProjection> subcriteriosporCriterio(Long id_modelo, Long id_criterio) {
-        return repository.subcriteriosporCriterio(id_modelo, id_criterio);
+    public List<SubcriterioPorcProjection> subcriteriosporCriterio(Long id_criterio) {
+        return repository.subcriteriosporCriterio( id_criterio);
     }
 }

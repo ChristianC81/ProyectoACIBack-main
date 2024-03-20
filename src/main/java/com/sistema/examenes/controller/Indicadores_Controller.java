@@ -260,4 +260,12 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }*/
+    @GetMapping("/listarporcindicadores/{id_subcriterio}")
+    public ResponseEntity<List<IndicadorPorcProjection>> listarporcindicadores(@PathVariable("id_subcriterio") Long id_subcriterio) {
+        try {
+            return new ResponseEntity<>(Service.indicadoreporsubcriterio(id_subcriterio), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }
