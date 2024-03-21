@@ -92,7 +92,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
 
     @Query("SELECT DISTINCT cri.nombre as nombrecriterio, s.nombre as nombresubcriterio, i.nombre as nombreindicador, " +
             "i.descripcion as descripcionindicador, i.valor_obtenido as valorobtenido, i.porc_obtenido as porcentajeobtenido, " +
-            "i.porc_utilida_obtenida as porcentajeutilidad " +
+            "i.porc_utilida_obtenida as porcentajeutilidad, i.tipo as tipo " +
             "FROM Asignacion_Indicador ai " +
             "JOIN ai.indicador i " +
             "JOIN i.subcriterio s " +
