@@ -43,7 +43,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
         List<UsuariosProjection> listarusercrite(Long id_modelo);
 
       
-        @Query(value = "SELECT u.* " +
+        @Query(value = "SELECT DISTINCT u.* " +
                 "FROM " +
                 "    usuarios u " +
                 "JOIN " +
