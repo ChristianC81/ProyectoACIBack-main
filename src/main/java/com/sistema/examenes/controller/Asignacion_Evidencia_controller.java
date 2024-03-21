@@ -16,10 +16,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @CrossOrigin({"https://apps.tecazuay.edu.ec","http://localhost:4200/"})
 @RestController
@@ -106,16 +104,6 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    /**
-    @GetMapping("/listarpruebasevi")
-    public ResponseEntity<List<AsignacionEvidenciaProyeccion>> listarpruebasevi() {
-        try {
-            return new ResponseEntity<>(Service.listarAsignacionEvidenciaProyeccion(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-**/
     @GetMapping("/actCalendar/{id}")
     public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id) {
         try {
@@ -171,16 +159,6 @@ public class Asignacion_Evidencia_controller {
             }
         }
     }
-    /**
-    @GetMapping("/listarEviUsua/{username}")
-    public ResponseEntity<List<Asignacion_Evidencia>> listarAsigEvi(@PathVariable("username") String  username) {
-        try {
-            return new ResponseEntity<>(Service.listarporUsuario(username), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-     **/
     @GetMapping("/fecha/{id_evidencia}/{id_modelo}")
     public ResponseEntity<Asignacion_Evidencia> listarfecha(@PathVariable("id_evidencia") Long id_evidencia, @PathVariable("id_modelo") Long id_modelo) {
         try {
