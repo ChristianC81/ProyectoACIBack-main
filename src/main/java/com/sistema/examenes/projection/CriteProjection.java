@@ -6,5 +6,9 @@ public interface CriteProjection {
     Long getUsuariorol();
     String getCriterionombre();
 
+    //reporte de criterio
+    Long getIdcriterio();
+    String getNombrecriterio();
+
 }
 

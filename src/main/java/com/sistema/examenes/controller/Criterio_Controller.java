@@ -220,6 +220,16 @@ public class Criterio_Controller {
         }
     }
 
+    @GetMapping("/CriteriosUltimoModelo")
+    public ResponseEntity<List<CriteProjection>> obtenerCriteUltimoModelo() {
+        try {
+            return new ResponseEntity<>(Service.ObtenerCriterioUltimoModelo(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+
     // List<Criterio> listarCriterioPorIndicador(Long id_indicador);
     /**
     @GetMapping("/listarCriterioPorIndicador/{id}")
