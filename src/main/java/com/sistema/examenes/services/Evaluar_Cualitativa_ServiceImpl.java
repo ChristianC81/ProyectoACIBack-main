@@ -20,4 +20,11 @@ public class Evaluar_Cualitativa_ServiceImpl extends GenericServiceImpl<Evaluar_
     public List<Evaluar_Cualitativa> listar() {
         return repository.listarEvaluarCualiativa();
     }
+
+    @Override
+    public List<Evaluar_Cualitativa> findByIdEvidencia(Long id_evidencia) {
+        return repository.findByIdEvidencia(id_evidencia);
+    }
+
+
 }

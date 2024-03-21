@@ -240,11 +240,12 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "SUM(i.porc_utilida_obtenida) AS total, " +
             "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
             "FROM Indicador i " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +
-            "WHERE i.visible=true AND sub.id_subcriterio =:id_subcriterio " +
+            "WHERE i.visible=true AND sub.nombre=:sub_nombre " +
             "GROUP BY i.nombre, i.id_indicador " +
             "ORDER BY i.id_indicador")
-    List<IndicadorPorcProjection> indicadoreporsubcriterio(Long id_subcriterio);
+    List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre);
 
 }
