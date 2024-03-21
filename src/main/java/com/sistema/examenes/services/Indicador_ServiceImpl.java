@@ -52,17 +52,20 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
     }
 
     @Override
-    public List<Indicador> indicadoresPorCriterios(List<Long> id_criterio) {
+    public List<IndicadoresProjection> indicadoresPorCriterios(List<Long> id_criterio) {
         return repository.indicadoresPorCriterios(id_criterio);
     }
+
     @Override
-    public List<Indicador> indicadoresPorCriteriosPruebaCuali(List<Long> id_criterio) {
-        return repository.indicadoresPorCriteriosPruebaCuali(id_criterio);
+    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio) {
+        return repository.indicadoresPorCriteriosPruebaCualitativa(id_criterio);
     }
+
     @Override
-    public List<Indicador> indicadoresPorCriteriosPruebaCuanti(List<Long> id_criterio) {
-        return repository.indicadoresPorCriteriosPruebaCuanti(id_criterio);
+    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio) {
+        return repository.indicadoresPorCriteriosPruebaCuantitativa(id_criterio);
     }
+
 
    /* @Override
     public List<Indicador> indicadoresPorCriteriosCuali() {return repository.indicadoresPorCriteriosCuali();}

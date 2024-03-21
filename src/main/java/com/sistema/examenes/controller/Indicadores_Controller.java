@@ -189,8 +189,9 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
     @GetMapping("/indicadoresPorCriterios")
-    public ResponseEntity<List<Indicador>> indicadoresPorCriterios(
+    public ResponseEntity<List<IndicadoresProjection>> indicadoresPorCriterios(
             @RequestParam("idCriterios") List<Long> idCriterios) {
         try {
             return new ResponseEntity<>(Service.indicadoresPorCriterios(idCriterios), HttpStatus.OK);
@@ -199,6 +200,7 @@ public class Indicadores_Controller {
         }
     }
 
+    /*
     @GetMapping("/indicadoresPorCriteriosPruebaCL")
     public ResponseEntity<List<Indicador>> indicadoresPorCriteriosPruebaCuali(
             @RequestParam("idCriterios") List<Long> idCriterios) {
@@ -208,8 +210,7 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-    @GetMapping("/indicadoresPorCriteriosPruebaCT")
+     @GetMapping("/indicadoresPorCriteriosPruebaCT")
     public ResponseEntity<List<Indicador>> indicadoresPorCriteriosPruebaCuanti(
             @RequestParam("idCriterios") List<Long> idCriterios) {
         try {
@@ -218,6 +219,27 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+     */
+
+    @GetMapping("/indicadoresPorCriteriosPruebaCualitativa")
+    public ResponseEntity<List<IndicadoresProjection>> indicadoresPorCriteriosPruebaCualitativa(
+            @RequestParam("idCriterios") List<Long> idCriterios) {
+        try {
+            return new ResponseEntity<>(Service.indicadoresPorCriteriosPruebaCualitativa(idCriterios), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/indicadoresPorCriteriosPruebaCuantitativa")
+    public ResponseEntity<List<IndicadoresProjection>> indicadoresPorCriteriosPruebaCuantitativa(
+            @RequestParam("idCriterios") List<Long> idCriterios) {
+        try {
+            return new ResponseEntity<>(Service.indicadoresPorCriteriosPruebaCuantitativa(idCriterios), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
 
   /*  @GetMapping("/indicadoresPorCriteriosCuali")
     public ResponseEntity<List<Indicador>> indicadoresPorCriteriosCuali() {

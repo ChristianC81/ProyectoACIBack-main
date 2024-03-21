@@ -50,6 +50,14 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
     List<Criterio> obtenerCriteriosUltimoModelo();
 
+    @Query("SELECT DISTINCT c.id_criterio as idcriterio, c.nombre as nombrecriterio " +
+            "FROM Criterio c " +
+            "JOIN c.lista_subcriterios s " +
+            "JOIN s.lista_indicadores i " +
+            "JOIN i.lista_asignacion ai " +
+            "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
+    List<CriteProjection> ObtenerCriterioUltimoModelo();
+
     //el de abajo no se vale
         @Query(value = "SELECT c.* FROM public.criterio c join public.subcriterio s ON s.id_criterio = c.id_criterio join public.indicador i ON i.subcriterio_id_subcriterio = s.id_subcriterio WHERE i.id_indicador=:id_indicador", nativeQuery = true)
         List<Criterio> listarCriterioPorIndicador(Long id_indicador);

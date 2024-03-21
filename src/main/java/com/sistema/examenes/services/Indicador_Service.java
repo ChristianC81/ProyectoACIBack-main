@@ -16,9 +16,11 @@ public interface Indicador_Service extends GenericService<Indicador, Long> {
 
     List<Indicador> listarIndicadorPorCriterioModelo(Long id_criterio, Long id_modelo);
 
-    List<Indicador> indicadoresPorCriterios(List<Long> id_criterio);
-    List<Indicador> indicadoresPorCriteriosPruebaCuali(List<Long> id_criterio);
-    List<Indicador> indicadoresPorCriteriosPruebaCuanti(List<Long> id_criterio);
+    List<IndicadoresProjection> indicadoresPorCriterios(List<Long> id_criterio);
+
+    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio);
+    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio);
+
     //List<Indicador> indicadoresPorCriteriosCuali();
     //List<Indicador> indicadoresPorCriteriosCuanti();
     public List<IndicadorEvidenciasProjection> obtenerDatosIndicadores(Long id_subcriterio);
