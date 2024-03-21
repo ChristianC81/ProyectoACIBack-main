@@ -104,7 +104,7 @@ public class Evidencia_Controller {
         }
     }
     @GetMapping("/buscarev/{username}")
-    public ResponseEntity<List<Evidencia>> buscarEvidencia(@PathVariable("username") String username) {
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidencia(@PathVariable("username") String username) {
         try {
             return new ResponseEntity<>(Service.evidenciaUsuario(username), HttpStatus.OK);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class Evidencia_Controller {
     }
 
     @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}")
-    public ResponseEntity<List<Evidencia>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
         try {
             return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId), HttpStatus.OK);
         } catch (Exception e) {
@@ -175,6 +175,23 @@ public class Evidencia_Controller {
         } else {
             try {
                 a.setDescripcion(p.getDescripcion());
+                a.setEstado(p.getEstado());
+                return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+    }
+
+    @PutMapping("/actualizar2/{id}")
+    public ResponseEntity<Evidencia> actualizar2(@PathVariable Long id, @RequestBody Evidencia p) {
+        Evidencia a = Service.findById(id);
+        if (a == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                //a.setDescripcion(p.getDescripcion());
                 a.setEstado(p.getEstado());
                 return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
             } catch (Exception e) {

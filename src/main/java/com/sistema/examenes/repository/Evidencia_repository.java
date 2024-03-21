@@ -13,16 +13,22 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     @Query("SELECT e FROM Evidencia e WHERE e.visible = true")
     List<Evidencia> listarEvidencia();
 
-    @Query("SELECT e FROM Evidencia e " +
+    @Query("SELECT e.id_evidencia AS id_evidencia, c.nombre AS nombrecriterio, s.nombre AS nombresubcriterio, " +
+            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado " +
+            "FROM Evidencia e " +
             "JOIN e.lista_evidencias ae " +
             "JOIN ae.usuario u " +
+            "JOIN e.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio c " +
             "WHERE u.username = :username " +
             "AND e.visible = true " +
             "AND ae.visible = true " +
             "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
-    public List<Evidencia> evidenciaUsuario(@Param("username") String username);
+    public List<EvidenciaEvProjection> evidenciaUsuario(@Param("username") String username);
 
-    @Query(value = "SELECT e.* " +
+    @Query(value = "SELECT e.id_evidencia AS id_evidencia, cri.nombre AS nombrecriterio, s.nombre AS nombresubcriterio, " +
+            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado " +
             "FROM asignacion_evidencia ae " +
             "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
             "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +
@@ -42,7 +48,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "AND aa.visible = true " +
             "AND u.username = :username " +
             "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador", nativeQuery = true)
-    List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId);
+    List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
 
     @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
             "e.descripcion AS descripcion, e.estado AS estado, ae.id_asignacion_evidencia AS id_asignacion_evidencia, " +
