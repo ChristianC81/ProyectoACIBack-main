@@ -153,8 +153,6 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
-                serviceEvaluarCuali.
-                if()
                 indicador.setValor_obtenido(p.getValor_obtenido());
                 indicador.setPorc_obtenido(p.getPorc_obtenido());
                 indicador.setPorc_utilida_obtenida(p.getPorc_utilida_obtenida());
