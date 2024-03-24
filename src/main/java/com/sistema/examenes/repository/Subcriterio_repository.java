@@ -53,17 +53,17 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
     List<SubcriterioIndicadoresProjection> obtenerSubcriterios(Long id_criterio,Long id_modelo);
 
     //Grafica de barras, porcentajes de subcriterios por criterio
-
     @Query("SELECT sub.id_subcriterio AS id_subcriterio, " +
             "sub.nombre AS nombre, " +
             "SUM(i.porc_utilida_obtenida) AS total, " +
             "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
             "FROM Indicador i " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +
-            "WHERE sub.visible=true AND cri.id_criterio =:id_criterio " +
+            "WHERE sub.visible =true AND i.visible=true AND sub.criterio.nombre=:cri_nombre " +
             "GROUP BY sub.nombre, sub.id_subcriterio " +
             "ORDER BY sub.id_subcriterio")
-    List<SubcriterioPorcProjection> subcriteriosporCriterio(Long id_criterio);
+    List<SubcriterioPorcProjection> subcriteriosporCriterio(String cri_nombre);
 
 }
