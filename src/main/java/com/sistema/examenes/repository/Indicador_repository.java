@@ -21,6 +21,17 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "ORDER BY cri.id_criterio, s.id_subcriterio, i.id_indicador")
     List<Indicador> listarIndicador();
 
+    @Query("SELECT i.id_indicador as idindicador, cri.nombre as nombrecriterio, s.nombre as nombresubcriterio, i.nombre as nombreindicador, " +
+            "i.valor_obtenido as valorobtenido, i.peso as peso, " +
+            "i.porc_obtenido as porcentajeobtenido, i.porc_utilida_obtenida as porcentajeutilidad " +
+            "FROM Asignacion_Indicador ai " +
+            "JOIN ai.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio cri " +
+            "WHERE ai.modelo.id = :id_modelo " +
+            "AND i.visible = true ")
+    List<PonderacionProjection> listarIndicadoresModelo(Long id_modelo);
+
     @Query("SELECT i FROM Indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio c  " +

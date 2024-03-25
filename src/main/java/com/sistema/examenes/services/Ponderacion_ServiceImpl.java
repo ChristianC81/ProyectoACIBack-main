@@ -61,7 +61,7 @@ public class Ponderacion_ServiceImpl extends GenericServiceImpl<Ponderacion, Lon
     }
 
     @Override
-    public List<Ponderacion> listarPonderacionPorFecha(String fecha,Long contador) {
+    public List<PonderacionProjection> listarPonderacionPorFecha(String fecha,Long contador) {
         return repository.listarPonderacionPorFecha(fecha, contador);
     }
     @Override

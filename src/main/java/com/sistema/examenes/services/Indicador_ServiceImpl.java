@@ -25,6 +25,10 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
     public List<Indicador> listar() {
         return repository.listarIndicador();
     }
+    @Override
+    public List<PonderacionProjection> listarIndicadoresModelo(Long id_modelo) {
+        return repository.listarIndicadoresModelo(id_modelo);
+    }
 
     @Override
     public List<IndicadoresProjection> indicadores(Long id_modelo) {
