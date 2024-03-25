@@ -26,18 +26,8 @@ public class Asignacion_Admin_ServiceImpl extends GenericServiceImpl<Asignacion_
     }
 
     @Override
-    public Asignacion_Admin listarAsignacion_AdminPorUsuario(Long id_usuario,Long id_modelo) {
-        return repository.listarAsignacion_AdminPorUsuario(id_usuario, id_modelo);
-    }
-
-    @Override
-    public Asignacion_Admin buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId) {
+    public AsignacionProjection buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId) {
         return repository.buscar_asignacion_especifica(usuarioId,modeloId,criterioId);
-    }
-
-    @Override
-    public List<Asignacion_Admin> listarAsignacion_AdminPorUsuarioCriterio(Long id_criterio, Long id_modelo) {
-        return repository.listarAsignacion_AdminPorUsuarioCriterio(id_criterio, id_modelo);
     }
 
     @Override

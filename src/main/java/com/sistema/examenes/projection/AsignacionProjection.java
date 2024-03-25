@@ -5,4 +5,9 @@ public interface AsignacionProjection {
     String getNombrescri();
     String getActividasi();
 
+    //Para la busqueda especifica
+    Long getId_asignacion();
+    Long getIdUsuario();
+    Long getIdCriterio();
+    Long getIdModelo();
 }

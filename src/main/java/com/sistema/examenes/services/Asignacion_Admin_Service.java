@@ -8,10 +8,7 @@ import java.util.List;
 public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admin, Long> {
     public List<Asignacion_Admin> listar();
 
-    public Asignacion_Admin listarAsignacion_AdminPorUsuario(Long id_usuario,Long id_modelo);
-
-    public Asignacion_Admin buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId);
-    public List<Asignacion_Admin> listarAsignacion_AdminPorUsuarioCriterio(Long id_criterio, Long id_modelo);
+    public AsignacionProjection buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId);
     public List<AsignacionProjection> asignacionAdmin(Long id_modelo, String veri);
     public Asignacion_Admin asignacion_existente(Long id_criterio, Long id_modelo,Long id_usuario);
 
@@ -30,8 +27,4 @@ public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admi
     public List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
     public List<ActivProyection> listarEvidenciasCumplidas();
     public List<ActivProyection> evidenciaUsu(Long id);
-
-
-
-
 }
