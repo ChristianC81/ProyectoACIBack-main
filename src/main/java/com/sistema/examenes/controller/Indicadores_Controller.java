@@ -41,6 +41,15 @@ public class Indicadores_Controller {
         }
     }
 
+    @GetMapping("/listarindicadoresModelo/{id_modelo}")
+    public ResponseEntity<List<PonderacionProjection>> listarIndicadoresModelo(@PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.listarIndicadoresModelo(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/listarindi/{id_modelo}")
     public ResponseEntity<List<IndicadoresProjection>> listaIndi(@PathVariable("id_modelo") Long id_modelo) {
         try {

@@ -128,8 +128,8 @@ public class Ponderacion_Controller {
     }
 
     @GetMapping("/listarPonderacionPorFecha/{fecha}/{contador}")
-    public ResponseEntity<List<Ponderacion>> listarPonderacionPorFecha(@PathVariable("fecha") String fecha,@PathVariable("contador") Long contador) {
-        List<Ponderacion> ponderaciones = Service.listarPonderacionPorFecha(fecha,contador);
+    public ResponseEntity<List<PonderacionProjection>> listarPonderacionPorFecha(@PathVariable("fecha") String fecha,@PathVariable("contador") Long contador) {
+        List<PonderacionProjection> ponderaciones = Service.listarPonderacionPorFecha(fecha,contador);
         return new ResponseEntity<>(ponderaciones, HttpStatus.OK);
     }
 
