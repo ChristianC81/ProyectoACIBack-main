@@ -119,8 +119,8 @@ public class Criterio_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarvaloresmovil/{id_modelo}")
-    public ResponseEntity<List<ValoresProjection>> listarvaloresMovil(@PathVariable("id_modelo") Long id_modelo) {
+    @GetMapping("/listarvaloresmovil")
+    public ResponseEntity<List<ValoresProjection>> listarvaloresMovil() {
         try {
             return new ResponseEntity<>(Service.listarvaloresmovil(), HttpStatus.OK);
         } catch (Exception e) {
@@ -143,10 +143,10 @@ public class Criterio_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listvaladmovil/{id_modelo}/{id}")
-    public ResponseEntity<List<ValoresProjection>> listarvaladminmovil(@PathVariable("id_modelo") Long id_modelo, @PathVariable("id") Long id) {
+    @GetMapping("/listvaladmovil/{id}")
+    public ResponseEntity<List<ValoresProjection>> listarvaladminmovil(@PathVariable("id") Long id) {
         try {
-            return new ResponseEntity<>(Service.listarvaladminmovil(id_modelo, id), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarvaladminmovil(id), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

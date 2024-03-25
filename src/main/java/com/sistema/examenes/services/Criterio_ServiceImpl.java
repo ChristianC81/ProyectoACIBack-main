@@ -80,8 +80,8 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     }
 
     @Override
-    public List<ValoresProjection> listarvaladminmovil(Long id_modelo, Long id) {
-        return repository.listarvaladmin(id_modelo, id);
+    public List<ValoresProjection> listarvaladminmovil(Long id) {
+        return repository.listarvaladminmovil(id);
     }
 
     @Override
