@@ -1,7 +1,11 @@
 package com.sistema.examenes.controller;
 
+import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.entity.Subcriterio;
+import com.sistema.examenes.entity.Usuario;
+import com.sistema.examenes.entity.pdto.SubcriterioPDTO;
 import com.sistema.examenes.projection.*;
+import com.sistema.examenes.services.Criterio_Service;
 import com.sistema.examenes.services.Subcriterio_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,12 +20,19 @@ import java.util.List;
 public class Subcriterio_Controller {
     @Autowired
     Subcriterio_Service Service;
+    @Autowired
+    Criterio_Service serviceCriterio;
 
     @PostMapping("/crear")
-    public ResponseEntity<Subcriterio> crear(@RequestBody Subcriterio r) {
+    public ResponseEntity<Subcriterio> crear(@RequestBody SubcriterioPDTO r) {
         try {
-            r.setVisible(true);
-            return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
+            Subcriterio nuevoSubcriterio = new Subcriterio();
+            nuevoSubcriterio.setVisible(true);
+            nuevoSubcriterio.setDescripcion(r.getDescripcion());
+            nuevoSubcriterio.setNombre(r.getNombre());
+            Criterio criterio = serviceCriterio.findById(r.getId_criterio());
+            nuevoSubcriterio.setCriterio(criterio);
+            return new ResponseEntity<>(Service.save(nuevoSubcriterio), HttpStatus.CREATED);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
