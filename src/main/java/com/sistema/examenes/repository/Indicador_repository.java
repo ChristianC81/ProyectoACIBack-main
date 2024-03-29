@@ -28,7 +28,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "JOIN ai.indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio cri " +
-            "WHERE ai.modelo.id = :id_modelo " +
+            "WHERE ai.modelo.id_modelo = :id_modelo " +
             "AND i.visible = true ")
     List<PonderacionProjection> listarIndicadoresModelo(Long id_modelo);
 
@@ -51,17 +51,20 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "ORDER BY cri.id_criterio")
     List<IndicadoresProjection> Indicadores(Long id_modelo);
 
-    @Query("SELECT cri.nombre AS nombre, " +
-            "SUM(i.porc_utilida_obtenida)  AS total, " +
-            "SUM(i.peso)  AS faltante " +
+    @Query("SELECT cri.id_criterio AS id_criterio, " +
+            "cri.nombre AS nombre, " +
+            "SUM(i.porc_utilida_obtenida) AS total, " +
+            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
             "FROM Indicador i " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +
-            "JOIN Asignacion_Admin aa ON aa.criterio.id_criterio=cri.id_criterio AND aa.visible=true " +
-            "AND aa.id_modelo.id_modelo=:id_modelo AND aa.usuario.id=:id " +
-            "GROUP BY cri.nombre,cri.id_criterio  " +
-            "ORDER BY cri.id_criterio ")
-    List<IndicadoresProjection> indicadoresadmin(@Param("id_modelo") Long id_modelo, @Param("id") Long id);
+            "JOIN Asignacion_Admin aa ON aa.criterio.id_criterio = cri.id_criterio AND aa.visible = true " +
+            "JOIN Modelo m ON ai.modelo.id_modelo = m.id_modelo " +
+            "WHERE m.visible =true AND i.visible=true AND ai.modelo.id_modelo =:id_modelo AND aa.usuario.id=:id " +
+            "GROUP BY cri.nombre, cri.id_criterio " +
+            "ORDER BY cri.id_criterio")
+    List<CriterioPorcProjection> indicadoresadmin(@Param("id_modelo") Long id_modelo, @Param("id") Long id);
 
     @Query( "SELECT cri.nombre AS nombre, " +
             "SUM(i.porc_utilida_obtenida)  AS total, " +
@@ -97,7 +100,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "JOIN ai.indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio cri " +
-            "WHERE ai.modelo.id = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
+            "WHERE ai.modelo.id_modelo = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
             "AND (cri.id_criterio IN :idCriterios OR :idCriterios IS NULL)")
     List<IndicadoresProjection> indicadoresPorCriterios(List<Long> idCriterios);
 
@@ -108,7 +111,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "JOIN ai.indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio cri " +
-            "WHERE ai.modelo.id = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
+            "WHERE ai.modelo.id_modelo = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
             "AND (cri.id_criterio IN :idCriterios OR :idCriterios IS NULL) AND i.tipo='cualitativa'")
     List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> idCriterios);
 
@@ -119,7 +122,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "JOIN ai.indicador i " +
             "JOIN i.subcriterio s " +
             "JOIN s.criterio cri " +
-            "WHERE ai.modelo.id = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
+            "WHERE ai.modelo.id_modelo = (SELECT MAX(mo.id_modelo) FROM Modelo mo) " +
             "AND (cri.id_criterio IN :idCriterios OR :idCriterios IS NULL) AND i.tipo='cuantitativa'")
     List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> idCriterios);
 

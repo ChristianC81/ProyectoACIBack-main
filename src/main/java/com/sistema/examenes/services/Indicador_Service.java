@@ -10,7 +10,7 @@ public interface Indicador_Service extends GenericService<Indicador, Long> {
     public List<Indicador> listar();
     public List<PonderacionProjection> listarIndicadoresModelo(Long id_modelo);
     public List<IndicadoresProjection> indicadores(Long id_modelo);
-    List<IndicadoresProjection> indicadoresadmin(Long id_modelo,Long id);
+    List<CriterioPorcProjection> indicadoresadmin(Long id_modelo,Long id);
     public List<Indicador> listarPorSubcriterio(Long id_subcriterio);
 
     List<Indicador> obtenerIndicadores(Long id);

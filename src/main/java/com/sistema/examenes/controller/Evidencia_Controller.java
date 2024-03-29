@@ -201,6 +201,21 @@ public class Evidencia_Controller {
         }
     }
 
+    @PutMapping("/editarValorEvid/{id}/{valorevid}")
+    public ResponseEntity<Evidencia> editarValorEvid(@PathVariable Long id, @PathVariable double valorevid) {
+        Evidencia evidencia = Service.findById(id);
+        if (evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                // Aquí actualizamos el valor de la evidencia
+                evidencia.setValor_obtenido(valorevid);
+                return new ResponseEntity<>(Service.save(evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
     @GetMapping("/listarEvidenciaPorIndicador/{id_indicador}")
     public ResponseEntity<List<Evidencia>> listarEvidenciaPorIndicador(
             @PathVariable("id_indicador") Long id_indicador) {
