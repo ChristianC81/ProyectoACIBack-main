@@ -8,7 +8,7 @@ import java.util.List;
 public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admin, Long> {
     public List<Asignacion_Admin> listar();
 
-    public AsignacionProjection buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId);
+    public AsignacionProjection buscarAsignacionAdmin(Long usuarioId, Long modeloId, Long criterioId);
     public List<AsignacionProjection> asignacionAdmin(Long id_modelo, String veri);
     public Asignacion_Admin asignacion_existente(Long id_criterio, Long id_modelo,Long id_usuario);
 

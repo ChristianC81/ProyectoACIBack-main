@@ -53,8 +53,8 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "ORDER BY u.id;", nativeQuery = true)
     List<AsignacionProjection> veradminsporcriterio(Long id_modelo, Long id_criterio);
 
-    @Query("SELECT aa.id_asignacion as id_asignacion, aa.usuario.id as idUsuario, aa.criterio.id_criterio as idCriterio, aa.id_modelo.id_modelo as idModelo FROM Asignacion_Admin aa WHERE aa.usuario.id = ?1 AND aa.id_modelo.id_modelo = ?2 AND aa.criterio.id_criterio = ?3 AND aa.visible = true")
-    AsignacionProjection buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId);
+    @Query("SELECT aa.id_asignacion as id_asignacion, aa.usuario.id as idUsuario, aa.criterio.id_criterio as idCriterio, aa.id_modelo.id_modelo as idModelo, aa.visible as visible FROM Asignacion_Admin aa WHERE aa.usuario.id = ?1 AND aa.id_modelo.id_modelo = ?2 AND aa.criterio.id_criterio = ?3")
+    AsignacionProjection buscarAsignacionAdmin(Long usuarioId, Long modeloId, Long criterioId);
 
     @Query(value = "SELECT DISTINCT u.id as enc, " +
             "per.primer_nombre || ' ' || per.primer_apellido as nombrescri, " +

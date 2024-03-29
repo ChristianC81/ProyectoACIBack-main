@@ -10,4 +10,5 @@ public interface AsignacionProjection {
     Long getIdUsuario();
     Long getIdCriterio();
     Long getIdModelo();
+    Boolean getVisible();
 }
