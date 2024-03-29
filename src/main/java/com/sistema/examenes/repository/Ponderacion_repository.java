@@ -54,7 +54,8 @@ public interface Ponderacion_repository extends JpaRepository<Ponderacion, Long>
 
     @Query("SELECT p.id_ponderacion as idponderacion, i.id_indicador as idindicador, c.nombre as nombrecriterio, s.nombre as nombresubcriterio, i.nombre as nombreindicador, " +
             "p.valor_obtenido as valorobtenido, p.peso as peso, " +
-            "p.porc_obtenido as porcentajeobtenido, p.porc_utilida_obtenida as porcentajeutilidad " +
+            "p.porc_obtenido as porcentajeobtenido, p.porc_utilida_obtenida as porcentajeutilidad, " +
+            "p.fecha as fechapo, p.contador as contador " +
             "FROM Ponderacion p " +
             "JOIN p.modelo m " +
             "JOIN p.indicador i " +
