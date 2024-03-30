@@ -183,4 +183,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "WHERE " +
             "u.id = :responsableId AND e.visible = true", nativeQuery = true)
     ActiDiagramaPieProjection porcentajeEstadosdeActividadesByResponsableId(@Param("responsableId") Long responsableId);
+
+    @Query("SELECT SUM(e.valor_obtenido) AS valor_obtenido FROM Evidencia e WHERE e.visible = true AND e.indicador.id_indicador = :id_indicador")
+    ValorObtenidoInd obtenerTotalValoresEvidPorIndicador(@Param("id_indicador") Long id_indicador);
 }

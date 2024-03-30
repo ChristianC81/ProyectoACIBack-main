@@ -30,7 +30,7 @@ public class Evidencia implements Serializable {
     private Boolean visible;
 
     @Column(name = "valor_obtenido")
-    private double valor_obtenido;
+    private Double valor_obtenido;
 
     @ManyToOne(fetch = FetchType.EAGER)
     private Indicador indicador;
