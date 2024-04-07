@@ -8,9 +8,9 @@ import java.util.List;
 public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     public List<Evidencia> listar();
 
-    public List<Evidencia> evidenciaUsuario(String username);
+    public List<EvidenciaEvProjection> evidenciaUsuario(String username);
 
-    public List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId);
+    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
 
     public List<Evidencia> listarEvidenciaAsigna(Long idUsuario) ;
 
@@ -24,5 +24,6 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     public List<EvidenciaProjection> evidenUsuario(String username);
     public List<EvidenciaProjection> evidenUserPendiente(String username);
     ActiDiagramaPieProjection porcentajeEstadosdeActividades (Long responsableId);
+    ValorObtenidoInd valoresObtenidosEvidencias (Long id_indicador);
 
 }

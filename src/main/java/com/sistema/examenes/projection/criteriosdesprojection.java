@@ -6,8 +6,10 @@ public interface criteriosdesprojection {
     String getcriterionomj();
     String getsubcrierioj();
     Long getId_indicardorj();
+    Long getId_evidencia();
     String getIdes();
     String getDescrip();
+    double getPeso_evid();
     String getind_nombrej();
     String getTip();
     String getarchivo_nombre();

@@ -1,8 +1,7 @@
 package com.sistema.examenes.controller;
 
-import com.sistema.examenes.entity.Asignacion_Admin;
-import com.sistema.examenes.entity.Asignacion_Responsable;
-import com.sistema.examenes.entity.Criterio;
+import com.sistema.examenes.entity.*;
+import com.sistema.examenes.entity.pdto.AsignacionAdminPDTO;
 import com.sistema.examenes.projection.*;
 import com.sistema.examenes.services.Asignacion_Admin_Service;
 
@@ -25,35 +24,64 @@ public class Asignacion_Admin_Controller {
     @Autowired
     Asignacion_Responsable_Service asignacionResService;
 
+
     @PostMapping("/crear")
-    public ResponseEntity<Asignacion_Admin> crear(@RequestBody Asignacion_Admin r) {
+    public ResponseEntity<Asignacion_Admin> crear(@RequestBody AsignacionAdminPDTO dto) {
         try {
-            Long criterio = r.getCriterio().getId_criterio(); // Obtener el ID del criterio
-            Long modelo = r.getId_modelo().getId_modelo();
-            Long usuario=r.getUsuario().getId();
-            Asignacion_Admin asignacionExistente = Service.asignacion_existente(criterio, modelo,usuario);
+            Long criterio = dto.getIdCriterio();
+            Long modelo = dto.getIdModelo();
+            Long usuario = dto.getIdUsuario();
+
+            Asignacion_Admin asignacionExistente = Service.asignacion_existente(criterio, modelo, usuario);
+
             if (asignacionExistente != null) {
-                Criterio criterioAdm = asignacionExistente.getCriterio();
-                List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(asignacionExistente.getUsuario().getId());
-                if (responsables!=null) {
+                // La asignación ya existe
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            } else {
+                Asignacion_Admin nuevaAsignacion = new Asignacion_Admin();
+                nuevaAsignacion.setCriterio(new Criterio(criterio));
+                nuevaAsignacion.setId_modelo(new Modelo(modelo));
+                nuevaAsignacion.setUsuario(new Usuario(usuario));
+                nuevaAsignacion.setVisible(true);
+
+                // Manejar el responsable aquí
+                Criterio criterioAdm = nuevaAsignacion.getCriterio();
+                List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(usuario);
+                if (responsables != null) {
                     for (Asignacion_Responsable responsable : responsables) {
                         Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
-                        if(asigcriterioResp!=null) {
-                            if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
-                                responsable.setVisible(true);
-                                asignacionResService.save(responsable);
-                            }
+                        if (asigcriterioResp != null && criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                            responsable.setVisible(true);
+                            asignacionResService.save(responsable);
                         }
                     }
                 }
-                asignacionExistente.setVisible(true);
-                return new ResponseEntity<>(Service.save(asignacionExistente), HttpStatus.OK);
+                Asignacion_Admin asignacionGuardada = Service.save(nuevaAsignacion);
+                return new ResponseEntity<>(asignacionGuardada, HttpStatus.CREATED);
             }
-            r.setVisible(true);
-            return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/actualizarEstado/{id}")
+    public ResponseEntity<?> actualizarEstado(@PathVariable Long id) {
+        try {
+            // Obtener la asignación por su ID
+            Asignacion_Admin asignacion = Service.findById(id);
+            if (asignacion == null) {
+                return new ResponseEntity<>("Asignacion_Admin no encontrada con el ID proporcionado", HttpStatus.NOT_FOUND);
+            }
+            asignacion.setVisible(true);
+            Service.save(asignacion);
+            // Devolver el DTO de la asignación actualizada
+            AsignacionAdminPDTO asignacionAdminPDTO = new AsignacionAdminPDTO();
+            asignacionAdminPDTO.setIdAsignacion(asignacion.getId_asignacion());
+            return new ResponseEntity<>(asignacionAdminPDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Error al actualizar el estado de visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
     @GetMapping("/asignacionadmin/{id_modelo}/{veri}")
@@ -99,32 +127,36 @@ public class Asignacion_Admin_Controller {
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarlogic(@PathVariable Long id) {
         try {
+            // Obtener la asignación por su ID
             Asignacion_Admin a = Service.findById(id);
             if (a == null) {
                 return new ResponseEntity<>("Asignacion_Admin no encontrada con el ID proporcionado", HttpStatus.NOT_FOUND);
             }
             Criterio criterioAdm = a.getCriterio();
             List<Asignacion_Responsable> responsables = asignacionResService.Asignacion_ResponsablesByAdmin(a.getUsuario().getId());
-            if (responsables!=null) {
+            if (responsables != null) {
                 for (Asignacion_Responsable responsable : responsables) {
                     Asignacion_Admin asigcriterioResp = Service.findById(responsable.getUsuarioResponsable().getId());
-                   if(asigcriterioResp!=null) {
-                       if (criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
-                           responsable.setVisible(false);
-                           asignacionResService.save(responsable);
-                       }
-                   }
+                    if (asigcriterioResp != null && criterioAdm.getId_criterio().equals(asigcriterioResp.getCriterio().getId_criterio())) {
+                        responsable.setVisible(false);
+                        asignacionResService.save(responsable);
+                    }
                 }
             }
+
             a.setVisible(false);
-            return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
+            Service.save(a);
+
+            // Crear el DTO para el proceso de eliminación
+            AsignacionAdminPDTO asignacionAdminPDTO = new AsignacionAdminPDTO();
+            asignacionAdminPDTO.setIdAsignacion(a.getId_asignacion());
+            // Devolver el DTO en la respuesta
+            return new ResponseEntity<>(asignacionAdminPDTO, HttpStatus.CREATED);
         } catch (Exception e) {
             System.out.println(e.getMessage());
             return new ResponseEntity<>("Error al cambiar la visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-
-
 
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<Asignacion_Admin> actualizar(@PathVariable Long id, @RequestBody Asignacion_Admin p) {
@@ -144,26 +176,6 @@ public class Asignacion_Admin_Controller {
         }
     }
 
-    @GetMapping("/listarAsignacion_AdminPorUsuario/{id_usuario}/{id_modelo}")
-    public ResponseEntity<Asignacion_Admin> listarAsignacion_AdminPorUsuario(
-            @PathVariable("id_usuario") Long id_usuario, @PathVariable("id_modelo") Long id_modelo) {
-        try {
-            return new ResponseEntity<>(Service.listarAsignacion_AdminPorUsuario(id_usuario,id_modelo), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-    /**
-    @GetMapping("/listarnombre_admin/{id_modelo}/{id_criterio}")
-    public ResponseEntity<NombreAsigProjection> listarnombre_Admin(
-            @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
-        try {
-            return new ResponseEntity<>(Service.listarnombre_Admin(id_modelo,id_criterio), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-            **/
     @GetMapping("/veradminsporcriterio/{id_modelo}/{id_criterio}")
     public ResponseEntity<List<AsignacionProjection>> veradminsporcriterio(
             @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
@@ -174,30 +186,11 @@ public class Asignacion_Admin_Controller {
         }
     }
 
-
     @GetMapping("/verresponsablesporcriterio/{id_modelo}/{id_criterio}")
     public ResponseEntity<List<AsignacionProjection>> verresponsablesporcriterio(
             @PathVariable("id_modelo") Long id_modelo, @PathVariable("id_criterio") Long id_criterio) {
         try {
             return new ResponseEntity<>(Service.verresponsablesporcriterio(id_modelo, id_criterio), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-
-    @GetMapping("/listarAsignacion_AdminPorUsuarioCriterio/{id_criterio}/{id_modelo}")
-    public ResponseEntity<List<Asignacion_Admin>> listarAsignacion_AdminPorUsuarioCriterio(
-            @PathVariable("id_criterio") Long id_criterio,  @PathVariable("id_modelo") Long id_modelo) {
-        try {
-            List<Asignacion_Admin> asignaciones = Service.listarAsignacion_AdminPorUsuarioCriterio(id_criterio, id_modelo);
-
-            if (asignaciones.isEmpty()) {
-                // Manejar el caso en el que no hay asignaciones
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // o cualquier otro código de estado adecuado
-            } else {
-                // Retornar la lista de asignaciones
-                return new ResponseEntity<>(asignaciones, HttpStatus.OK);
-            }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -219,19 +212,18 @@ public class Asignacion_Admin_Controller {
         }
     }
 
-
     @GetMapping("/busqueda_especifica/{idUsuario}/{idModelo}/{idCriterio}")
-    public ResponseEntity<Asignacion_Admin> buscarAsignacionAdmin(
+    public ResponseEntity<?> buscarAsignacionAdmin(
             @PathVariable("idUsuario") Long idUsuario,
             @PathVariable("idModelo") Long idModelo,
             @PathVariable("idCriterio") Long idCriterio) {
         try {
-            Asignacion_Admin asignacionAdmin = Service.buscar_asignacion_especifica(idUsuario, idModelo, idCriterio);
+            AsignacionProjection asignacionAdmin = Service.buscarAsignacionAdmin(idUsuario, idModelo, idCriterio);
 
             if (asignacionAdmin != null) {
                 return new ResponseEntity<>(asignacionAdmin, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Manejar el caso en el que no se encuentre ninguna asignación
+                return new ResponseEntity<>(HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

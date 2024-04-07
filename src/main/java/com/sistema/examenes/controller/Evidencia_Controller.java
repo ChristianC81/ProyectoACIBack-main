@@ -104,7 +104,7 @@ public class Evidencia_Controller {
         }
     }
     @GetMapping("/buscarev/{username}")
-    public ResponseEntity<List<Evidencia>> buscarEvidencia(@PathVariable("username") String username) {
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidencia(@PathVariable("username") String username) {
         try {
             return new ResponseEntity<>(Service.evidenciaUsuario(username), HttpStatus.OK);
         } catch (Exception e) {
@@ -113,7 +113,7 @@ public class Evidencia_Controller {
     }
 
     @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}")
-    public ResponseEntity<List<Evidencia>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
         try {
             return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId), HttpStatus.OK);
         } catch (Exception e) {
@@ -184,6 +184,23 @@ public class Evidencia_Controller {
         }
     }
 
+    @PutMapping("/actualizar2/{id}")
+    public ResponseEntity<Evidencia> actualizar2(@PathVariable Long id, @RequestBody Evidencia p) {
+        Evidencia a = Service.findById(id);
+        if (a == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                //a.setDescripcion(p.getDescripcion());
+                a.setEstado(p.getEstado());
+                return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+    }
+
     @GetMapping("/listarEvidenciaPorIndicador/{id_indicador}")
     public ResponseEntity<List<Evidencia>> listarEvidenciaPorIndicador(
             @PathVariable("id_indicador") Long id_indicador) {
@@ -199,6 +216,48 @@ public class Evidencia_Controller {
         try {
             ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeActividades(responsableId);
             return new ResponseEntity<>(actividades, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @PutMapping("/editarValorEvid/{id}")
+    public ResponseEntity<Evidencia> editarValorEvid(@PathVariable Long id,  @RequestParam("valorevid") double valorevid) {
+        Evidencia evidencia = Service.findById(id);
+        if (evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                // Aquí actualizamos el valor de la evidencia
+                evidencia.setValor_obtenido(valorevid);
+                return new ResponseEntity<>(Service.save(evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+    @PutMapping("/editarValoresEvidaCero/{id_indicador}")
+    public ResponseEntity<Evidencia> editarValoresEvidaCero(@PathVariable Long id_indicador) {
+        List<Evidencia> evidencia = Service.listarEvidenciaPorIndicador(id_indicador);
+        if (evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                for (Evidencia e : evidencia) {
+                    // Aquí actualizamos el valor de la evidencia
+                    e.setValor_obtenido(0.0);
+                    Service.save(e);
+                }
+                return new ResponseEntity<>(evidencia.get(0), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+    @GetMapping("/valoresObtenidosEvidPorIndicador/{id_indicador}")
+    public ResponseEntity<ValorObtenidoInd> valoresObtenidosEvidPorIndicador(@PathVariable("id_indicador") Long id_indicador) {
+        try {
+            ValorObtenidoInd valores = Service.valoresObtenidosEvidencias(id_indicador);
+            return new ResponseEntity<>(valores, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

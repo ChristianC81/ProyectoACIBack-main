@@ -50,6 +50,14 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
     List<Criterio> obtenerCriteriosUltimoModelo();
 
+    @Query("SELECT DISTINCT c.id_criterio as idcriterio, c.nombre as nombrecriterio " +
+            "FROM Criterio c " +
+            "JOIN c.lista_subcriterios s " +
+            "JOIN s.lista_indicadores i " +
+            "JOIN i.lista_asignacion ai " +
+            "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
+    List<CriteProjection> ObtenerCriterioUltimoModelo();
+
     //el de abajo no se vale
         @Query(value = "SELECT c.* FROM public.criterio c join public.subcriterio s ON s.id_criterio = c.id_criterio join public.indicador i ON i.subcriterio_id_subcriterio = s.id_subcriterio WHERE i.id_indicador=:id_indicador", nativeQuery = true)
         List<Criterio> listarCriterioPorIndicador(Long id_indicador);
@@ -230,5 +238,19 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "  AND m.id_modelo = (SELECT MAX(m2.id_modelo) FROM Modelo m2) " +
             "  AND aa.usuario.id = ?1")
     List<CriterioAdm> criteriosadmultimomodelo(Long userId);
+
+    @Query("SELECT cri.id_criterio AS id_criterio, " +
+            "cri.nombre AS nombre, " +
+            "SUM(i.porc_utilida_obtenida) AS total, " +
+            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
+            "FROM Indicador i " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            "JOIN i.subcriterio sub " +
+            "JOIN sub.criterio cri " +
+            "JOIN Modelo m ON ai.modelo.id_modelo = m.id_modelo " +
+            "WHERE m.visible =true AND i.visible=true AND ai.modelo.id_modelo =:id_modelo " +
+            "GROUP BY cri.nombre, cri.id_criterio " +
+            "ORDER BY cri.id_criterio")
+    List<CriterioPorcProjection> criteriosporModelo(Long id_modelo);
 
 }
