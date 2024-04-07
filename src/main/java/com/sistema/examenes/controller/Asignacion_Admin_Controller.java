@@ -65,6 +65,25 @@ public class Asignacion_Admin_Controller {
         }
     }
 
+    @PutMapping("/actualizarEstado/{id}")
+    public ResponseEntity<?> actualizarEstado(@PathVariable Long id) {
+        try {
+            // Obtener la asignación por su ID
+            Asignacion_Admin asignacion = Service.findById(id);
+            if (asignacion == null) {
+                return new ResponseEntity<>("Asignacion_Admin no encontrada con el ID proporcionado", HttpStatus.NOT_FOUND);
+            }
+            asignacion.setVisible(true);
+            Service.save(asignacion);
+            // Devolver el DTO de la asignación actualizada
+            AsignacionAdminPDTO asignacionAdminPDTO = new AsignacionAdminPDTO();
+            asignacionAdminPDTO.setIdAsignacion(asignacion.getId_asignacion());
+            return new ResponseEntity<>(asignacionAdminPDTO, HttpStatus.OK);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            return new ResponseEntity<>("Error al actualizar el estado de visibilidad de la asignación admin: " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @GetMapping("/asignacionadmin/{id_modelo}/{veri}")
     public ResponseEntity<List<AsignacionProjection>> asignacionadmin(@PathVariable("id_modelo") Long id_modelo,@PathVariable("veri") String veri) {
         try {
@@ -194,17 +213,17 @@ public class Asignacion_Admin_Controller {
     }
 
     @GetMapping("/busqueda_especifica/{idUsuario}/{idModelo}/{idCriterio}")
-    public ResponseEntity<AsignacionProjection> buscarAsignacionAdmin(
+    public ResponseEntity<?> buscarAsignacionAdmin(
             @PathVariable("idUsuario") Long idUsuario,
             @PathVariable("idModelo") Long idModelo,
             @PathVariable("idCriterio") Long idCriterio) {
         try {
-            AsignacionProjection asignacionAdmin = Service.buscar_asignacion_especifica(idUsuario, idModelo, idCriterio);
+            AsignacionProjection asignacionAdmin = Service.buscarAsignacionAdmin(idUsuario, idModelo, idCriterio);
 
             if (asignacionAdmin != null) {
                 return new ResponseEntity<>(asignacionAdmin, HttpStatus.OK);
             } else {
-                return new ResponseEntity<>(HttpStatus.NOT_FOUND); // Manejar el caso en el que no se encuentre ninguna asignación
+                return new ResponseEntity<>(HttpStatus.OK);
             }
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
