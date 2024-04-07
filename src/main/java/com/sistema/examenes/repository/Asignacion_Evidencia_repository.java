@@ -113,7 +113,9 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
             "LEFT JOIN detalle_evaluacion de ON e.id_evidencia = de.evidencia_id_evidencia " +
-            "WHERE u.username = :username AND ae.evidencia_id_evidencia=:id_evidencia AND ae.visible=true", nativeQuery = true)
+            "WHERE u.username = :username AND ae.evidencia_id_evidencia=:id_evidencia AND ae.visible=true " +
+            "ORDER BY de.fecha DESC " +
+            "LIMIT 1", nativeQuery = true)
     List<Object[]> listarAsigEviUser(String username, Long id_evidencia);
 
     @Query(value = "select * from  asignacion_evidencia ac JOIN usuarios u ON ac.usuario_id = u.id where u.username=:username and ac.visible =true",nativeQuery = true)
