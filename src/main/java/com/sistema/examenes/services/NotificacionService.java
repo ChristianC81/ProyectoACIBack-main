@@ -7,7 +7,10 @@ import java.util.List;
 public interface NotificacionService extends GenericService<Notificacion, Long> {
     public List<Notificacion> listarTodasNotificaciones();
     public List<Notificacion> listar(Long us);
+    public List<Notificacion> listarmovil(Long us);
+
     public List<Notificacion> all(String roluserer);
+    public List<Notificacion> allmovil(String roluserer);
     public void eliminar(Long id);
     public List<Notificacion> listarNotifi(String fecha);
 

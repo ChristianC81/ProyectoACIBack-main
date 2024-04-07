@@ -17,6 +17,9 @@ public interface Notificacion_repository extends JpaRepository<Notificacion, Lon
     List<Notificacion> listarTodasNotificaciones();
     @Query("SELECT n FROM Notificacion n WHERE n.usuario=:user ORDER BY n.fecha DESC")
     List<Notificacion> listarUserNoti(Long user);
+
+    @Query("SELECT n FROM Notificacion n WHERE n.usuario = :user ORDER BY n.fecha DESC")
+    List<Notificacion> listarUserNotimovil(Long user, Pageable pageable);
     @Modifying
     @Transactional
     @Query(value = "DELETE FROM notificacion WHERE id=:id", nativeQuery = true)
@@ -26,6 +29,8 @@ public interface Notificacion_repository extends JpaRepository<Notificacion, Lon
     List<Notificacion> listarNot(String fec);
     @Query("SELECT n FROM Notificacion n WHERE n.rol = :roluser ORDER BY n.fecha DESC")
     List<Notificacion> all(@Param("roluser") String roluser, Pageable pageable);
+    @Query("SELECT n FROM Notificacion n WHERE n.rol = :roluser ORDER BY n.fecha DESC")
+    List<Notificacion> allmovil(@Param("roluser") String roluser, Pageable pageable);
     @Query("SELECT n FROM Notificacion n " +
             "WHERE n.rol = :roluser " +
             "AND n.idactividad IN ( " +

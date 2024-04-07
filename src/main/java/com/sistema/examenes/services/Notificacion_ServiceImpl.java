@@ -5,6 +5,7 @@ import com.sistema.examenes.repository.Notificacion_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Service;
 import java.sql.Date;
@@ -28,7 +29,11 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     public List<Notificacion> listar(Long user) {
         return notificacionRepository.listarUserNoti(user);
     }
-
+    @Override
+    public List<Notificacion> listarmovil(Long user) {
+        Pageable pageable = PageRequest.of(0, 15, Sort.by("fecha").descending());
+        return notificacionRepository.listarUserNotimovil(user, pageable);
+    }
     @Override
     public void eliminar(Long id) {
         notificacionRepository.borrar(id);
@@ -48,6 +53,12 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     public List<Notificacion> all(String roluser) {
         Pageable pageable = PageRequest.of(0, 20); // Página 0 y tamaño de página 20
         return notificacionRepository.all(roluser, pageable);
+    }
+
+    @Override
+    public List<Notificacion> allmovil(String roluser) {
+        Pageable pageable = PageRequest.of(0, 15); // Página 0 y tamaño de página 20
+        return notificacionRepository.allmovil(roluser, pageable);
     }
 
     @Override

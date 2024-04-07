@@ -53,6 +53,31 @@ public class Notificacion_Controller {
         }
     }
 
+    @GetMapping("/listarnotificacionesmovil/{id}")
+    public ResponseEntity<List<Notificacion>> listarmovil(@PathVariable("id") Long id){
+        try {
+            return new ResponseEntity<>(service.listarmovil(id), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    @PutMapping("/actualizarnotificaciones/{id}")
+    public ResponseEntity<?> actualizarnotificaciones(@PathVariable Long id) {
+        Notificacion notificacion = service.findById(id);
+        if (notificacion == null) {
+            return new ResponseEntity<>("Notificación no encontrada", HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                notificacion.setVisto(true);
+                service.save(notificacion);
+                return new ResponseEntity<>("Notificación marcada como vista", HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al actualizar la notificación", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
     @GetMapping("/notificacionsinleer/{id}")
     public ResponseEntity<List<Notificacion>>noleidos(@PathVariable("id") Long id){
         try {
@@ -65,6 +90,14 @@ public class Notificacion_Controller {
     public ResponseEntity<List<Notificacion>>obtenerLista(@PathVariable("roluser") String roluser) {
         try {
             return new ResponseEntity<>(service.all(roluser), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+    @GetMapping("/listartodomovil/{roluser}")
+    public ResponseEntity<List<Notificacion>>obtenerListamovil(@PathVariable("roluser") String roluser) {
+        try {
+            return new ResponseEntity<>(service.allmovil(roluser), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

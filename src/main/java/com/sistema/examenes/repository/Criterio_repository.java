@@ -92,6 +92,19 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "JOIN subcriterio sb ON i.subcriterio_id_subcriterio = sb.id_subcriterio " +
             "JOIN criterio c ON sb.id_criterio = c.id_criterio " +
             "JOIN modelo m ON m.id_modelo = ai.modelo_id_modelo " +
+            "WHERE m.visible = true AND i.visible=true AND ai.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "GROUP BY c.nombre, c.id_criterio " +
+            "ORDER BY c.id_criterio", nativeQuery = true)
+    List<ValoresProjection> listarvaloresMovil();
+    @Query(value = "SELECT c.nombre AS Nomcriterio, " +
+            "CAST(SUM(i.peso) AS NUMERIC(10, 2)) AS Ponderacio, " +
+            "CAST(SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 3)) AS VlObtenido, " +
+            "CAST(SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 3)) AS Vlobtener " +
+            "FROM indicador i " +
+            "JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
+            "JOIN subcriterio sb ON i.subcriterio_id_subcriterio = sb.id_subcriterio " +
+            "JOIN criterio c ON sb.id_criterio = c.id_criterio " +
+            "JOIN modelo m ON m.id_modelo = ai.modelo_id_modelo " +
             "WHERE m.visible = true AND i.visible=true AND ai.modelo_id_modelo = ?1  AND c.nombre =?2 " +
             "GROUP BY c.nombre, c.id_criterio " +
             "ORDER BY c.id_criterio", nativeQuery = true)
@@ -104,6 +117,16 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
                 "JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true " +
                 "AND aa.id_modelo=?1 AND aa.usuario_id=?2 GROUP BY cri.nombre,cri.id_criterio  ORDER BY cri.id_criterio", nativeQuery = true)
         List<ValoresProjection> listarvaladmin(Long id_modelo,Long id);
+    @Query(value = "SELECT cri.nombre AS \"Nomcriterio\",CAST(SUM(i.peso) AS NUMERIC(10, 2)) as \"Ponderacio\", " +
+            "CAST(SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS \"VlObtenido\", " +
+            "CAST(SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS \"Vlobtener\" " +
+            "FROM indicador i JOIN subcriterio sub ON sub.id_subcriterio=i.subcriterio_id_subcriterio " +
+            "JOIN criterio cri ON cri.id_criterio =sub.id_criterio " +
+            "JOIN asignacion_admin aa ON aa.criterio_id_criterio=cri.id_criterio AND aa.visible=true " +
+            "AND aa.id_modelo=(SELECT MAX(id_modelo) FROM modelo) AND aa.usuario_id=?1 " + // Cambio en la condición
+            "GROUP BY cri.nombre,cri.id_criterio ORDER BY cri.id_criterio", nativeQuery = true)
+    List<ValoresProjection> listarvaladminmovil(Long id_usuario);
+
         @Query(value = "SELECT cri.nombre AS Nomcriterio,CAST(SUM(i.peso) AS NUMERIC(10, 2)) as Ponderacio, " +
                 "CAST(SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS VlObtenido, " +
                 "CAST(SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS NUMERIC(10, 2)) AS Vlobtener " +
