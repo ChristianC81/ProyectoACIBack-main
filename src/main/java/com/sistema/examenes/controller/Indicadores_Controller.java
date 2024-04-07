@@ -60,7 +60,7 @@ public class Indicadores_Controller {
     }
 
     @GetMapping("/listarindiad/{id_modelo}/{id}")
-    public ResponseEntity<List<IndicadoresProjection>> listaIndiad(@PathVariable("id_modelo") Long id_modelo,@PathVariable("id") Long id) {
+    public ResponseEntity<List<CriterioPorcProjection>> listaIndiad(@PathVariable("id_modelo") Long id_modelo,@PathVariable("id") Long id) {
         try {
             return new ResponseEntity<>(Service.indicadoresadmin(id_modelo,id), HttpStatus.OK);
         } catch (Exception e) {
