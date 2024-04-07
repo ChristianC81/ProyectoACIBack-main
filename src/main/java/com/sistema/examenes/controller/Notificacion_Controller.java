@@ -61,6 +61,23 @@ public class Notificacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    @PutMapping("/actualizarnotificaciones/{id}")
+    public ResponseEntity<?> actualizarnotificaciones(@PathVariable Long id) {
+        Notificacion notificacion = service.findById(id);
+        if (notificacion == null) {
+            return new ResponseEntity<>("Notificación no encontrada", HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                notificacion.setVisto(true);
+                service.save(notificacion);
+                return new ResponseEntity<>("Notificación marcada como vista", HttpStatus.OK);
+            } catch (Exception e) {
+                return new ResponseEntity<>("Error al actualizar la notificación", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
+
     @GetMapping("/notificacionsinleer/{id}")
     public ResponseEntity<List<Notificacion>>noleidos(@PathVariable("id") Long id){
         try {
