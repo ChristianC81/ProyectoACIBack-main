@@ -27,6 +27,9 @@ public class Archivo_s implements Serializable {
     @Column(name = "visible")
     private boolean visible;
 
+    @Column(name = "comentario")
+    private String comentario;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_asignacion_evidencia")
     private Asignacion_Evidencia actividad;

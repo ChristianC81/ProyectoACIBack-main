@@ -14,7 +14,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     List<Evidencia> listarEvidencia();
 
     @Query("SELECT e.id_evidencia AS id_evidencia, c.nombre AS nombrecriterio, s.nombre AS nombresubcriterio, " +
-            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado " +
+            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado, " +
+            "(SELECT comentario FROM Archivo_s arc WHERE arc.actividad.id_asignacion_evidencia = ae.id_asignacion_evidencia AND arc.visible = true) AS comentario " +
             "FROM Evidencia e " +
             "JOIN e.lista_evidencias ae " +
             "JOIN ae.usuario u " +
@@ -27,8 +28,10 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
     public List<EvidenciaEvProjection> evidenciaUsuario(@Param("username") String username);
 
+
     @Query(value = "SELECT e.id_evidencia AS id_evidencia, cri.nombre AS nombrecriterio, s.nombre AS nombresubcriterio, " +
-            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado " +
+            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado, " +
+            "(SELECT comentario FROM archivo WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS comentario " +
             "FROM asignacion_evidencia ae " +
             "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
             "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +

@@ -236,9 +236,6 @@ public class Asignacion_Evidencia_controller {
             // Actualizar el usuario en la asignación de evidencia
             asignacionEvidencia.setUsuario(nuevoUsuario);
             Service.save(asignacionEvidencia);
-
-            // Cambiar el estado de la evidencia a "pendiente"
-            evidencia.setEstado("pendiente");
             evidenciaService.save(evidencia);
 
             return new ResponseEntity<>(asignacionEvidencia, HttpStatus.OK);

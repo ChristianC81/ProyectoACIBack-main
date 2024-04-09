@@ -48,9 +48,6 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarAsigEvidenciaPorUsuario(usuarioId);
     }
 
-
-
-
     @Override
     public Asignacion_Evidencia fechaactividades(Long id_evidencia, Long id_modelo) {
         return repository.fechaactividades(id_evidencia, id_modelo);
@@ -82,6 +79,7 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
             ae.setId_evidencia(((BigInteger) fila[5]).longValue());
             ae.setObservacion((String) fila[6]);
             ae.setCountarchivos(((BigInteger) fila[7]).intValue());
+            ae.setComentario_archivo((String) fila[8]);
             asignaciones.add(ae);
         }
         return asignaciones;
