@@ -252,6 +252,20 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "AS total ON 1=1;", nativeQuery = true)
     List<IndiColProjection> indicadorval(Long id_modelo);
 
+    @Query(value = "SELECT i.id_indicador AS id_indicador," +
+            " i.nombre AS nombre_indicador, " +
+            " i.porc_obtenido AS porc_obtenido " +
+            " FROM Indicador i " +
+            " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 75 AND ai.modelo.id_modelo =:id_modelo")
+    List<IndiColProjection> indicadoresPorcObtenidoMayor75(Long id_modelo);
+    @Query(value = "SELECT i.id_indicador AS id_indicador," +
+            " i.nombre AS nombre_indicador, " +
+            " i.porc_obtenido AS porc_obtenido " +
+            " FROM Indicador i " +
+            " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 75 AND ai.modelo.id_modelo =:id_modelo")
+    List<IndiColProjection> indicadoresPorcObtenidoMas50MenorIgual75(Long id_modelo);
     @Query(value = "WITH color_values AS (SELECT 'verde' AS color UNION ALL SELECT 'amarillo' " +
             "UNION ALL SELECT 'naranja' UNION ALL SELECT 'rojo') " +
             "SELECT COALESCE(counts.indica, 0) AS indica, cv.color AS color, " +
