@@ -11,6 +11,10 @@ public interface ActivProyection {
     Double getAvance();
 
     //AUTORIDAD
+    Long getIdevidencia();
+    String getCriterio();
+    String getSubcriterio();
+    String getIndicador();
     String getNombre();
     String getFechainicio();
     String getFechafin();
