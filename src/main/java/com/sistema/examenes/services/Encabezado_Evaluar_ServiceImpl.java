@@ -20,4 +20,9 @@ public class Encabezado_Evaluar_ServiceImpl extends GenericServiceImpl<Encabezad
     public List<Encabezado_Evaluar> listar() {
         return repository.listarEncabezadoEvaluar();
     }
+
+    @Override
+    public Encabezado_Evaluar findByIdFormula(Long formulaId) {
+        return repository.findByIdFormula(formulaId);
+    }
 }
