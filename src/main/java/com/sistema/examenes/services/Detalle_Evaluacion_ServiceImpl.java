@@ -1,6 +1,7 @@
 package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Detalle_Evaluacion;
+import com.sistema.examenes.projection.DetalleEvaluacionProjection;
 import com.sistema.examenes.repository.Detalle_Evaluacion_repository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.repository.CrudRepository;
@@ -25,6 +26,11 @@ public class Detalle_Evaluacion_ServiceImpl extends GenericServiceImpl<Detalle_E
     @Override
     public List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia) {
         return repository.listarDetalleEvaluacion( idEvidencia);
+    }
+
+    @Override
+    public List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia) {
+        return repository.listarDetallesEvalu(idevidencia);
     }
 
     @Override

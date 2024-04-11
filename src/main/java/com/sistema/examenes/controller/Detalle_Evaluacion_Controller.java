@@ -2,6 +2,7 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.entity.Detalle_Evaluacion;
+import com.sistema.examenes.projection.DetalleEvaluacionProjection;
 import com.sistema.examenes.services.Detalle_Evaluacion_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -97,6 +98,14 @@ public class Detalle_Evaluacion_Controller {
         }
     }
 
+    @GetMapping("/listarporEvidencia/{idEvi}")
+    public ResponseEntity<List<DetalleEvaluacionProjection>> listarPorEvidencias(@PathVariable("idEvi") Long idevidencia) {
+        try {
+            return new ResponseEntity<>(Service.listarDetallesEvalu(idevidencia), HttpStatus.OK);
+        } catch (Exception e) {;
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @DeleteMapping("/eliminar/{id}")
     public ResponseEntity<?> eliminar(@PathVariable Long id, @RequestBody Detalle_Evaluacion detalle_evaluacion) {

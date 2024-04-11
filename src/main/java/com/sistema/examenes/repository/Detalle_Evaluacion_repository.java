@@ -2,6 +2,8 @@ package com.sistema.examenes.repository;
 
 import com.sistema.examenes.entity.Criterio;
 import com.sistema.examenes.entity.Detalle_Evaluacion;
+import com.sistema.examenes.projection.AsignacionProjection;
+import com.sistema.examenes.projection.DetalleEvaluacionProjection;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -19,11 +21,23 @@ public interface Detalle_Evaluacion_repository extends JpaRepository<Detalle_Eva
             "WHERE d2.evidencia.id_evidencia = :id_evidencia " +
             "AND d2.id_modelo = :id_modelo)")
     List<Detalle_Evaluacion> listarbservaciones(Long id_evidencia, Long id_modelo);
+
     @Query("SELECT d FROM Detalle_Evaluacion d " +
             "WHERE d.visible = true " +
             "AND d.evidencia.id_evidencia = :idEvidencia " +
             "ORDER BY d.fecha DESC")
     List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia);
+
+    @Query(value = "SELECT d.observacion as comentario, e.estado as estado, d.fecha as fecha, \n" +
+            "per.primer_nombre||' '||per.primer_apellido as usuarioevaluador \n" +
+            "FROM Detalle_Evaluacion d\n" +
+            "JOIN evidencia e ON d.evidencia_id_evidencia = e.id_evidencia\n" +
+            "JOIN usuarios u ON d.usuario_id = u.id\n" +
+            "JOIN persona per ON u.persona_id_persona = per.id_persona\n" +
+            "WHERE d.visible = true \n" +
+            "AND d.evidencia_id_evidencia =:idevidencia\n" +
+            "ORDER BY d.fecha DESC", nativeQuery = true)
+    List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia);
 
     @Query("SELECT CASE WHEN COUNT(d.id_detalle_evaluacion) > 0 THEN true ELSE false END " +
             "FROM Detalle_Evaluacion d " +
