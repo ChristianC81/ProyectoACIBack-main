@@ -17,7 +17,8 @@ public interface Archivo_repository extends JpaRepository<Archivo_s, Long> {
     @Query("SELECT ar.id_archivo AS id_archivo," +
             "ar.enlace AS enlace, " +
             "ar.nombre AS nombre, " +
-            "ar.descripcion AS descripcion " +
+            "ar.descripcion AS descripcion, " +
+            "ar.comentario AS comentario " +
             "FROM Archivo_s ar " +
             "JOIN ar.actividad asig " +
             "JOIN asig.usuario u " +

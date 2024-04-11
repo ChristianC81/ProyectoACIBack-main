@@ -5,4 +5,5 @@ public interface ArchivoResProjection {
     String getEnlace();
     String getNombre();
     String getDescripcion();
+    String getComentario();
 }
