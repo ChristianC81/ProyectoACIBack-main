@@ -185,6 +185,22 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "asi.usuario_id = :responsableId AND asi.visible = true AND asi.id_modelo= (SELECT MAX(id_modelo) FROM modelo);", nativeQuery = true)
     ActiDiagramaPieProjection porcentajeEstadosdeActividadesByResponsableId(@Param("responsableId") Long responsableId);
 
+    @Query(value = "SELECT SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, \n" +
+            "SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, \n" +
+            "SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) AS rechazados, \n" +
+            "COUNT(*) AS total, \n" +
+            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_pendientes, \n" +
+            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_aprobados, \n" +
+            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_rechazados \n" +
+            "FROM \n" +
+            "evidencia e \n" +
+            "JOIN \n" +
+            "asignacion_evidencia asi ON e.id_evidencia = asi.evidencia_id_evidencia \n" +
+            "JOIN \n" +
+            "usuarios u ON u.id = asi.usuario_id \n" +
+            "WHERE e.visible = true", nativeQuery = true)
+    ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral();
+
     @Query("SELECT SUM(e.valor_obtenido) AS valor_obtenido FROM Evidencia e WHERE e.visible = true AND e.indicador.id_indicador = :id_indicador")
     ValorObtenidoInd obtenerTotalValoresEvidPorIndicador(@Param("id_indicador") Long id_indicador);
 }
