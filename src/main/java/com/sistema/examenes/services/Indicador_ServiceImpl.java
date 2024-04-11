@@ -112,4 +112,22 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
     public List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre) {
         return repository.indicadoreporsubcriterio(sub_nombre);
     }
+    @Override
+    public List<IndicadoresGPieProjection> indicadoresPorcObtenidoM75(Long id_modelo) {
+        return repository.indicadoresPorcObtenidoM75(id_modelo);
+    }
+
+    @Override
+    public List<IndicadoresGPieProjection> indicadoresPorcObtenido50_75(Long id_modelo) {
+        return repository.indicadoresPorcObtenido50_75(id_modelo);
+    }
+    @Override
+    public List<IndicadoresGPieProjection> indicadoresPorcObtenido25_50(Long id_modelo) {
+        return repository.indicadoresPorcObtenido25_50(id_modelo);
+    }
+    @Override
+    public List<IndicadoresGPieProjection> indicadoresPorcObtenido0_25(Long id_modelo) {
+        return repository.indicadoresPorcObtenido0_25(id_modelo);
+    }
+
 }

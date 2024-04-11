@@ -258,14 +258,28 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             " FROM Indicador i " +
             " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
             " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 75 AND ai.modelo.id_modelo =:id_modelo")
-    List<IndiColProjection> indicadoresPorcObtenidoMayor75(Long id_modelo);
+    List<IndicadoresGPieProjection> indicadoresPorcObtenidoM75(Long id_modelo);
     @Query(value = "SELECT i.id_indicador AS id_indicador," +
             " i.nombre AS nombre_indicador, " +
             " i.porc_obtenido AS porc_obtenido " +
             " FROM Indicador i " +
             " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
-            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 75 AND ai.modelo.id_modelo =:id_modelo")
-    List<IndiColProjection> indicadoresPorcObtenidoMas50MenorIgual75(Long id_modelo);
+            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 50 AND i.porc_obtenido <= 75 AND ai.modelo.id_modelo =:id_modelo")
+    List<IndicadoresGPieProjection> indicadoresPorcObtenido50_75(Long id_modelo);
+    @Query(value = "SELECT i.id_indicador AS id_indicador," +
+            " i.nombre AS nombre_indicador, " +
+            " i.porc_obtenido AS porc_obtenido " +
+            " FROM Indicador i " +
+            " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido > 25 AND i.porc_obtenido <= 50 AND ai.modelo.id_modelo =:id_modelo")
+    List<IndicadoresGPieProjection> indicadoresPorcObtenido25_50(Long id_modelo);
+    @Query(value = "SELECT i.id_indicador AS id_indicador," +
+            " i.nombre AS nombre_indicador, " +
+            " i.porc_obtenido AS porc_obtenido " +
+            " FROM Indicador i " +
+            " JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            " WHERE i.visible=true AND ai.visible =true AND i.porc_obtenido >= 0 AND i.porc_obtenido <= 25 AND ai.modelo.id_modelo =:id_modelo")
+    List<IndicadoresGPieProjection> indicadoresPorcObtenido0_25(Long id_modelo);
     @Query(value = "WITH color_values AS (SELECT 'verde' AS color UNION ALL SELECT 'amarillo' " +
             "UNION ALL SELECT 'naranja' UNION ALL SELECT 'rojo') " +
             "SELECT COALESCE(counts.indica, 0) AS indica, cv.color AS color, " +
