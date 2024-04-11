@@ -21,6 +21,9 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.servlet.http.HttpServletRequest;
 import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.*;
 import java.util.stream.Collectors;
 @RestController
@@ -44,12 +47,30 @@ public class Archivo_Controller {
                                                    @RequestParam("descripcion") String descripcion,
                                                    @RequestParam("id_evidencia") Long id_evidencia) {
         String mensaje = "";
+        String comentario = "";
         try {
             Asignacion_Evidencia actividad = actiservis.findById(id_evidencia);
             if (actividad == null) {
                 mensaje = "No se encontró la evidencia con id " + id_evidencia;
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Archivosmensajes(mensaje));
             }
+
+            // Calcular la diferencia entre la fecha límite y la fecha actual
+            Date fechaLimiteDate = actividad.getFecha_fin();
+            LocalDateTime fechaLimite = fechaLimiteDate.toInstant().atZone(ZoneId.systemDefault()).toLocalDateTime();
+            LocalDateTime fechaActual = LocalDateTime.now();
+            Duration diff = Duration.between(fechaLimite, fechaActual);
+            long diasRetraso = diff.toDays();
+            long horasRetraso = diff.toHours() % 24;
+
+            // Generar el mensaje de retraso
+            if (diasRetraso > 0 || horasRetraso > 0) {
+                comentario = "Archivo atrasado con " + diasRetraso + " día(s), " + horasRetraso + " hora(s).";
+            } else {
+                comentario = "Se subió el archivo a tiempo.";
+            }
+
+            // Guardar los archivos y obtener sus nombres
             List<String> fileNames = new ArrayList<>();
             Arrays.asList(files).stream().forEach(file -> {
                 String nombreOriginal = file.getOriginalFilename();
@@ -63,19 +84,29 @@ public class Archivo_Controller {
                 servis.guardar(file, nombreArchivoUnico);
                 fileNames.add(nombreArchivoUnico);
             });
+
+            // Construir la URL del archivo
             String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
             String url = ServletUriComponentsBuilder.fromHttpUrl(host)
                     .scheme("https") // Agrega este método para establecer el protocolo HTTPS
                     .path("/aseguramiento/archivo/").path(fileNames.get(0)).toUriString();
-            archivoservis.save(new Archivo_s(url, String.join(",", fileNames), descripcion, true, actividad));
+
+            // Crear el objeto Archivo_s con el comentario establecido y guardarlo en la base de datos
+            Archivo_s arch = new Archivo_s(url, String.join(",", fileNames), descripcion, true, actividad);
+            arch.setComentario(comentario);
+            archivoservis.save(arch);
+
+            // Mensaje de éxito
             mensaje = "Se subieron correctamente " + fileNames;
             return ResponseEntity.status(HttpStatus.OK).body(new Archivosmensajes(mensaje + "url:" + url));
         } catch (Exception e) {
+            // Mensaje de error
             mensaje = "Fallo al subir";
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new Archivosmensajes(mensaje));
         }
     }
+
 
     private String generarNombreUnico(String nombreOriginal) {
         // Obtenemos la fecha y hora actual

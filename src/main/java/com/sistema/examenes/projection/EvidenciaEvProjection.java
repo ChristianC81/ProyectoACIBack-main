@@ -9,4 +9,5 @@ public interface EvidenciaEvProjection {
     String getTipo();
     String getDescripcionevidencia();
     String getEstado();
+    String getComentario();
 }
