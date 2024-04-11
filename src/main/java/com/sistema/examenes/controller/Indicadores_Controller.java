@@ -321,4 +321,12 @@ public class Indicadores_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/indicadorval/{id_modelo}}")
+    public ResponseEntity<List<IndicadoresGPieProjection>> getIndicadoresByPorcObtenido(@PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.indicadoresPorcObtenidoM75(id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 }

@@ -49,6 +49,7 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
             "    AND ( " +
             "        (asigres.usuarioadmin_id = ?1 AND asigres.visible = true) " +
             "        OR " +
+
             "        (u.id IN ( " +
             "            SELECT ae_inner.usuario_id " +
             "            FROM asignacion_evidencia ae_inner " +
