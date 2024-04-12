@@ -2,6 +2,7 @@ package com.sistema.examenes.services;
 
 import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.entity.Evidencia;
+import com.sistema.examenes.projection.ArchivoAdmSupProjection;
 import com.sistema.examenes.projection.ArchivoProjection;
 import com.sistema.examenes.projection.ArchivoResProjection;
 import com.sistema.examenes.repository.Archivo_repository;
@@ -32,7 +33,7 @@ public class Archivo_ServiceImpl extends GenericServiceImpl<Archivo_s, Long> imp
     }
 
     @Override
-    public List<Archivo_s> listararchivoActividad(Long idActividad) {
+    public List<ArchivoAdmSupProjection> listararchivoActividad(Long idActividad) {
         return repository.listararchivoActividad(idActividad);
     }
 

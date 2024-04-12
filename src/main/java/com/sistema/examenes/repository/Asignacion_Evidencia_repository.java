@@ -112,7 +112,7 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
 
     @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia, de.observacion, " +
             "(SELECT count(id_archivo) from archivo where id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS countarchivos, " +
-            "(SELECT comentario FROM archivo WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS comentario_archivo " +
+            "(SELECT comentario FROM archivo WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true ORDER BY id_archivo DESC LIMIT 1) AS comentario_archivo " +
             "FROM asignacion_evidencia ae " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
