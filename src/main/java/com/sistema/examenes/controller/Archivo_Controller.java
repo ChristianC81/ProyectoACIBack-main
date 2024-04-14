@@ -4,6 +4,7 @@ import com.sistema.examenes.entity.Archivo;
 import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.mensajes.Archivosmensajes;
+import com.sistema.examenes.projection.ArchivoAdmSupProjection;
 import com.sistema.examenes.projection.ArchivoProjection;
 import com.sistema.examenes.projection.ArchivoResProjection;
 import com.sistema.examenes.repository.Archivo_repository;
@@ -195,7 +196,7 @@ public class Archivo_Controller {
         }
     }
     @GetMapping("/buscararchivo/{idActi}")
-    public ResponseEntity<List<Archivo_s>> listararchiActividad(@PathVariable("idActi") Long idActividad) {
+    public ResponseEntity<List<ArchivoAdmSupProjection>> listararchiActividad(@PathVariable("idActi") Long idActividad) {
         try {
             return new ResponseEntity<>(archivoservis.listararchivoActividad(idActividad), HttpStatus.OK);
         } catch (Exception e) {

@@ -26,9 +26,8 @@ public interface Historial_Asignacion_Evidencia_repository extends JpaRepository
             "JOIN sc.criterio c " +
             "JOIN Usuario u ON u.id = a.usuario.id " +
             "JOIN u.persona per " +
-            "WHERE h.usuario_asignador.id = :userId " +
-            "and c.id_criterio = :critId " +
+            "WHERE c.id_criterio = :critId " +
             "and a.visible= :veri " +
             "ORDER BY h.fecha DESC")
-    List<HistorialAsignacionEvidenciaProjection> obtenerHistorialPorUsuario(@Param("userId") Long userId, @Param("critId") Long critId, boolean veri);
+    List<HistorialAsignacionEvidenciaProjection> obtenerHistorialPorUsuario( @Param("critId") Long critId, boolean veri);
 }
