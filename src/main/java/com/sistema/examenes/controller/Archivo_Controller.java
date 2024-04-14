@@ -90,7 +90,7 @@ public class Archivo_Controller {
             // Construir la URL del archivo
             String host = request.getRequestURL().toString().replace(request.getRequestURI(), "");
             String url = ServletUriComponentsBuilder.fromHttpUrl(host)
-                    //.scheme("https") // Agrega este método para establecer el protocolo HTTPS
+                    .scheme("https") // Agrega este método para establecer el protocolo HTTPS
                     .path("/aseguramiento/archivo/").path(fileNames.get(0)).toUriString();
 
             // Crear el objeto Archivo_s con el comentario establecido y guardarlo en la base de datos
