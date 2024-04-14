@@ -29,7 +29,7 @@ public interface Indicador_repository extends JpaRepository<Indicador, Long> {
             "JOIN i.subcriterio s " +
             "JOIN s.criterio cri " +
             "WHERE ai.modelo.id_modelo = :id_modelo " +
-            "AND i.visible = true ")
+            "AND i.visible = true ORDER BY cri.id_criterio ASC")
     List<PonderacionProjection> listarIndicadoresModelo(Long id_modelo);
 
     @Query("SELECT i FROM Indicador i " +
