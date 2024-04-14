@@ -1,5 +1,9 @@
 package com.sistema.examenes.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -13,6 +17,7 @@ public class TokenFCM {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_usuario", referencedColumnName = "id")
+    @JsonBackReference
     private Usuario usuario;
 
     @Column(name = "token")
@@ -24,16 +29,6 @@ public class TokenFCM {
     @Column(name = "fecha_actualizacion")
     private Date fechaActualizacion;
 
-    public TokenFCM(Long id, Usuario usuario, String token, Date fechaCreacion, Date fechaActualizacion) {
-        this.id = id;
-        this.usuario = usuario;
-        this.token = token;
-        this.fechaCreacion = fechaCreacion;
-        this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public TokenFCM() {
-    }
 
     public Long getId() {
         return id;
@@ -74,4 +69,9 @@ public class TokenFCM {
     public void setFechaActualizacion(Date fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
     }
+
+    public void setActivo(boolean b) {
+
+    }
 }
+
