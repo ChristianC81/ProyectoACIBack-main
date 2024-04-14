@@ -24,6 +24,7 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     public List<EvidenciaProjection> evidenUsuario(String username);
     public List<EvidenciaProjection> evidenUserPendiente(String username);
     ActiDiagramaPieProjection porcentajeEstadosdeActividades (Long responsableId);
+    ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral();
     ValorObtenidoInd valoresObtenidosEvidencias (Long id_indicador);
 
 }

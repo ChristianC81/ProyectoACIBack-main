@@ -220,6 +220,17 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    //Estados de las Evidencias Generales - Rol Autoridad
+    @GetMapping("/porcentajeEstadosdeActividadesGeneral")
+    public ResponseEntity<ActiDiagramaPieProjection> porcentajeEstadosdeEvidenciasGeneral() {
+        try {
+            ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeEvidenciasGeneral();
+            return new ResponseEntity<>(actividades, HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
     @PutMapping("/editarValorEvid/{id}")
     public ResponseEntity<Evidencia> editarValorEvid(@PathVariable Long id,  @RequestParam("valorevid") double valorevid) {
         Evidencia evidencia = Service.findById(id);
