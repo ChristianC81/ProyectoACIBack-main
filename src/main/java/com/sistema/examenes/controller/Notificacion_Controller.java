@@ -2,6 +2,9 @@ package com.sistema.examenes.controller;
 
 import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Notificacion;
+import com.sistema.examenes.entity.TokenFCM;
+import com.sistema.examenes.entity.Usuario;
+import com.sistema.examenes.repository.TokenFCMRepository;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
 import com.sistema.examenes.services.NotificacionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +27,8 @@ public class Notificacion_Controller {
     NotificacionService service;
     @Autowired
     Asignacion_Evidencia_Service act;
+    @Autowired
+    private TokenFCMRepository tokenFCMRepository;
 
     @PostMapping("/crear")
     public ResponseEntity<Notificacion> crear(@RequestBody Notificacion not){
@@ -125,6 +130,57 @@ public class Notificacion_Controller {
         }
        }
     }*/
+    /*
+    @PostMapping("/guardartoken_")
+    public ResponseEntity<TokenFCM> guardarToken(@RequestBody TokenFCM tokenFCM) {
+        try {
+            System.out.println(tokenFCM.getId());
+            // Asignar fecha de creación y actualización
+            Date fechaActual = new Date();
+            tokenFCM.setFechaCreacion(fechaActual);
+            tokenFCM.setFechaActualizacion(fechaActual);
+
+            // Guardar el token en la base de datos
+            TokenFCM nuevoToken = tokenFCMRepository.save(tokenFCM);
+
+            return new ResponseEntity<>(nuevoToken, HttpStatus.CREATED);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+*/
+
+    @PostMapping("/guardartoken_")
+    public ResponseEntity<TokenFCM> guardarToken(@RequestBody TokenFCM tokenFCM) {
+        try {
+            if (tokenFCM == null || tokenFCM.getToken() == null || tokenFCM.getUsuario() == null) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+
+            // Obtener el usuario asociado al token
+            Usuario usuario = tokenFCM.getUsuario();
+            Long userId = usuario.getId();
+
+            // Eliminar tokens antiguos del usuario
+            tokenFCMRepository.deleteTokensByUserId(userId);
+
+            // Asignar fecha de creación y actualización
+            Date fechaActual = new Date();
+            tokenFCM.setFechaCreacion(fechaActual);
+            tokenFCM.setFechaActualizacion(fechaActual);
+
+            // Guardar el nuevo token en la base de datos
+            TokenFCM nuevoToken = tokenFCMRepository.save(tokenFCM);
+
+            // Confirmar la transacción
+            tokenFCMRepository.flush();
+
+            return new ResponseEntity<>(nuevoToken, HttpStatus.CREATED);
+        } catch (Exception e) {
+            e.printStackTrace(); // Imprimir la traza de la excepción para depuración
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 //@Scheduled(cron = "segundo minuto hora día-del-mes mes día-de-la-semana")
     @Scheduled(cron = "0 0 10 * * ?") // Ejecutar todos los días a las 10 AM 13PM
     public void CrearNotificaciones() {
