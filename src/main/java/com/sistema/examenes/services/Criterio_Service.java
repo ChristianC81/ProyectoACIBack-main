@@ -10,6 +10,7 @@ public interface Criterio_Service extends GenericService<Criterio, Long> {
     public List<Criterio> listar();
 
     public List<Criterio> obtenerCriterios();
+    public List<CriteProjection> ObtenerCriterioUltimoModelo();
 
     public List<Criterio> obtenerCriterioModelo();
 
@@ -37,5 +38,5 @@ public interface Criterio_Service extends GenericService<Criterio, Long> {
     List<CriteRespProjection> criterioporresp(Long id, Long id_modelo);
     List<CriteProjection> listarcriusers(Long id_usuariorol, Long id_modelo);
     List<CriterioAdm> criteriosadmultimomodelo (Long userId);
-
+    List<CriterioPorcProjection> criteriosporModelo(Long id_modelo);
 }

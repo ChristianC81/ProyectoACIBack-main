@@ -51,13 +51,18 @@ public interface Ponderacion_repository extends JpaRepository<Ponderacion, Long>
             "WHERE p.fecha = TO_DATE(:fecha, 'YYYY-MM-DD')")
     List<Ponderacion> listarPorFecha(@Param("fecha") String fecha);
 
-    @Query("SELECT p FROM Ponderacion p " +
-            "JOIN FETCH p.modelo m " +
-            "JOIN FETCH p.indicador i " +
-            "JOIN FETCH i.subcriterio s " +
-            "JOIN FETCH s.criterio c " +
-            "WHERE p.fecha = TO_DATE(?1, 'YYYY-MM-DD') AND p.contador = ?2 ORDER BY c.id_criterio")
-    List<Ponderacion> listarPonderacionPorFecha(String fecha, Long contador);
+
+    @Query("SELECT p.id_ponderacion as idponderacion, i.id_indicador as idindicador, c.nombre as nombrecriterio, s.nombre as nombresubcriterio, i.nombre as nombreindicador, " +
+            "p.valor_obtenido as valorobtenido, p.peso as peso, " +
+            "p.porc_obtenido as porcentajeobtenido, p.porc_utilida_obtenida as porcentajeutilidad, " +
+            "p.fecha as fechapo, p.contador as contador " +
+            "FROM Ponderacion p " +
+            "JOIN p.modelo m " +
+            "JOIN p.indicador i " +
+            "JOIN i.subcriterio s " +
+            "JOIN s.criterio c " +
+            "WHERE p.fecha = TO_DATE(?1, 'YYYY-MM-DD') AND p.contador = ?2 ")
+    List<PonderacionProjection> listarPonderacionPorFecha(String fecha, Long contador);
 
     @Query("SELECT p.contador AS contador FROM Ponderacion p WHERE p.modelo.id_modelo = :idModelo ORDER BY p.contador DESC")
     List<PonderacionProjection> idmax(@Param("idModelo") Long idModelo, Pageable pageable);

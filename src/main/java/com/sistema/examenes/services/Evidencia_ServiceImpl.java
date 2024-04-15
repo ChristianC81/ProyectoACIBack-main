@@ -26,12 +26,12 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
-    public List<Evidencia> evidenciaUsuario(String username) {
+    public List<EvidenciaEvProjection> evidenciaUsuario(String username) {
         return repository.evidenciaUsuario(username);
     }
 
     @Override
-    public List<Evidencia> evidenciaFiltraCriterio(String username, Long usuarioId) {
+    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId) {
         return repository.evidenciaFiltraCriterio(username , usuarioId );
     }
 
@@ -89,4 +89,10 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     public ActiDiagramaPieProjection porcentajeEstadosdeActividades(Long responsableId) {
         return repository.porcentajeEstadosdeActividadesByResponsableId(responsableId);
     }
+
+    @Override
+    public ValorObtenidoInd valoresObtenidosEvidencias(Long id_indicador) {
+        return repository.obtenerTotalValoresEvidPorIndicador(id_indicador);
+    }
+
 }

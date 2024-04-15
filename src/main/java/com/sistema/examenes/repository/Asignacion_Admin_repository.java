@@ -21,18 +21,6 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
     List<AsignacionProjection> asignacionAdmin(Long id_modelo, String veri);
 
     @Query("SELECT aa FROM Asignacion_Admin aa " +
-            "WHERE aa.usuario.id = :id_usuario " +
-            "AND aa.id_modelo.id_modelo = :id_modelo " +
-            "AND aa.visible = true")
-    Asignacion_Admin listarAsignacion_AdminPorUsuario(Long id_usuario, Long id_modelo);
-    @Query("SELECT aa FROM Asignacion_Admin aa " +
-            "JOIN aa.criterio c " +
-            "WHERE c.id_criterio = :id_criterio " +
-            "AND aa.id_modelo.id_modelo = :id_modelo " +
-            "AND aa.visible = true")
-    List<Asignacion_Admin> listarAsignacion_AdminPorUsuarioCriterio(Long id_criterio, Long id_modelo);
-
-    @Query("SELECT aa FROM Asignacion_Admin aa " +
             "WHERE aa.criterio.id_criterio = :id_criterio " +
             "AND aa.id_modelo.id_modelo = :id_modelo " +
             "AND aa.usuario.id = :id_usuario")
@@ -65,9 +53,8 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "ORDER BY u.id;", nativeQuery = true)
     List<AsignacionProjection> veradminsporcriterio(Long id_modelo, Long id_criterio);
 
-    @Query(value = "SELECT aa FROM Asignacion_Admin aa WHERE aa.usuario.id = ?1 AND aa.id_modelo.id_modelo = ?2 AND aa.criterio.id_criterio = ?3 AND aa.visible = true")
-    Asignacion_Admin buscar_asignacion_especifica(Long usuarioId, Long modeloId, Long criterioId);
-
+    @Query("SELECT aa.id_asignacion as id_asignacion, aa.usuario.id as idUsuario, aa.criterio.id_criterio as idCriterio, aa.id_modelo.id_modelo as idModelo, aa.visible as visible FROM Asignacion_Admin aa WHERE aa.usuario.id = ?1 AND aa.id_modelo.id_modelo = ?2 AND aa.criterio.id_criterio = ?3")
+    AsignacionProjection buscarAsignacionAdmin(Long usuarioId, Long modeloId, Long criterioId);
 
     @Query(value = "SELECT DISTINCT u.id as enc, " +
             "per.primer_nombre || ' ' || per.primer_apellido as nombrescri, " +

@@ -31,6 +31,11 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     }
 
     @Override
+    public List<CriteProjection> ObtenerCriterioUltimoModelo() {
+        return repository.ObtenerCriterioUltimoModelo();
+    }
+
+    @Override
     public List<Criterio> obtenerCriteriosUltimoModelo() {
         return repository.obtenerCriteriosUltimoModelo();
     }
@@ -44,6 +49,7 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     public List<Criterio> obtenerCriterioIdModelo(Long id) {
         return repository.obtenerCriteriosModeloId(id);
     }
+
 
     @Override
     public List<Criterio> listarCriterioPorIndicador(Long id_indicador) {
@@ -120,6 +126,11 @@ public class Criterio_ServiceImpl extends GenericServiceImpl<Criterio, Long> imp
     @Override
     public List<CriterioAdm> criteriosadmultimomodelo(Long userId) {
         return repository.criteriosadmultimomodelo(userId);
+    }
+
+    @Override
+    public List<CriterioPorcProjection> criteriosporModelo(Long id_modelo) {
+        return repository.criteriosporModelo(id_modelo);
     }
 
 }

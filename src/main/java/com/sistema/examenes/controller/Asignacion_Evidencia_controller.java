@@ -4,7 +4,7 @@ import com.sistema.examenes.entity.Asignacion_Evidencia;
 import com.sistema.examenes.entity.Evidencia;
 import com.sistema.examenes.entity.Historial_Asignacion_Evidencia;
 import com.sistema.examenes.entity.Usuario;
-import com.sistema.examenes.entity.dto.AsignacionEvidenciaPDTO;
+import com.sistema.examenes.entity.pdto.AsignacionEvidenciaPDTO;
 import com.sistema.examenes.projection.*;
 import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import com.sistema.examenes.services.Asignacion_Evidencia_Service;
@@ -40,7 +40,6 @@ public class Asignacion_Evidencia_controller {
             List<Asignacion_Evidencia> asignacionesGuardadas = new ArrayList<>();
 
             for (AsignacionEvidenciaPDTO evidencia : evidencias) {
-
                 Asignacion_Evidencia nuevaAsignacion = new Asignacion_Evidencia();
                 nuevaAsignacion.setVisible(true);
                 nuevaAsignacion.setArchsubido(false);
@@ -53,7 +52,6 @@ public class Asignacion_Evidencia_controller {
                 Evidencia evidenciaAsignada = evidenciaService.findById(evidencia.getEvidencia_id());
                 nuevaAsignacion.setEvidencia(evidenciaAsignada);
                 Asignacion_Evidencia asignacionGuardada = Service.save(nuevaAsignacion);
-
 
                 nuevoRegistroAsignacion = new Historial_Asignacion_Evidencia();
                 usuarioAsignador = usuarioService.findById(evidencia.getId_usuario_asignador());
@@ -106,16 +104,6 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    /**
-    @GetMapping("/listarpruebasevi")
-    public ResponseEntity<List<AsignacionEvidenciaProyeccion>> listarpruebasevi() {
-        try {
-            return new ResponseEntity<>(Service.listarAsignacionEvidenciaProyeccion(), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-**/
     @GetMapping("/actCalendar/{id}")
     public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id) {
         try {
@@ -171,16 +159,6 @@ public class Asignacion_Evidencia_controller {
             }
         }
     }
-    /**
-    @GetMapping("/listarEviUsua/{username}")
-    public ResponseEntity<List<Asignacion_Evidencia>> listarAsigEvi(@PathVariable("username") String  username) {
-        try {
-            return new ResponseEntity<>(Service.listarporUsuario(username), HttpStatus.OK);
-        } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
-     **/
     @GetMapping("/fecha/{id_evidencia}/{id_modelo}")
     public ResponseEntity<Asignacion_Evidencia> listarfecha(@PathVariable("id_evidencia") Long id_evidencia, @PathVariable("id_modelo") Long id_modelo) {
         try {

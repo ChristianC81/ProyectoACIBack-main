@@ -21,7 +21,8 @@ public interface Detalle_Evaluacion_repository extends JpaRepository<Detalle_Eva
     List<Detalle_Evaluacion> listarbservaciones(Long id_evidencia, Long id_modelo);
     @Query("SELECT d FROM Detalle_Evaluacion d " +
             "WHERE d.visible = true " +
-            "AND d.evidencia.id_evidencia = :idEvidencia")
+            "AND d.evidencia.id_evidencia = :idEvidencia " +
+            "ORDER BY d.fecha DESC")
     List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia);
 
     @Query("SELECT CASE WHEN COUNT(d.id_detalle_evaluacion) > 0 THEN true ELSE false END " +
