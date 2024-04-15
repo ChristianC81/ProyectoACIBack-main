@@ -61,6 +61,13 @@ public class Usuario implements UserDetails {
     @JsonIgnore
     private Set<Asignacion_Responsable> usuarioAdmin = new HashSet<>();
 
+
+
+    @OneToMany(mappedBy = "usuario", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @JsonIgnore
+    private Set<TokenFCM> tokensFCM = new HashSet<>();
+
+
     @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.LAZY, mappedBy = "usuarioResponsable")
     @JsonIgnore
     private Set<Asignacion_Responsable> usuarioResponsable = new HashSet<>();
@@ -157,6 +164,14 @@ public class Usuario implements UserDetails {
 
     public void setVisible(boolean visible) {
         this.visible = visible;
+    }
+
+    public Set<TokenFCM> getTokensFCM() {
+        return tokensFCM;
+    }
+
+    public void setTokensFCM(Set<TokenFCM> tokensFCM) {
+        this.tokensFCM = tokensFCM;
     }
 
 }

@@ -24,4 +24,12 @@ public class Notificacion {
     private Boolean visto;
     private String url;
     private Long idactividad;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 }
