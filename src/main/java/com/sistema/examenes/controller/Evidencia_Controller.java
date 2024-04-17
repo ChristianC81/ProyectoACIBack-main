@@ -201,6 +201,16 @@ public class Evidencia_Controller {
         }
     }
 
+    @GetMapping("/listarArchivos/{id_evidencia}")
+    public ResponseEntity<List<EvidenciaProjection>> listarArchivosporEvidencia(
+            @PathVariable("id_evidencia") Long id_evidencia) {
+        try {
+            return new ResponseEntity<>(Service.listararchivos(id_evidencia), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
+
     @GetMapping("/listarEvidenciaPorIndicador/{id_indicador}")
     public ResponseEntity<List<Evidencia>> listarEvidenciaPorIndicador(
             @PathVariable("id_indicador") Long id_indicador) {

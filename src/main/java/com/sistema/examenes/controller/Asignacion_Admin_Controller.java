@@ -270,11 +270,11 @@ public class Asignacion_Admin_Controller {
         }
     }
 
-    @GetMapping("/evidenciascumplidas")
-    public ResponseEntity<List<ActivProyection>> evidenciascumplidas() {
+    @GetMapping("/listarevidencias/{estado}")
+    public ResponseEntity<List<ActivProyection>> evidenciasautoridad(@PathVariable("estado")String estado) {
 
         try {
-            return new ResponseEntity<>(Service.listarEvidenciasCumplidas(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvidenciasAutoridad(estado), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

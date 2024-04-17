@@ -60,6 +60,10 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     public List<EvidenciasProjection> evidenciaRechazada(Long id_modelo) {
         return repository.evidenciaRechazada(id_modelo);
     }
+    @Override
+    public List<EvidenciaProjection> listararchivos(Long id_evidencia) {
+        return repository.listararchivos(id_evidencia);
+    }
 
     @Override
     public EvidenciaCalProjection evidenciacal(Long id_evidencia, Long id_modelo) {

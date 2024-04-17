@@ -162,6 +162,20 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "WHERE d.id_modelo=:id_modelo", nativeQuery = true)
     List<EvidenciasProjection> evidenciaRechazada(Long id_modelo);
 
+    @Query(value = "SELECT STRING_AGG(ar.enlace, ' - ') AS enlaces " +
+            "FROM evidencia e " +
+            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN archivo ar ON ar.id_asignacion_evidencia = ae.id_asignacion_evidencia AND ar.visible = true \n" +
+            "JOIN usuarios u ON u.id = ae.usuario_id " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "WHERE e.id_evidencia =:id_evidencia " +
+            "AND u.visible = true  " +
+            "AND ae.visible = true " +
+            "AND e.visible = true " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<EvidenciaProjection> listararchivos(Long id_evidencia);
+
     @Query(value = "SELECT i.tipo AS tipo, i.id_indicador AS id_in,i.peso AS peso,  e.descripcion AS descrip, " +
             "e.estado AS est from evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
             "JOIN indicador i ON i.id_indicador = e.indicador_id_indicador AND i.visible = true " +
@@ -198,7 +212,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "asignacion_evidencia asi ON e.id_evidencia = asi.evidencia_id_evidencia \n" +
             "JOIN \n" +
             "usuarios u ON u.id = asi.usuario_id \n" +
-            "WHERE e.visible = true", nativeQuery = true)
+            "WHERE e.visible = true AND u.visible= true  AND asi.visible=true", nativeQuery = true)
     ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral();
 
     @Query("SELECT SUM(e.valor_obtenido) AS valor_obtenido FROM Evidencia e WHERE e.visible = true AND e.indicador.id_indicador = :id_indicador")

@@ -170,17 +170,18 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "GROUP BY per.primer_nombre, per.primer_apellido;", nativeQuery = true)
     List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
 
-    @Query(value = "SELECT distinct u.id as idusuario, e.id_evidencia as idevidencia, cri.nombre as criterio, s.nombre as subcriterio, i.nombre as indicador, e.descripcion as nombre, ae.fecha_fin as fechafin, \n" +
-            "ae.fecha_inicio as fechainicio, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable\n" +
-            "FROM evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia\n" +
-            "JOIN usuarios u ON u.id = ae.usuario_id\n" +
-            "JOIN persona pe ON pe.id_persona = u.persona_id_persona\n" +
-            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador \n" +
-            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio\n" +
-            "JOIN criterio cri ON s.criterio_id_criterio = cri.id_criterio\n" +
-            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador \n" +
-            "WHERE e.estado = 'Aprobada' AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
-    List<ActivProyection> listarEvidenciasCumplidas();
+    @Query(value = "SELECT u.id as idusuario, e.id_evidencia as idevidencia, cri.nombre as criterio, s.nombre as subcriterio, i.nombre as indicador, e.descripcion as nombre, ae.fecha_fin as fechafin, " +
+            "ae.fecha_inicio as fechainicio, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable, e.estado as estado " +
+            "FROM evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN usuarios u ON u.id = ae.usuario_id " +
+            "JOIN persona pe ON pe.id_persona = u.persona_id_persona " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio cri ON s.criterio_id_criterio = cri.id_criterio " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "WHERE (LOWER(e.estado) = LOWER(:estado)) AND u.visible= true  AND ae.visible=true AND e.visible=true " +
+            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
+    List<ActivProyection> listarEvidenciasAutoridad(String estado);
 
 
     @Query(value = "SELECT distinct ev.descripcion as nombreevidencia, ae.fecha_inicio as inicio, ae.fecha_fin as fin \n" +
@@ -191,6 +192,5 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "mo.id_modelo=(SELECT MAX(id_modelo) FROM modelo) \n" +
             "AND ae.visible=true AND ae.usuario_id=:id", nativeQuery = true)
     List<ActivProyection> evidenciaUsu(Long id);
-
 
 }

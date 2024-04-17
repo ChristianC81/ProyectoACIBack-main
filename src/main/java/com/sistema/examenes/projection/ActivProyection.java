@@ -19,6 +19,7 @@ public interface ActivProyection {
     String getFechainicio();
     String getFechafin();
     String getNombreresponsable();
+    String getEstado();
 
     //
     String getNombreevidencia();

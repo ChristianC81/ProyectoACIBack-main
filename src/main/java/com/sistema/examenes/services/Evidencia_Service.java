@@ -17,6 +17,7 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     List<Evidencia> listarEvidenciaPorIndicador(Long id_indicador);
     List<Evidencia> evidenciacriterio(Long idcriterio);
     List<EvidenciasProjection> evidenciaAprobada(Long id_modelo);
+    List<EvidenciaProjection> listararchivos(Long id_evidencia);
     List<EvidenciasProjection> evidenciaRechazada(Long id_modelo);
     EvidenciaCalProjection evidenciacal(Long id_evidencia, Long id_modelo);
     List<AsigEvidProjection> evidenciatab(Long idcriterio);
