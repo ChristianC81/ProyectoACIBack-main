@@ -23,6 +23,9 @@ public class Historial_Asignacion_Evidencia implements Serializable {
     @Temporal(TemporalType.TIMESTAMP)
     private Date fecha;
 
+    @Column(name = "id_modelo") // Columna para guardar el Modelo en el que se realiza el registro
+    private Long id_modelo;
+
     @Column(name = "visible")
     private Boolean visible;
 
