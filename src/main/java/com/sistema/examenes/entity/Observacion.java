@@ -18,6 +18,8 @@ public class Observacion implements Serializable {
     @Column(name = "observacion", length = 10000 )
     private String observacion;
     private boolean visible;
+    @Column(name = "id_modelo") // Columna para guardar el Modelo en el que se realiza el registro
+    private Long id_modelo;
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;
     @ManyToOne(fetch = FetchType.LAZY)
