@@ -70,4 +70,7 @@ public class Indicador implements Serializable {
     @JsonIgnore
     private Set<Ponderacion> lista_ponderacion = new HashSet<>();
 
+    @JsonIgnore
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "indicador")
+    private Set<Calificar_Indicador> lista_calificar_indicador = new HashSet<>();
 }

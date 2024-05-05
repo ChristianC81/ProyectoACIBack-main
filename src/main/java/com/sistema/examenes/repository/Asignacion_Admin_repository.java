@@ -101,7 +101,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "AND LOWER(ev.estado) = 'rechazada' " +
             "AND ac.visible = true " +
             "AND ai.visible = true " +
-            "AND mo.id_modelo = :id_modelo")
+            "AND ac.id_modelo = :id_modelo")
     List<ActivAprobadaProjection> actividadRechazada(Long id_modelo);
 
     @Query("SELECT CONCAT(pe.primer_nombre, ' ', pe.primer_apellido) AS encargado, " +
@@ -128,7 +128,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "AND LOWER(ev.estado) = 'pendiente' " +
             "AND ac.visible = true " +
             "AND ai.visible = true " +
-            "AND mo.id_modelo = :id_modelo")
+            "AND ac.id_modelo = :id_modelo")
     List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
 
     @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS encargado, " +
@@ -143,7 +143,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "FROM asignacion_evidencia ac " +
             "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia AND ac.visible = true " +
             "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador AND i.visible = true " +
-            "JOIN asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :id_modelo " +
+            "JOIN asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true " +
             "JOIN modelo mo ON mo.id_modelo = ai.modelo_id_modelo " +
             "JOIN usuarios u ON u.id = ac.usuario_id " +
             "LEFT JOIN archivo ar ON ar.id_asignacion_evidencia = ac.id_asignacion_evidencia AND ar.visible = true " +
@@ -153,6 +153,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "WHERE ac.fecha_inicio BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND ac.fecha_fin BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
             "AND LOWER(ev.estado) = 'aprobada' " +
+            "AND ac.id_modelo = :id_modelo " +
             "AND ac.visible = true", nativeQuery = true)
     List<ActivAprobadaProjection> actividadAprobada(Long id_modelo);
 

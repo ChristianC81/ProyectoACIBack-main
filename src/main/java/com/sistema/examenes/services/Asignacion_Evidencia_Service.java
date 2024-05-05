@@ -7,7 +7,7 @@ import com.sistema.examenes.entity.dto.Asignacion_EvidenciaDTO;
 import java.util.List;
 
 public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_Evidencia, Long>{
-    public List<AsignacionEvidenciaCalendarProjection> listar() ;
+    public List<AsignacionEvidenciaCalendarProjection> listar(Long id_modelo) ;
     public List<Asignacion_Evidencia> listarporUsuario (String usuario  ) ;
 
     List<AsignacionEvidenciaProyeccion> listarAsignacionEvidenciaProyeccion();

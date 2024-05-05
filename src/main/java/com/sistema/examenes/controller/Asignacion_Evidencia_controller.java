@@ -77,10 +77,10 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarv")
-    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav() {
+    @GetMapping("/listarv/{id_modelo}")
+    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav(Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listar(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listar(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

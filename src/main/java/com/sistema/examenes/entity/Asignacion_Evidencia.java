@@ -30,6 +30,9 @@ public class Asignacion_Evidencia implements Serializable {
     @Column(name = "id_modelo")
     private Long id_modelo;
 
+    @Column(name = "estado")
+    private String estado;
+
     @Column(name = "fecha_inicio")
     private Date fecha_inicio;
 
