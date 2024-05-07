@@ -201,6 +201,21 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
+    @PutMapping("/editarEstado/{id}")
+    public ResponseEntity<Asignacion_Evidencia> editarEstado(@PathVariable Long id,@RequestBody Asignacion_Evidencia p) {
+        Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
+        if (asignacion_evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                asignacion_evidencia.setEstado(p.getEstado());
+                return new ResponseEntity<>(Service.save(asignacion_evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+    }
     @PutMapping("/editarArchSubido/{id}/{estado}")
     public ResponseEntity<Asignacion_Evidencia> editarArchSubido(@PathVariable Long id, @PathVariable boolean estado) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
