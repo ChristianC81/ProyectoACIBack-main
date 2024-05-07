@@ -241,10 +241,11 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
     @Query("SELECT cri.id_criterio AS id_criterio, " +
             "cri.nombre AS nombre, " +
-            "SUM(i.porc_utilida_obtenida) AS total, " +
-            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
+            "COALESCE(SUM(ci.porc_utilida_obtenida), 0) AS total, " +
+            "COALESCE(SUM(i.peso) - SUM(ci.porc_utilida_obtenida),0) AS faltante " +
             "FROM Indicador i " +
             "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            "LEFT JOIN Calificar_Indicador ci ON i.id_indicador = ci.indicador.id_indicador AND ci.id_modelo = :id_modelo " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +
             "JOIN Modelo m ON ai.modelo.id_modelo = m.id_modelo " +

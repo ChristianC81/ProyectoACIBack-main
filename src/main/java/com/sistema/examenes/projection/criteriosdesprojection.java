@@ -7,6 +7,7 @@ public interface criteriosdesprojection {
     String getsubcrierioj();
     Long getId_indicardorj();
     Long getId_evidencia();
+    String getEstado_evi();
     String getIdes();
     String getDescrip();
     double getPeso_evid();

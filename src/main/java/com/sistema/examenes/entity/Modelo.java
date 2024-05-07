@@ -25,8 +25,12 @@ public class Modelo implements Serializable {
     private Date fecha_fin;
     @Column(name = "fecha_final_act")
     private Date fecha_final_act;
+    //Va trabajar para definir la eliminacion logica del mismo
     @Column(name = "visible")
     private boolean visible;
+    //Va trabajar para definir el activo y desactivo de un modelo
+    @Column(name = "estadoad")
+    private Boolean estadoad;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Usuario usuario;

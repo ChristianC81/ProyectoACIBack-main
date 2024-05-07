@@ -11,6 +11,7 @@ import com.sistema.examenes.services.Modelo_Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
@@ -40,13 +41,20 @@ public class  Modelo_Controller {
             if (existe) {
                 return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
             }else{
-                List<Evidencia> listae=serviev.listar();
+               /* List<Evidencia> listae=serviev.listar();
                 if(listae!=null){
                     for (Evidencia evid:listae) {
                         editar(evid.getId_evidencia(), evid);
                     }
-                }
+                }*/
+                    //Si se crea el modelo deberia solo activarse el mismo y desactivar los demas
+                    List<Modelo> modelos = Service.findByAll();
+                    for(Modelo modelo:modelos){
+                        modelo.setEstadoad(false);
+                        Service.save(modelo);
+                    }
                     r.setVisible(true);
+                    r.setEstadoad(true);
             return new ResponseEntity<>(Service.save(r), HttpStatus.CREATED);}
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
@@ -115,6 +123,7 @@ public class  Modelo_Controller {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
             try {
+                //Al eliminar hacer el elimnado logico en cascada
                 a.setVisible(false);
                 return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
             } catch (Exception e) {
@@ -123,7 +132,31 @@ public class  Modelo_Controller {
 
         }
     }
-
+    @PutMapping("/editarEstadoModeloAD/{id}")
+    public ResponseEntity<?> editarEstadoModeload(@PathVariable Long id,@RequestParam Integer vnum) {
+        Modelo a = Service.findById(id);
+        if (a == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                if(vnum==(0)){
+                    //Si desactivo el modelo deberia obligatoriamente activar otro
+                    a.setEstadoad(false);
+                }else if(vnum==(1)){
+                    //Si activo el modelo deberia solo activarse el mismo y desactivar los demas
+                    List<Modelo> modelos = Service.findByAll();
+                    for(Modelo modelo:modelos){
+                        modelo.setEstadoad(false);
+                        Service.save(modelo);
+                    }
+                    a.setEstadoad(true);
+                }
+                return new ResponseEntity<>(Service.save(a), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+        }
+    }
     @PutMapping("/actualizar/{id}")
     public ResponseEntity<Modelo> actualizar(@PathVariable Long id, @RequestBody Modelo p) {
         Modelo a = Service.findById(id);

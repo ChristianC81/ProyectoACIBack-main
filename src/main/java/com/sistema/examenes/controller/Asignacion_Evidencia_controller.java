@@ -42,6 +42,7 @@ public class Asignacion_Evidencia_controller {
             for (AsignacionEvidenciaPDTO evidencia : evidencias) {
                 Asignacion_Evidencia nuevaAsignacion = new Asignacion_Evidencia();
                 nuevaAsignacion.setVisible(true);
+                nuevaAsignacion.setEstado("pendiente");
                 nuevaAsignacion.setArchsubido(false);
                 nuevaAsignacion.setId_modelo(evidencia.getId_modelo());
                 nuevaAsignacion.setFecha_inicio(evidencia.getFecha_inicio());
@@ -77,10 +78,10 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarv")
-    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav() {
+    @GetMapping("/listarv/{id_modelo}")
+    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav(Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listar(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listar(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -200,6 +201,21 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
+    @PutMapping("/editarEstado/{id}")
+    public ResponseEntity<Asignacion_Evidencia> editarEstado(@PathVariable Long id,@RequestBody Asignacion_Evidencia p) {
+        Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
+        if (asignacion_evidencia == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        } else {
+            try {
+                asignacion_evidencia.setEstado(p.getEstado());
+                return new ResponseEntity<>(Service.save(asignacion_evidencia), HttpStatus.CREATED);
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+            }
+
+        }
+    }
     @PutMapping("/editarArchSubido/{id}/{estado}")
     public ResponseEntity<Asignacion_Evidencia> editarArchSubido(@PathVariable Long id, @PathVariable boolean estado) {
         Asignacion_Evidencia asignacion_evidencia = Service.findById(id);
