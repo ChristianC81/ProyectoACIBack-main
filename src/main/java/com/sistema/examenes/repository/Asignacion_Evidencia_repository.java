@@ -123,8 +123,8 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
     @Query(value = "select * from  asignacion_evidencia ac JOIN usuarios u ON ac.usuario_id = u.id where u.username=:username and ac.visible =true",nativeQuery = true)
     List<Asignacion_Evidencia>listarporusuario(String username);
 
-    @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidendicia ;",nativeQuery = true)
-    List<Asignacion_Evidencia>listarporEvidencia(Long idEvidendicia);
+    @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidencia ;",nativeQuery = true)
+    List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia);
 
     @Query(value = "SELECT * FROM asignacion_evidencia WHERE usuario_id = :userId AND visible = true;",nativeQuery = true)
     List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);

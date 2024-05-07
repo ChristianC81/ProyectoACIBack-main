@@ -8,7 +8,7 @@ import java.util.List;
 public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     public List<Evidencia> listar();
 
-    public List<EvidenciaEvProjection> evidenciaUsuario(String username);
+    public List<EvidenciaEvProjection> evidenciaUsuario(String username, Long id_modelo);
 
     public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
 

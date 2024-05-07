@@ -30,6 +30,9 @@ public class Archivo_s implements Serializable {
     @Column(name = "comentario")
     private String comentario;
 
+    @Column(name = "id_modelo") // Columna para guardar el Modelo en el que se realiza el registro
+    private Long id_modelo;
+
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_asignacion_evidencia")
     private Asignacion_Evidencia actividad;

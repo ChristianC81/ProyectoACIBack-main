@@ -34,7 +34,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
                 "JOIN ic.subcriterio sc  " +
                 "WHERE ai2.visible  = true AND ic.visible = true AND m.visible=true " +
                 "GROUP by m.id_modelo " +
-                "order by m.estadoad desc")
+                "order by m.id_modelo DESC")
     List<ModeloVistaProjection> obtenerModeloVista();
     @Query( "SELECT cri.nombre AS crite, subc.nombre AS sub, i.id_indicador AS id_indi, i.nombre AS ind_nombre, " +
             "CASE WHEN ai.visible IS NOT NULL THEN ai.visible ELSE false END AS visi " +
@@ -55,6 +55,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "ev.descripcion AS descrip, " +
             "i.id_indicador, " +
             "ev.id_evidencia AS id_evidencia, " +
+            "ac.estado AS estado_evi," +
             "(CASE " +
             "   WHEN (SELECT count(evi.id_evidencia) FROM evidencia evi WHERE evi.indicador_id_indicador = i.id_indicador) = 0 THEN 0 " +
             "   ELSE (i.peso / (SELECT count(evi.id_evidencia) FROM evidencia evi WHERE evi.indicador_id_indicador = i.id_indicador)) " +

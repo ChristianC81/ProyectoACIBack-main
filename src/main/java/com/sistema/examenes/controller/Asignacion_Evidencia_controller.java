@@ -42,6 +42,7 @@ public class Asignacion_Evidencia_controller {
             for (AsignacionEvidenciaPDTO evidencia : evidencias) {
                 Asignacion_Evidencia nuevaAsignacion = new Asignacion_Evidencia();
                 nuevaAsignacion.setVisible(true);
+                nuevaAsignacion.setEstado("pendiente");
                 nuevaAsignacion.setArchsubido(false);
                 nuevaAsignacion.setId_modelo(evidencia.getId_modelo());
                 nuevaAsignacion.setFecha_inicio(evidencia.getFecha_inicio());

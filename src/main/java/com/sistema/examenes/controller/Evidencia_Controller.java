@@ -103,10 +103,10 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/buscarev/{username}")
-    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidencia(@PathVariable("username") String username) {
+    @GetMapping("/buscarev/{username}/{id_modelo}")
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidencia(@PathVariable("username") String username, @PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.evidenciaUsuario(username), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenciaUsuario(username,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
