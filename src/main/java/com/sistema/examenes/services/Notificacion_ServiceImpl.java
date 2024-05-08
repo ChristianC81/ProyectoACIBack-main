@@ -26,8 +26,8 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     }
 
     @Override
-    public List<Notificacion> listar(Long user) {
-        return notificacionRepository.listarUserNoti(user);
+    public List<Notificacion> listarNotificacionesPorUsuario(Long id_usuario, Long id_modelo) {
+        return notificacionRepository.listarNotificacionesPorUsuario(id_usuario,id_modelo);
     }
     @Override
     public List<Notificacion> listarmovil(Long user) {

@@ -105,10 +105,10 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/actCalendar/{id}")
-    public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id) {
+    @GetMapping("/actCalendar/{id}/{id_modelo}")
+    public ResponseEntity<List<ActiCalendarProjection>> getActCalUserById(@PathVariable("id") Long id,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            List<ActiCalendarProjection> actividades = Service.listarActiCalendarbyuser(id);
+            List<ActiCalendarProjection> actividades = Service.listarActiCalendarbyuser(id,id_modelo);
             return new ResponseEntity<>(actividades, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

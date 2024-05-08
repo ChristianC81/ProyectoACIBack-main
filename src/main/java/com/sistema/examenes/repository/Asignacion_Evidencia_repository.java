@@ -104,9 +104,9 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN evidencia e ON e.id_evidencia = a.evidencia_id_evidencia " +
             "WHERE a.usuario_id = :usuarioId " +
             "AND a.visible = true " +
-            "AND a.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
+            "AND a.id_modelo = :id_modelo " +
             "AND LOWER(e.estado)='pendiente' OR LOWER(e.estado)='rechazada' ", nativeQuery = true)
-    List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId);
+    List<ActiCalendarProjection> findActCalendarByUsuarioId(@Param("usuarioId") Long usuarioId, @Param("id_modelo") Long id_modelo);
 
     @Query(value = "SELECT ae.id_asignacion_evidencia, e.descripcion, ae.fecha_inicio, ae.fecha_fin, e.estado, e.id_evidencia, de.observacion, " +
             "(SELECT count(id_archivo) from archivo where id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true) AS countarchivos, " +

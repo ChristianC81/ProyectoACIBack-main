@@ -71,13 +71,13 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
-    public List<AsigEvidProjection> evidenciatab(Long idcriterio) {
-        return repository.evidenciatab(idcriterio);
+    public List<AsigEvidProjection> obtenerEvidenciasPorCriterio(Long idcriterio, Long id_modelo) {
+        return repository.obtenerEvidenciasPorCriterio(idcriterio, id_modelo);
     }
 
     @Override
-    public List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser) {
-        return repository.listarEvidenciaAdmin(idUser);
+    public List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser,Long id_modelo) {
+        return repository.listarEvidenciaAdmin(idUser,id_modelo);
     }
 
     @Override
@@ -86,12 +86,12 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
-    public List<EvidenciaProjection> evidenUserPendiente(String username) { return repository.evidenUserPendiente(username);
+    public List<EvidenciaProjection> evidenUserPendiente(String username, Long id_modelo) { return repository.evidenUserPendiente(username,id_modelo);
     }
 
     @Override
-    public ActiDiagramaPieProjection porcentajeEstadosdeActividades(Long responsableId) {
-        return repository.porcentajeEstadosdeActividadesByResponsableId(responsableId);
+    public ActiDiagramaPieProjection porcentajeEstadosdeActividades(Long responsableId, Long id_modelo) {
+        return repository.porcentajeEstadosdeActividadesByResponsableId(responsableId, id_modelo);
     }
     @Override
     public ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral() {

@@ -79,18 +79,18 @@ public class Evidencia_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/eviasigtab/{idcriterio}")
-    public ResponseEntity<List<AsigEvidProjection>> evidenciatabla(@PathVariable("idcriterio") Long idcriterio) {
+    @GetMapping("/obtenerevidenciasporcriterio/{idcriterio}/{id_modelo}")
+    public ResponseEntity<List<AsigEvidProjection>> obtenerEvidenciasPorCriterio(@PathVariable("idcriterio") Long idcriterio, @PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.evidenciatab(idcriterio), HttpStatus.OK);
+            return new ResponseEntity<>(Service.obtenerEvidenciasPorCriterio(idcriterio,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/eviasigadmin/{idUser}")
-    public ResponseEntity<List<AsigEvidProjection>> evidenciaadmintabla(@PathVariable("idUser") Long idUser) {
+    @GetMapping("/eviasigadmin/{idUser}/{id_modelo}")
+    public ResponseEntity<List<AsigEvidProjection>> evidenciaadmintabla(@PathVariable("idUser") Long idUser,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listarEvidenciaAdmin(idUser), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvidenciaAdmin(idUser,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -131,10 +131,10 @@ public class Evidencia_Controller {
         }
     }
 
-    @GetMapping("/evidenuserpendiente/{username}")
-    public ResponseEntity<List<EvidenciaProjection>> evidenUserPendiente(@PathVariable("username") String username) {
+    @GetMapping("/evidenuserpendiente/{username}/{id_modelo}")
+    public ResponseEntity<List<EvidenciaProjection>> evidenUserPendiente(@PathVariable("username") String username, @PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.evidenUserPendiente(username), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenUserPendiente(username, id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -221,12 +221,13 @@ public class Evidencia_Controller {
         }
     }
 
-    @GetMapping("/porcentajeEstadosdeActividades/{responsableId}")
-    public ResponseEntity<ActiDiagramaPieProjection> porcentajeEstadosdeActividadesPorResponsableId(@PathVariable("responsableId") Long responsableId) {
+    @GetMapping("/porcentajeEstadosdeActividades/{responsableId}/{id_modelo}")
+    public ResponseEntity<ActiDiagramaPieProjection> porcentajeEstadosdeActividadesPorResponsableId(@PathVariable("responsableId") Long responsableId, @PathVariable("id_modelo") Long id_modelo) {
         try {
-            ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeActividades(responsableId);
+            ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeActividades(responsableId, id_modelo);
             return new ResponseEntity<>(actividades, HttpStatus.OK);
         } catch (Exception e) {
+            System.out.println(e.getMessage());
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }

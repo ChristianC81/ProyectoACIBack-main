@@ -20,11 +20,11 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     List<EvidenciaProjection> listararchivos(Long id_evidencia);
     List<EvidenciasProjection> evidenciaRechazada(Long id_modelo);
     EvidenciaCalProjection evidenciacal(Long id_evidencia, Long id_modelo);
-    List<AsigEvidProjection> evidenciatab(Long idcriterio);
-    List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser);
+    List<AsigEvidProjection> obtenerEvidenciasPorCriterio(Long idcriterio, Long id_modelo);
+    List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser, Long id_modelo);
     public List<EvidenciaProjection> evidenUsuario(String username);
-    public List<EvidenciaProjection> evidenUserPendiente(String username);
-    ActiDiagramaPieProjection porcentajeEstadosdeActividades (Long responsableId);
+    public List<EvidenciaProjection> evidenUserPendiente(String username, Long id_modelo);
+    ActiDiagramaPieProjection porcentajeEstadosdeActividades (Long responsableId, Long id_modelo);
     ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral();
     ValorObtenidoInd valoresObtenidosEvidencias (Long id_indicador);
 

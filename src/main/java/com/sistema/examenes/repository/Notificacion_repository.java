@@ -15,8 +15,9 @@ public interface Notificacion_repository extends JpaRepository<Notificacion, Lon
     //ListarTODO
     @Query("SELECT n FROM Notificacion n ORDER BY n.fecha DESC")
     List<Notificacion> listarTodasNotificaciones();
-    @Query("SELECT n FROM Notificacion n WHERE n.usuario=:user ORDER BY n.fecha DESC")
-    List<Notificacion> listarUserNoti(Long user);
+
+    @Query("SELECT n FROM Notificacion n WHERE n.usuario= :id_usuario AND n.id_modelo= :id_modelo ORDER BY n.fecha DESC")
+    List<Notificacion> listarNotificacionesPorUsuario(Long id_usuario, Long id_modelo);
 
     @Query("SELECT n FROM Notificacion n WHERE n.usuario = :user ORDER BY n.fecha DESC")
     List<Notificacion> listarUserNotimovil(Long user, Pageable pageable);
