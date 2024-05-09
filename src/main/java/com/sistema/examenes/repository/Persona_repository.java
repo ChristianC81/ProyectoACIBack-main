@@ -17,4 +17,6 @@ public interface Persona_repository extends JpaRepository<Persona, Long> {
 
     Persona findByCedula(String cedula);
 
+    @Query(value = "SELECT p FROM Persona p JOIN Usuario u ON p.id_persona = u.persona.id_persona WHERE u.visible=true")
+    List<Persona> findAllPersonasByUsuarios();
 }

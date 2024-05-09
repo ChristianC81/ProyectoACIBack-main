@@ -17,7 +17,7 @@ public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_
     List<AsignaProjection>listarAsigEvidenciaPorUsuario(Long usuarioId);
     Asignacion_Evidencia fechaactividades(Long id_evidencia,Long id_modelo);
 
-    List<ActiCalendarProjection> listarActiCalendarbyuser (Long usuario);
+    List<ActiCalendarProjection> listarActiCalendarbyuser (Long usuario, Long id_modelo);
 
     List<Asignacion_EvidenciaDTO>listarAsigEviUser(String username, Long id_evidencia);
     public List<Asignacion_Evidencia> listarporusuario(String username);

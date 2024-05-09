@@ -78,8 +78,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "WHERE u.username = :username " +
             "AND ae.visible = true " +
             "AND ae.archsubido = false " +
-            "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
-    public List<EvidenciaProjection> evidenUserPendiente(@Param("username") String username);
+            "AND ae.id_modelo = :id_modelo")
+    public List<EvidenciaProjection> evidenUserPendiente(@Param("username") String username, @Param("id_modelo") Long id_modelo);
 
    /* @Query(value = " SELECT e.* FROM evidencia e  \n" +
             "               LEFT JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia \n" +
@@ -106,29 +106,48 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "ORDER BY c.id_criterio,e.id_evidencia", nativeQuery = true)
     List<Evidencia> evidenciacriterio(Long idcriterio);
 
-    @Query(value = "SELECT DISTINCT e.id_evidencia AS idev,c.id_criterio AS idcri,c.nombre AS nombcri, " +
-            "sc.id_subcriterio AS idsub,sc.nombre AS nombsub,i.id_indicador AS idind,i.nombre AS nombind, e.descripcion AS descripc " +
-            "FROM evidencia e JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
-            "LEFT JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible = true " +
-            "JOIN subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
-            "JOIN criterio c ON sc.id_criterio = c.id_criterio " +
-            "JOIN asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio AND aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
-            "WHERE c.id_criterio=:idcriterio AND e.visible = true " +
-            "AND e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia  WHERE visible=true) " +
-            "ORDER BY sc.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
-    List<AsigEvidProjection> evidenciatab(Long idcriterio);
+    @Query(value = "SELECT DISTINCT " +
+            "e.id_evidencia AS idev, " +
+            "c.id_criterio AS idcri, " +
+            "c.nombre AS nombcri, " +
+            "sc.id_subcriterio AS idsub, " +
+            "sc.nombre AS nombsub, " +
+            "i.id_indicador AS idind, " +
+            "i.nombre AS nombind, " +
+            "e.descripcion AS descripc " +
+            "FROM " +
+            "evidencia e " +
+            "JOIN " +
+            "indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN " +
+            "asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :id_modelo " +
+            "LEFT JOIN " +
+            "asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible = true AND ae.id_modelo = :id_modelo " +
+            "JOIN " +
+            "subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
+            "JOIN " +
+            "criterio c ON sc.id_criterio = c.id_criterio " +
+            "WHERE " +
+            "c.id_criterio = :idcriterio " +
+            "AND e.visible = true " +
+            "AND e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia WHERE visible = true AND ae.id_modelo = :id_modelo) " +
+            "ORDER BY " +
+            "sc.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
+    List<AsigEvidProjection> obtenerEvidenciasPorCriterio(Long idcriterio, Long id_modelo);
 
-    @Query(value = "SELECT cri.id_criterio AS idcri, cri.nombre AS nombcri, s.id_subcriterio AS idsub, s.nombre AS nombsub,i.id_indicador AS idind, i.nombre AS nombind, e.id_evidencia AS idev,e.descripcion AS descripc " +
-            "FROM evidencia e JOIN indicador i ON i.id_indicador = e.indicador_id_indicador " +
+    @Query(value = "SELECT cri.id_criterio AS idcri, cri.nombre AS nombcri, s.id_subcriterio AS idsub, s.nombre AS nombsub, i.id_indicador AS idind, i.nombre AS nombind, e.id_evidencia AS idev, e.descripcion AS descripc " +
+            "FROM evidencia e " +
+            "JOIN indicador i ON i.id_indicador = e.indicador_id_indicador " +
+            "JOIN asignacion_indicador ai ON ai.indicador_id_indicador = i.id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :id_modelo " +
             "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
             "JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
-            "LEFT JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible = true " +
+            "LEFT JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia AND ae.visible = true AND ae.id_modelo= :id_modelo " +
             "LEFT JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true " +
-            "WHERE aa.id_modelo = (SELECT MAX(id_modelo) FROM modelo) AND aa.usuario_id =:idUser " +
-            "AND (e.id_evidencia IS NULL OR e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia WHERE visible = true)) " +
+            "WHERE aa.id_modelo = :id_modelo AND aa.usuario_id = :idUser " +
+            "AND (e.id_evidencia IS NULL OR e.id_evidencia NOT IN (SELECT evidencia_id_evidencia FROM asignacion_evidencia WHERE visible = true AND ae.id_modelo= :id_modelo)) " +
             "AND e.visible = true " +
-            "ORDER BY  cri.nombre, s.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
-    List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser);
+            "ORDER BY cri.nombre, s.nombre, i.nombre, e.descripcion ASC", nativeQuery = true)
+    List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser, Long id_modelo);
     // SELECT evidencia.*
     // FROM public.indicador join public.evidencia ON
     // evidencia.indicador_id_indicador = indicador.id_indicador
@@ -196,8 +215,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "JOIN " +
             "asignacion_evidencia asi ON e.id_evidencia = asi.evidencia_id_evidencia " +
             "WHERE " +
-            "asi.usuario_id = :responsableId AND asi.visible = true AND asi.id_modelo= (SELECT MAX(id_modelo) FROM modelo);", nativeQuery = true)
-    ActiDiagramaPieProjection porcentajeEstadosdeActividadesByResponsableId(@Param("responsableId") Long responsableId);
+            "asi.usuario_id = :responsableId AND asi.visible = true AND asi.id_modelo= :id_modelo ", nativeQuery = true)
+    ActiDiagramaPieProjection porcentajeEstadosdeActividadesByResponsableId(@Param("responsableId") Long responsableId,@Param("id_modelo") Long id_modelo);
 
     @Query(value = "SELECT SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, \n" +
             "SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, \n" +

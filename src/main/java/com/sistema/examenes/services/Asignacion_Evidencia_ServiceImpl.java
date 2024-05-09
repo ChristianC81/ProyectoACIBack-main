@@ -54,8 +54,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<ActiCalendarProjection> listarActiCalendarbyuser(Long usuario) {
-        return repository.findActCalendarByUsuarioId(usuario);
+    public List<ActiCalendarProjection> listarActiCalendarbyuser(Long usuario, Long id_modelo) {
+        return repository.findActCalendarByUsuarioId(usuario, id_modelo);
     }
 
     @Override

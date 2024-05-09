@@ -3,6 +3,7 @@ package com.sistema.examenes.controller;
 import com.sistema.examenes.entity.Archivo;
 import com.sistema.examenes.entity.Archivo_s;
 import com.sistema.examenes.entity.Asignacion_Evidencia;
+import com.sistema.examenes.entity.Modelo;
 import com.sistema.examenes.mensajes.Archivosmensajes;
 import com.sistema.examenes.projection.ArchivoAdmSupProjection;
 import com.sistema.examenes.projection.ArchivoProjection;
@@ -38,6 +39,8 @@ public class Archivo_Controller {
     @Autowired
     Evidencia_Service eviservis;
     @Autowired
+    Modelo_Service modelo_service;
+    @Autowired
     Archivo_Service archivoservis;
     @Autowired
     Asignacion_Evidencia_Service actiservis;
@@ -47,7 +50,8 @@ public class Archivo_Controller {
     @PostMapping("/upload")
     public ResponseEntity<Archivosmensajes> upload(@RequestParam("file") MultipartFile[] files,
                                                    @RequestParam("descripcion") String descripcion,
-                                                   @RequestParam("id_evidencia") Long id_evidencia) {
+                                                   @RequestParam("id_evidencia") Long id_evidencia,
+                                                   @RequestParam("id_modelo") Long id_modelo) {
         String mensaje = "";
         String comentario = "";
         try {
@@ -55,6 +59,10 @@ public class Archivo_Controller {
             if (actividad == null) {
                 mensaje = "No se encontró la evidencia con id " + id_evidencia;
                 return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new Archivosmensajes(mensaje));
+            }
+            if(id_modelo == null){
+                Modelo modeloVigente = modelo_service.listarMaximo();
+                id_modelo=modeloVigente.getId_modelo();
             }
 
             // Calcular la diferencia entre la fecha límite y la fecha actual
@@ -96,6 +104,7 @@ public class Archivo_Controller {
             // Crear el objeto Archivo_s con el comentario establecido y guardarlo en la base de datos
             Archivo_s arch = new Archivo_s(url, String.join(",", fileNames), descripcion, true, actividad);
             arch.setComentario(comentario);
+            arch.setId_modelo(id_modelo);
             archivoservis.save(arch);
 
             // Mensaje de éxito

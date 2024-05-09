@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface NotificacionService extends GenericService<Notificacion, Long> {
     public List<Notificacion> listarTodasNotificaciones();
-    public List<Notificacion> listar(Long us);
+    public List<Notificacion> listarNotificacionesPorUsuario(Long id_usuario, Long id_modelo);
     public List<Notificacion> listarmovil(Long us);
 
     public List<Notificacion> all(String roluserer);

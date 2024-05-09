@@ -44,10 +44,10 @@ public class Notificacion_Controller {
         }
     }
 
-        @GetMapping("/listarnotificaciones/{id}")
-    public ResponseEntity<List<Notificacion>>listar(@PathVariable("id") Long id){
+        @GetMapping("/listarnotificaciones/{id_usuario}/{id_modelo}")
+    public ResponseEntity<List<Notificacion>>listarNotificacionesPorUsuario(@PathVariable("id_usuario") Long id_usuario,@PathVariable("id_modelo") Long id_modelo){
         try {
-            return new ResponseEntity<>(service.listar(id), HttpStatus.OK);
+            return new ResponseEntity<>(service.listarNotificacionesPorUsuario(id_usuario,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
