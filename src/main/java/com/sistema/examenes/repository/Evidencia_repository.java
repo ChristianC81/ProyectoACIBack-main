@@ -50,7 +50,8 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "AND aa.usuario_id = :usuarioId " +
             "AND aa.visible = true " +
             "AND u.username = :username " +
-            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador", nativeQuery = true)
+            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador, " +
+            "CAST(SUBSTRING(e.descripcion FROM '^[0-9]+') AS INTEGER), e.descripcion ASC", nativeQuery = true)
     List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
 
     @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
