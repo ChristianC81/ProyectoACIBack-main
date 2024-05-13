@@ -30,29 +30,28 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
 
 
     @Query(value = "SELECT e.id_evidencia AS id_evidencia, cri.nombre AS nombrecriterio, s.nombre AS nombresubcriterio, " +
-            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, e.estado AS estado, " +
-            "(SELECT comentario FROM archivo WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true ORDER BY id_archivo DESC LIMIT 1 ) AS comentario " +
+            "i.nombre AS nombreindicador, i.tipo AS tipo, e.descripcion AS descripcionevidencia, ae.estado AS estado, " +
+            "(SELECT comentario FROM archivo WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia AND visible = true " +
+            "AND id_modelo = :idModel ORDER BY id_archivo DESC LIMIT 1 ) AS comentario " +
             "FROM asignacion_evidencia ae " +
-            "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.visible = true " +
-            "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id " +
+            "JOIN evidencia e ON e.id_evidencia = ae.evidencia_id_evidencia AND e.visible = true " +
+            "JOIN usuarios u_resp ON u_resp.id = ae.usuario_id AND u_resp.visible = true " +
             "JOIN persona pe_resp ON pe_resp.id_persona = u_resp.persona_id_persona " +
-            "JOIN usuarios u_asig ON u_asig.id = ae.id_usuario_asignador " +
+            "JOIN usuarios u_asig ON u_asig.id = ae.id_usuario_asignador AND u_asig.visible = true " +
             "JOIN persona pe_asig ON pe_asig.id_persona = u_asig.persona_id_persona " +
             "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
             "JOIN subcriterio s ON s.id_subcriterio = i.subcriterio_id_subcriterio " +
             "JOIN criterio cri ON cri.id_criterio = s.id_criterio " +
-            "JOIN asignacion_indicador po ON i.id_indicador = po.indicador_id_indicador " +
-            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
-            "AND mo.id_modelo = (SELECT MAX(id_modelo) FROM modelo) " +
-            "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio " +
+            "JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :idModel " +
+            "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true AND aa.id_modelo = :idModel " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "WHERE ae.visible = true " +
+            "AND ae.id_modelo = :idModel " +
             "AND aa.usuario_id = :usuarioId " +
-            "AND aa.visible = true " +
             "AND u.username = :username " +
             "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador, " +
             "CAST(SUBSTRING(e.descripcion FROM '^[0-9]+') AS INTEGER), e.descripcion ASC", nativeQuery = true)
-    List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
+    List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId, Long idModel);
 
     @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
             "e.descripcion AS descripcion, e.estado AS estado, ae.id_asignacion_evidencia AS id_asignacion_evidencia, " +
@@ -155,7 +154,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     // WHERE evidencia.indicador_id_indicador=6 And evidencia.visible=true;
     @Query(value = "SELECT evidencia.* FROM public.indicador JOIN public.evidencia ON evidencia.indicador_id_indicador = indicador.id_indicador " +
             "WHERE evidencia.indicador_id_indicador=:id_indicador AND evidencia.visible=true " +
-            "ORDER BY evidencia.descripcion ASC", nativeQuery = true)
+            "ORDER BY CAST(SUBSTRING(evidencia.descripcion FROM '^[0-9]+') AS INTEGER), evidencia.descripcion ASC", nativeQuery = true)
     List<Evidencia> listarEvidenciaPorIndicador(Long id_indicador);
 
     @Query(value = "SELECT DISTINCT e.id_evidencia AS idev,per.primer_nombre||' '||per.primer_apellido AS enca, " +

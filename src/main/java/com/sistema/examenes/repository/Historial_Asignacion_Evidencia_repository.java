@@ -9,7 +9,8 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface Historial_Asignacion_Evidencia_repository extends JpaRepository<Historial_Asignacion_Evidencia, Long> {
-    @Query("SELECT per.primer_nombre ||' '|| per.primer_apellido AS nombre_usuario, " +
+
+    @Query(value = "SELECT per.primer_nombre ||' '|| per.primer_apellido AS nombre_usuario, " +
             "h.fecha AS fecha, " +
             "a.fecha_fin AS fecha_fin, " +
             "a.fecha_inicio AS fecha_inicio, " +
@@ -19,15 +20,16 @@ public interface Historial_Asignacion_Evidencia_repository extends JpaRepository
             "sc.nombre AS titulo_subcriterio, " +
             "c.nombre AS titulo_criterio " +
             "FROM Historial_Asignacion_Evidencia h " +
-            "JOIN h.asignacion_evi a " +
-            "JOIN a.evidencia e  " +
-            "JOIN e.indicador i " +
-            "JOIN i.subcriterio sc " +
-            "JOIN sc.criterio c " +
-            "JOIN Usuario u ON u.id = a.usuario.id " +
-            "JOIN u.persona per " +
+            "JOIN asignacion_evidencia a ON h.asignacion_evi_id_asignacion_evidencia = a.id_asignacion_evidencia " +
+            "JOIN evidencia e ON a.evidencia_id_evidencia = e.id_evidencia  " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio sc ON i.subcriterio_id_subcriterio = sc.id_subcriterio " +
+            "JOIN criterio c ON sc.id_criterio = c.id_criterio " +
+            "JOIN Usuarios u ON a.usuario_id = u.id " +
+            "JOIN persona per ON u.persona_id_persona = per.id_persona " +
             "WHERE c.id_criterio = :critId " +
-            "and a.visible= :veri " +
-            "ORDER BY h.fecha DESC")
-    List<HistorialAsignacionEvidenciaProjection> obtenerHistorialPorUsuario( @Param("critId") Long critId, boolean veri);
+            "AND a.visible= :veri " +
+            "AND h.id_modelo = :idModel " +
+            "ORDER BY h.fecha, CAST(SUBSTRING(e.descripcion FROM '^[0-9]+') AS INTEGER), e.descripcion DESC ", nativeQuery = true)
+    List<HistorialAsignacionEvidenciaProjection> obtenerHistorialPorUsuario( @Param("critId") Long critId, boolean veri, @Param("idModel") Long idModel);
 }

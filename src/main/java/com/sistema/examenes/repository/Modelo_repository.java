@@ -71,7 +71,7 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "JOIN subcriterio sub ON cri.id_criterio = sub.id_criterio AND sub.visible = true " +
             "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
             "LEFT JOIN calificar_indicador ci ON i.id_indicador = ci.indicador_id_indicador AND ci.id_modelo = :id_modelo " +
-            "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador AND ai.id_modelo = :id_modelo " +
+            "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador AND ai.modelo_id_modelo = :id_modelo " +
             "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
             "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true AND ac.id_modelo= :id_modelo " +
             "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true AND arc.id_modelo= :id_modelo " +

@@ -122,7 +122,7 @@ public class UsuarioController {
                     // Si no lo ha asignado, realizar la asignación
                     usuarioExistente.setVisible(true);
                     registrarCriteriosAdminAlResponsable(usuarioExistente, adminId, modeloId);
-                    asignarResponsableAdm(usuarioExistente, adminId);
+                    asignarResponsableAdm(usuarioExistente, adminId, modeloId);
                     return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
                 } else {
                     System.out.println("USUARIO YA ASIGNADO POR ESTE ADMINISTRADOR");
@@ -142,7 +142,7 @@ public class UsuarioController {
 
             Usuario nuevoUsuario = uR.save(r);// Guardar el usuario en la base de datos
             registrarCriteriosAdminAlResponsable(nuevoUsuario, adminId, modeloId);//Asignacion con los criterios del admin
-            asignarResponsableAdm(nuevoUsuario,adminId);//Registra la asignacion del responsable con el admin
+            asignarResponsableAdm(nuevoUsuario,adminId, modeloId);//Registra la asignacion del responsable con el admin
             registrarSeguimiento(nuevoUsuario);// Registra la acción en el seguimiento de usuarios
 
             return new ResponseEntity<>(nuevoUsuario, HttpStatus.CREATED);
@@ -169,9 +169,9 @@ public class UsuarioController {
             }
         }
     }
-    private void asignarResponsableAdm(Usuario usuario, Long adminId) {
+    private void asignarResponsableAdm(Usuario usuario, Long adminId, Long idModel) {
 
-        Asignacion_Responsable asignacionExistente = asigresService.asignacion_existente(adminId, usuario.getId());
+        Asignacion_Responsable asignacionExistente = asigresService.asignacion_existente(adminId, usuario.getId(), idModel);
         if (asignacionExistente != null) {
             asignacionExistente.setVisible(true);
             asigresService.save(asignacionExistente);
@@ -180,6 +180,7 @@ public class UsuarioController {
         Usuario admin = usuarioService.findById(adminId);
         asigres.setUsuarioAdmin(admin);
         asigres.setUsuarioResponsable(usuario);
+        asigres.setId_modelo(idModel);
         asigres.setVisible(true);
         asigresService.save(asigres);
     }
@@ -437,7 +438,7 @@ public class UsuarioController {
                 //usuarioService.save(u);
                 return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.NO_CONTENT);
             } catch (Exception e) {
-
+                System.out.println("ERROR AL ELIMINAR UN RESPONSABLE ASIGNADO: "+ e.getMessage());
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
             }
 

@@ -21,10 +21,10 @@ public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_
 
     List<Asignacion_EvidenciaDTO>listarAsigEviUser(String username, Long id_evidencia);
     public List<Asignacion_Evidencia> listarporusuario(String username);
-    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia );
+    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia);
     public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);
     public List<EvidenciaReApPeAtrProjection>listarEvideByEstado(String estado);
-    public List<EvidenciaReApPeAtrProjection>listarEvideByEstadoAdm(String estado, Long id_admin);
+    public List<EvidenciaReApPeAtrProjection>listarEvideByEstadoAdm(String estado, Long id_admin, Long idModel);
     public List<ActivProyection>listarByActividad();
     int countArchivosByIdAsigEv(Long idAsignacionEv);
 }

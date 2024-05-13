@@ -90,9 +90,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporusuario(username);
     }
     @Override
-    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia ) {
+    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia) {
         return repository.listarporEvidencia(idEvidencia);
-
     }
 
     @Override
@@ -106,8 +105,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(String estado, Long id_admin) {
-        return repository.listarEvideByEstadoAdm(estado,id_admin);
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(String estado, Long id_admin, Long idModel) {
+        return repository.listarEvideByEstadoAdm(estado,id_admin, idModel);
     }
     @Override
     public List<ActivProyection> listarByActividad() {
