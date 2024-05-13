@@ -233,7 +233,7 @@ public class Asignacion_Evidencia_controller {
     }
 
     @PutMapping("/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}")
-    public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario) {
+    public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario, @PathVariable Long idModel) {
         List<Asignacion_Evidencia> asignacionEvidenciaList = Service.listarporEvidencia(idEvidencia);
         Evidencia evidencia = evidenciaService.findById(idEvidencia);
         Usuario nuevoUsuario = usuarioService.findById(idNuevoUsuario);
@@ -299,10 +299,11 @@ public class Asignacion_Evidencia_controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/evidenciasAdm/{estado}/{id_admin}")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstadoAdm(@PathVariable("estado") String estado, @PathVariable("id_admin") Long id_admin) {
+    @GetMapping("/evidenciasAdm/{estado}/{id_admin}/{idModel}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstadoAdm(@PathVariable("estado") String estado, @PathVariable("id_admin") Long id_admin,
+                                                                                            @PathVariable("idModel") Long idModel) {
         try {
-            return new ResponseEntity<>(Service.listarEvideByEstadoAdm(estado,id_admin), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvideByEstadoAdm(estado,id_admin, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

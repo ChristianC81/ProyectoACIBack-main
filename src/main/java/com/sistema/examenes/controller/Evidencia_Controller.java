@@ -112,10 +112,11 @@ public class Evidencia_Controller {
         }
     }
 
-    @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}")
-    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId) {
+    @GetMapping("/searchevifiltradoporadm/{username}/{usuarioId}/{idModel}")
+    public ResponseEntity<List<EvidenciaEvProjection>> buscarEvidenciaPorCriterio(@PathVariable("username") String username, @PathVariable("usuarioId") Long usuarioId,
+                                                                                  @PathVariable("idModel") Long idModel) {
         try {
-            return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenciaFiltraCriterio(username, usuarioId, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

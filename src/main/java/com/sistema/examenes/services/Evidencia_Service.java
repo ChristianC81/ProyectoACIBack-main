@@ -10,7 +10,7 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
 
     public List<EvidenciaEvProjection> evidenciaUsuario(String username, Long id_modelo);
 
-    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId);
+    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId, Long idModel);
 
     public List<Evidencia> listarEvidenciaAsigna(Long idUsuario) ;
 

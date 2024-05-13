@@ -31,8 +31,8 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
-    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId) {
-        return repository.evidenciaFiltraCriterio(username , usuarioId );
+    public List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId, Long idModel) {
+        return repository.evidenciaFiltraCriterio(username , usuarioId, idModel );
     }
 
     @Override
