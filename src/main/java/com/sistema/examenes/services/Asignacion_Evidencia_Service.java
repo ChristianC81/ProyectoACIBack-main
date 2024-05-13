@@ -24,7 +24,8 @@ public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_
     public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia,Long id_modelo );
     public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);
     public List<EvidenciaReApPeAtrProjection>listarEvideByEstado(String estado,Long id_modelo);
-    public List<EvidenciaReApPeAtrProjection>listarEvideByEstadoAdm(String estado, Long id_admin);
+    public List<EvidenciaReApPeAtrProjection>listarEvideByEstadoAdm(String estado, Long id_admin, Long idModel);
+
     public List<ActivProyection>listarByActividad();
     int countArchivosByIdAsigEv(Long idAsignacionEv);
 }

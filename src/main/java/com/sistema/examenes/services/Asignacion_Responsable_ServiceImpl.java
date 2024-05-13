@@ -22,8 +22,8 @@ public class Asignacion_Responsable_ServiceImpl extends GenericServiceImpl<Asign
 
 
     @Override
-    public List<ResponsableProjection> listadeResponsablesByAdmin(Long idAdministrador) {
-        return repository.listadeResponsablesByAdmin(idAdministrador);
+    public List<ResponsableProjection> listadeResponsablesByAdmin(Long idModelo,Long idAdministrador) {
+        return repository.listadeResponsablesByAdmin(idModelo,idAdministrador);
     }
 
     @Override
@@ -32,8 +32,8 @@ public class Asignacion_Responsable_ServiceImpl extends GenericServiceImpl<Asign
     }
 
     @Override
-    public Asignacion_Responsable asignacion_existente(Long id_usuarioAdmin, Long id_usuarioResponsable) {
-        return repository.asignacion_existente(id_usuarioAdmin,id_usuarioResponsable);
+    public Asignacion_Responsable asignacion_existente(Long id_usuarioAdmin, Long id_usuarioResponsable, Long idModelo) {
+        return repository.asignacion_existente(id_usuarioAdmin,id_usuarioResponsable, idModelo);
     }
 
     @Override

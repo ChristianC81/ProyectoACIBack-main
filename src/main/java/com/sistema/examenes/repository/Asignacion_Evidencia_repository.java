@@ -154,45 +154,27 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "ORDER BY e.id_evidencia DESC", nativeQuery = true)
     List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado,@Param("id_modelo") Long id_modelo);
 
-    @Query(value = "SELECT \n" +
-            "    pe.primer_nombre || ' ' || pe.primer_apellido AS responsable,\n" +
-            "    c.nombre AS nombre_criterio,\n" +
-            "    s.nombre AS nombre_subcriterio,\n" +
-            "    i.nombre AS nombre_indicador,\n" +
-            "    e.descripcion AS evidencia,\n" +
-            "    ae.fecha_fin,\n" +
-            "    ae.fecha_inicio,\n" +
-            "    e.estado\n" +
-            "FROM \n" +
-            "    asignacion_evidencia ae\n" +
-            "JOIN \n" +
-            "    usuarios u ON ae.usuario_id = u.id\n" +
-            "JOIN \n" +
-            "    evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia\n" +
-            "JOIN \n" +
-            "    indicador i ON e.indicador_id_indicador = i.id_indicador\n" +
-            "JOIN \n" +
-            "    subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio\n" +
-            "JOIN \n" +
-            "    criterio c ON s.id_criterio = c.id_criterio\n" +
-            "JOIN \n" +
-            "    asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador\n" +
-            "JOIN \n" +
-            "    asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio\n" +
-            "JOIN \n" +
-            "    asignacion_responsable ar ON u.id = ar.usuarioresponsable_id\n" +
-            "JOIN \n" +
-            "    persona pe ON u.persona_id_persona = pe.id_persona\n" +
-            "WHERE \n" +
-            "    LOWER(e.estado) = LOWER(:estado)\n" +
-            "    AND aa.usuario_id = :id_admin\n" +
-            "    AND ae.visible = true\n" +
-            "    AND e.visible = true\n" +
-            "    AND u.visible = true\n" +
-            "    AND ar.visible = true\n" +
-            "ORDER BY \n" +
-            "    e.id_evidencia DESC;", nativeQuery = true)
-    List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(@Param("estado") String estado, @Param("id_admin") Long id_admin);
+    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, ae.estado " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia AND e.visible = true " +
+            "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
+            "JOIN criterio c ON s.id_criterio = c.id_criterio " +
+            "JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador AND ai.visible = true AND ai.modelo_id_modelo = :idModel " +
+            "JOIN asignacion_admin aa ON c.id_criterio = aa.criterio_id_criterio AND aa.visible= true AND aa.id_modelo = :idModel " +
+            "JOIN asignacion_responsable ar ON u.id = ar.usuarioresponsable_id AND ar.visible = true AND ar.id_modelo = :idModel " +
+            "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
+            "WHERE LOWER(ae.estado) = LOWER(:estado) " +
+            "AND aa.usuario_id = :id_admin " +
+            "AND ae.visible = true " +
+            "AND u.visible = true " +
+            "AND ae.id_modelo = :idModel " +
+            "GROUP BY pe.primer_nombre, pe.primer_apellido, c.nombre, s.nombre, i.nombre, e.descripcion, ae.fecha_fin, ae.fecha_inicio, ae.estado " +
+            "ORDER BY CAST(SUBSTRING(e.descripcion FROM '^[0-9]+') AS INTEGER), e.descripcion DESC", nativeQuery = true)
+    List<EvidenciaReApPeAtrProjection> listarEvideByEstadoAdm(@Param("estado") String estado, @Param("id_admin") Long id_admin, @Param("idModel") Long idModel);
 
     @Query(value = "SELECT DISTINCT u.id AS idpersona, per.primer_nombre, per.primer_apellido, COALESCE(per.correo, 'Sin correo') AS percorreo " +
             "FROM asignacion_evidencia ac " +
