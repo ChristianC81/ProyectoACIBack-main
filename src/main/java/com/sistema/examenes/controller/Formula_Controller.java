@@ -40,10 +40,10 @@ public class Formula_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarv")
-    public ResponseEntity<List<FormulaProjection>> obtenerListav() {
+    @GetMapping("/listarv/{id_modelo}")
+    public ResponseEntity<List<FormulaProjection>> obtenerListav(@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listar(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarFormulas(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

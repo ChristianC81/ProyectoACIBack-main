@@ -21,15 +21,17 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
     @Query("SELECT s.id_subcriterio AS id_subcriterio, s.nombre AS nombre, s.descripcion AS descripcion, s.visible AS visible, " +
             "(SELECT COUNT(i2.id_indicador) " +
             "FROM Indicador i2 " +
-            "WHERE i2.subcriterio.id_subcriterio = s.id_subcriterio " +
-            "AND i2.visible = true) AS cantidadIndicadores " +
+            "JOIN Subcriterio s2 ON  i2.subcriterio.id_subcriterio= s2.id_subcriterio  AND s2.visible = true " +
+            "JOIN Asignacion_Indicador ai2 ON ai2.indicador.id_indicador = i2.id_indicador AND ai2.visible = true AND ai2.modelo.id_modelo= :id_modelo " +
+            "WHERE i2.visible = true AND s2.id_subcriterio=s.id_subcriterio) AS cantidadIndicadores " +
             "FROM Subcriterio s " +
-            "LEFT JOIN Indicador i " +
-            "ON s.id_subcriterio = i.subcriterio.id_subcriterio "+
-            "where s.visible =true and s.criterio.id_criterio=:id_criterio "+
+            "LEFT JOIN Indicador i ON s.id_subcriterio = i.subcriterio.id_subcriterio AND i.visible=true "+
+            "JOIN Asignacion_Indicador ai ON i.id_indicador = ai.indicador.id_indicador AND ai.modelo.id_modelo= :id_modelo AND ai.visible=true " +
+            "WHERE s.visible =true and s.criterio.id_criterio=:id_criterio "+
             "GROUP BY s.id_subcriterio " +
             "ORDER BY s.descripcion ASC")
-    List<SubcriterioIndicadoresProjection> obtenerSubcirteriosConCantidadIndicador(Long id_criterio);
+    List<SubcriterioIndicadoresProjection> obtenerSubcirteriosConCantidadIndicador(Long id_criterio, Long id_modelo);
+
     @Query(value = "SELECT s.id_subcriterio, s.nombre, s.descripcion, s.visible, c.nombre AS nombreCriterio, " +
             "(SELECT COUNT(i2.id_indicador) " +
             "FROM indicador i2 WHERE i2.subcriterio_id_subcriterio = s.id_subcriterio AND i2.visible = true) " +
@@ -55,15 +57,16 @@ public interface Subcriterio_repository extends JpaRepository<Subcriterio, Long>
     //Grafica de barras, porcentajes de subcriterios por criterio
     @Query("SELECT sub.id_subcriterio AS id_subcriterio, " +
             "sub.nombre AS nombre, " +
-            "SUM(i.porc_utilida_obtenida) AS total, " +
-            "SUM(i.peso) - SUM(i.porc_utilida_obtenida) AS faltante " +
+            "COALESCE(SUM(ci.porc_utilida_obtenida), 0) AS total, " +
+            "COALESCE(SUM(i.peso) - SUM(ci.porc_utilida_obtenida),0) AS faltante " +
             "FROM Indicador i " +
-            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador AND ai.visible=true " +
+            "LEFT JOIN Calificar_Indicador ci ON i.id_indicador = ci.indicador.id_indicador AND ci.id_modelo = :id_modelo " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +
-            "WHERE sub.visible =true AND i.visible=true AND sub.criterio.nombre=:cri_nombre " +
+            "WHERE sub.visible =true AND i.visible=true AND ai.modelo.id_modelo =:id_modelo AND sub.criterio.nombre=:cri_nombre " +
             "GROUP BY sub.nombre, sub.id_subcriterio " +
             "ORDER BY sub.id_subcriterio")
-    List<SubcriterioPorcProjection> subcriteriosporCriterio(String cri_nombre);
+    List<SubcriterioPorcProjection> subcriteriosporCriterio(String cri_nombre, Long id_modelo);
 
 }

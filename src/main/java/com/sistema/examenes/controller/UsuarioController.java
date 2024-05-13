@@ -255,10 +255,10 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listarResDatos")
-    public ResponseEntity<List<Usuario>> obtenerListaRespoDatosSup() {
+    @GetMapping("/listarResDatos/{id_modelo}")
+    public ResponseEntity<List<Usuario>> obtenerListaRespoDatosSup(@PathVariable Long id_modelo) {
         try {
-            return new ResponseEntity<>(uR.listaResponsablesDatos(), HttpStatus.OK);
+            return new ResponseEntity<>(uR.listaResponsablesDatos(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -289,10 +289,10 @@ public class UsuarioController {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/responsablesGeneral")
-    public ResponseEntity<List<ResponsableProjection>> ResponsablesAdmin() {
+    @GetMapping("/responsablesGeneral/{id_modelo}")
+    public ResponseEntity<List<ResponsableProjection>> ResponsablesAdmin(@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(uR.responsablesGeneral(), HttpStatus.OK);
+            return new ResponseEntity<>(uR.responsablesGeneral(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

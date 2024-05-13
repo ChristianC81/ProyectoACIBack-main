@@ -25,8 +25,9 @@ public interface Detalle_Evaluacion_repository extends JpaRepository<Detalle_Eva
     @Query("SELECT d FROM Detalle_Evaluacion d " +
             "WHERE d.visible = true " +
             "AND d.evidencia.id_evidencia = :idEvidencia " +
+            "AND d.id_modelo= :id_modelo " +
             "ORDER BY d.fecha DESC")
-    List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia);
+    List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia, Long id_modelo);
 
     @Query(value = "SELECT d.observacion as comentario, e.estado as estado, d.fecha as fecha, \n" +
             "per.primer_nombre||' '||per.primer_apellido as usuarioevaluador \n" +

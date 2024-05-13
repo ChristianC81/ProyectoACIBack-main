@@ -13,19 +13,23 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     @Query("SELECT e FROM Evidencia e WHERE e.visible = true")
     List<Evidencia> listarEvidencia();
 
-    @Query(value = "SELECT e.id_evidencia AS id_evidencia, c.nombre AS nombrecriterio, " +
-            "s.nombre AS nombresubcriterio, i.nombre AS nombreindicador, " +
+    @Query(value = "SELECT e.id_evidencia AS id_evidencia, " +
+            "c.nombre AS nombrecriterio, " +
+            "s.nombre AS nombresubcriterio, " +
+            "i.nombre AS nombreindicador, " +
             "i.tipo AS tipo, e.descripcion AS descripcionevidencia, " +
-            "ae.estado AS estado, (SELECT comentario FROM archivo " +
+            "ae.estado AS estado, " +
+            "(SELECT comentario FROM archivo " +
             "WHERE id_asignacion_evidencia = ae.id_asignacion_evidencia " +
-            "AND visible = true ORDER BY id_archivo DESC LIMIT 1 ) AS comentario " +
-            "FROM evidencia e JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia " +
-            "JOIN usuarios u ON ae.usuario_id = u.id " +
+            "AND visible = true AND id_modelo= :id_modelo ORDER BY id_archivo DESC LIMIT 1 ) AS comentario " +
+            "FROM evidencia e " +
+            "JOIN asignacion_evidencia ae ON e.id_evidencia = ae.evidencia_id_evidencia AND ae.id_modelo = :id_modelo AND ae.visible = true  " +
+            "JOIN usuarios u ON ae.usuario_id = u.id AND u.visible=true " +
             "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
+            "JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador AND ai.modelo_id_modelo = :id_modelo " +
             "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
             "JOIN criterio c ON s.id_criterio = c.id_criterio " +
-            "WHERE u.username = :username AND e.visible = true " +
-            "AND ae.visible = true AND ae.id_modelo = :id_modelo", nativeQuery = true)
+            "WHERE u.username = :username AND e.visible = true ", nativeQuery = true)
     public List<EvidenciaEvProjection> evidenciaUsuario(@Param("username") String username, @Param("id_modelo") Long id_modelo  );
 
 

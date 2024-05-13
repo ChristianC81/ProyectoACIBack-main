@@ -36,9 +36,10 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
             "JOIN i.lista_asignacion po " +
             "JOIN po.modelo mo " +
             "WHERE ae.visible = true " +
-            "AND mo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m) " +
+            "AND mo.id_modelo = :id_modelo " +
+            "AND ae.id_modelo = :id_modelo " +
             "ORDER BY u.id, cri.id_criterio, s.id_subcriterio, i.id_indicador")
-    List<AsignaProjection> listarAsigEvidencia();
+    List<AsignaProjection> listarAsigEvidencia(Long id_modelo);
 
     @Query(value = "SELECT ae.id_asignacion_evidencia AS idevid, " +
             "e.id_evidencia AS ideviden, " +
@@ -123,28 +124,35 @@ public interface Asignacion_Evidencia_repository extends JpaRepository<Asignacio
     @Query(value = "select * from  asignacion_evidencia ac JOIN usuarios u ON ac.usuario_id = u.id where u.username=:username and ac.visible =true",nativeQuery = true)
     List<Asignacion_Evidencia>listarporusuario(String username);
 
-    @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidencia ;",nativeQuery = true)
-    List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia);
+    @Query(value = "SELECT * FROM asignacion_evidencia WHERE visible= true AND evidencia_id_evidencia=:idEvidencia AND id_modelo= :id_modelo ;",nativeQuery = true)
+    List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia, Long id_modelo);
 
     @Query(value = "SELECT * FROM asignacion_evidencia WHERE usuario_id = :userId AND visible = true;",nativeQuery = true)
     List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);
 
-    @Query(value = "SELECT pe.primer_nombre ||' '|| pe.primer_apellido AS responsable, " +
-            "c.nombre AS nombre_criterio, s.nombre AS nombre_subcriterio, i.nombre AS nombre_indicador, " +
-            "e.descripcion AS evidencia, ae.fecha_fin, ae.fecha_inicio, e.estado " +
+    @Query(value = "SELECT pe.primer_nombre || ' ' || pe.primer_apellido AS responsable, " +
+            "c.nombre AS nombre_criterio, " +
+            "s.nombre AS nombre_subcriterio, " +
+            "i.nombre AS nombre_indicador, " +
+            "e.descripcion AS evidencia, " +
+            "ae.fecha_fin, " +
+            "ae.fecha_inicio, " +
+            "ae.estado " +
             "FROM asignacion_evidencia ae " +
             "JOIN evidencia e ON ae.evidencia_id_evidencia = e.id_evidencia " +
             "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
             "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
             "JOIN criterio c ON s.id_criterio = c.id_criterio " +
-            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
+            "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador AND ag.visible=true AND ag.modelo_id_modelo= :id_modelo " +
             "JOIN usuarios u ON ae.usuario_id = u.id " +
             "JOIN persona pe ON u.persona_id_persona = pe.id_persona " +
-            "WHERE (LOWER(e.estado) = LOWER(:estado)) " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)" +
-            "AND u.visible= true  AND ae.visible=true AND e.visible=true " +
+            "WHERE LOWER(ae.estado) = LOWER(:estado) " +
+            "AND ae.id_modelo = :id_modelo " +
+            "AND ae.visible = true " +
+            "AND u.visible = true " +
+            "AND e.visible = true " +
             "ORDER BY e.id_evidencia DESC", nativeQuery = true)
-    List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado);
+    List<EvidenciaReApPeAtrProjection> listarEvideByEstado(@Param("estado") String estado,@Param("id_modelo") Long id_modelo);
 
     @Query(value = "SELECT \n" +
             "    pe.primer_nombre || ' ' || pe.primer_apellido AS responsable,\n" +

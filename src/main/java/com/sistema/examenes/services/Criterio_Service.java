@@ -10,13 +10,13 @@ public interface Criterio_Service extends GenericService<Criterio, Long> {
     public List<Criterio> listar();
 
     public List<Criterio> obtenerCriterios();
-    public List<CriteProjection> ObtenerCriterioUltimoModelo();
+    public List<CriteProjection> ObtenerCriterioUltimoModelo(Long id_modelo);
 
     public List<Criterio> obtenerCriterioModelo();
 
     public List<Criterio> obtenerCriterioIdModelo(Long id);
 
-    public List<Criterio> obtenerCriteriosUltimoModelo();
+    public List<Criterio> obtenerCriteriosUltimoModelo(Long id_modelo);
 
     // listarCriterioPorIndicador de repositorio
     public List<Criterio> listarCriterioPorIndicador(Long id_indicador);
@@ -24,7 +24,7 @@ public interface Criterio_Service extends GenericService<Criterio, Long> {
     public List<Criterio> obtenerCriteriosPorUsuarioYModelo(Long usuarioId, Long modeloId);
 
     //Lista de criterios para el flujo
-    public List<CriterioSubcriteriosProjection> obtenerDatosCriterios();
+    public List<CriterioSubcriteriosProjection> obtenerDatosCriterios(Long id_modelo);
     public List<ValoresProjection>  listarvalores(Long id_modelo);
     public List<ValoresProjection>  listarvaloresmovil();
     List<ValoresProjection> valoresporcriterio(Long id_modelo,String nombre);

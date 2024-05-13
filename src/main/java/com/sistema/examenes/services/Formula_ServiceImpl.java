@@ -18,7 +18,7 @@ public class Formula_ServiceImpl extends GenericServiceImpl<Formula, Long> imple
     }
 
     @Override
-    public List<FormulaProjection> listar() {
-        return repository.listarFormula();
+    public List<FormulaProjection> listarFormulas(Long id_modelo) {
+        return repository.listarFormulas(id_modelo);
     }
 }
