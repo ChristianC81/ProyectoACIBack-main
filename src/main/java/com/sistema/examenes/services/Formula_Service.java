@@ -6,6 +6,6 @@ import com.sistema.examenes.projection.FormulaProjection;
 import java.util.List;
 
 public interface Formula_Service extends GenericService<Formula, Long>{
-    public List<FormulaProjection> listar() ;
+    public List<FormulaProjection> listarFormulas(Long id_modelo) ;
 
 }

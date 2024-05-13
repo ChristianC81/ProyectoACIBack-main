@@ -47,16 +47,16 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "JOIN c.lista_subcriterios s " +
             "JOIN s.lista_indicadores i " +
             "JOIN i.lista_asignacion ai " +
-            "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
-    List<Criterio> obtenerCriteriosUltimoModelo();
+            "WHERE ai.modelo.id_modelo = :id_modelo")
+    List<Criterio> obtenerCriteriosUltimoModelo(Long id_modelo);
 
     @Query("SELECT DISTINCT c.id_criterio as idcriterio, c.nombre as nombrecriterio " +
             "FROM Criterio c " +
             "JOIN c.lista_subcriterios s " +
             "JOIN s.lista_indicadores i " +
             "JOIN i.lista_asignacion ai " +
-            "WHERE ai.modelo.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
-    List<CriteProjection> ObtenerCriterioUltimoModelo();
+            "WHERE ai.modelo.id_modelo = :id_modelo")
+    List<CriteProjection> ObtenerCriterioUltimoModelo(Long id_modelo);
 
     //el de abajo no se vale
         @Query(value = "SELECT c.* FROM public.criterio c join public.subcriterio s ON s.id_criterio = c.id_criterio join public.indicador i ON i.subcriterio_id_subcriterio = s.id_subcriterio WHERE i.id_indicador=:id_indicador", nativeQuery = true)
@@ -64,11 +64,31 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
 
         //
         @Query("SELECT c.id_criterio AS id_criterio, c.nombre AS nombre, c.descripcion AS descripcion, c.visible AS visible, " +
-                "(SELECT COUNT(s2) FROM Subcriterio s2 WHERE s2.criterio.id_criterio = c.id_criterio AND s2.visible = true) AS cantidadSubcriterios " +
+                "(SELECT COUNT(s2.id_subcriterio) " +
+                "FROM Subcriterio s2 " +
+                "JOIN Criterio c2 ON s2.criterio.id_criterio = c2.id_criterio AND c2.visible = true " +
+                "WHERE c2.id_criterio = c.id_criterio " +
+                "      AND s2.visible = true " +
+                "      AND EXISTS ( " +
+                "          SELECT 1 " +
+                "          FROM Indicador i2 " +
+                "          WHERE i2.subcriterio.id_subcriterio = s2.id_subcriterio " +
+                "                AND i2.visible = true " +
+                "                AND EXISTS ( " +
+                "                    SELECT 1 " +
+                "                    FROM Asignacion_Indicador ai2 " +
+                "                    WHERE ai2.indicador.id_indicador = i2.id_indicador " +
+                "                          AND ai2.modelo.id_modelo = :id_modelo " +
+                "                ) " +
+                "      )) AS cantidadSubcriterios " +
                 "FROM Criterio c " +
+                "JOIN Subcriterio s ON s.criterio.id_criterio=c.id_criterio AND s.visible=true " +
+                "JOIN Indicador i ON i.subcriterio.id_subcriterio=s.id_subcriterio AND i.visible=true " +
+                "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador= i.id_indicador AND ai.visible=true AND ai.modelo.id_modelo= :id_modelo " +
                 "WHERE c.visible = true " +
-                "ORDER BY c.descripcion ASC")
-        List<CriterioSubcriteriosProjection> obtenerCriteriosConCantidadSubcriterios();
+                "GROUP BY id_criterio, nombre, descripcion, visible,cantidadSubcriterios " +
+                "ORDER BY c.id_criterio ASC")
+        List<CriterioSubcriteriosProjection> obtenerCriteriosConCantidadSubcriterios(Long id_modelo);
 
         @Query(value = "SELECT c.nombre AS Nomcriterio, " +
                 "CAST(SUM(i.peso) AS NUMERIC(10, 2)) AS Ponderacio, " +
@@ -246,7 +266,7 @@ public interface Criterio_repository extends JpaRepository<Criterio, Long> {
             "COALESCE(SUM(ci.porc_utilida_obtenida), 0) AS total, " +
             "COALESCE(SUM(i.peso) - SUM(ci.porc_utilida_obtenida),0) AS faltante " +
             "FROM Indicador i " +
-            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador " +
+            "JOIN Asignacion_Indicador ai ON ai.indicador.id_indicador = i.id_indicador AND ai.visible=true " +
             "LEFT JOIN Calificar_Indicador ci ON i.id_indicador = ci.indicador.id_indicador AND ci.id_modelo = :id_modelo " +
             "JOIN i.subcriterio sub " +
             "JOIN sub.criterio cri " +

@@ -13,8 +13,8 @@ import java.util.List;
 
 public interface Notificacion_repository extends JpaRepository<Notificacion, Long> {
     //ListarTODO
-    @Query("SELECT n FROM Notificacion n ORDER BY n.fecha DESC")
-    List<Notificacion> listarTodasNotificaciones();
+    @Query("SELECT n FROM Notificacion n WHERE n.id_modelo= :id_modelo ORDER BY n.fecha DESC")
+    List<Notificacion> listarTodasNotificaciones(Long id_modelo);
 
     @Query("SELECT n FROM Notificacion n WHERE n.usuario= :id_usuario AND n.id_modelo= :id_modelo ORDER BY n.fecha DESC")
     List<Notificacion> listarNotificacionesPorUsuario(Long id_usuario, Long id_modelo);
@@ -28,8 +28,10 @@ public interface Notificacion_repository extends JpaRepository<Notificacion, Lon
 
     @Query(value = "SELECT * FROM notificacion WHERE DATE(fecha)<CAST(:fec AS DATE)", nativeQuery = true)
     List<Notificacion> listarNot(String fec);
-    @Query("SELECT n FROM Notificacion n WHERE n.rol = :roluser ORDER BY n.fecha DESC")
-    List<Notificacion> all(@Param("roluser") String roluser, Pageable pageable);
+
+    @Query("SELECT n FROM Notificacion n WHERE n.rol = :roluser AND n.id_modelo= :id_modelo ORDER BY n.fecha DESC")
+    List<Notificacion> listarNotificacionesPorRolUsuario(@Param("roluser") String roluser,@Param("id_modelo") Long id_modelo, Pageable pageable);
+
     @Query("SELECT n FROM Notificacion n WHERE n.rol = :roluser ORDER BY n.fecha DESC")
     List<Notificacion> allmovil(@Param("roluser") String roluser, Pageable pageable);
     @Query("SELECT n FROM Notificacion n " +
@@ -38,8 +40,9 @@ public interface Notificacion_repository extends JpaRepository<Notificacion, Lon
             "    SELECT ae.evidencia.id_evidencia " +
             "    FROM Asignacion_Evidencia ae " +
             "    WHERE ae.id_usuario_asignador = :userId )" +
+            "AND n.id_modelo= :id_modelo " +
             "ORDER BY n.fecha DESC")
-    List<Notificacion> all2(@Param("roluser") String roluser, @Param("userId") Long userId);
+    List<Notificacion> all2(@Param("roluser") String roluser, @Param("userId") Long userId, @Param("id_modelo") Long id_modelo);
 
     @Query(value = "SELECT DISTINCT ON (mensaje)* FROM notificacion WHERE usuario=:user ORDER BY mensaje, fecha DESC;",nativeQuery = true)
     List<Notificacion> listarulNoti(@Param("user") Long user);

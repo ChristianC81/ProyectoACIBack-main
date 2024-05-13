@@ -29,8 +29,8 @@ public class Subcriterio_ServiceImpl extends GenericServiceImpl<Subcriterio, Lon
     public List<Subcriterio> listarPorCriterio(Long id_criterio) {
         return repository.listarSubcriterioPorCriterio(id_criterio);
     }
-    public List<SubcriterioIndicadoresProjection> obtenerDatosSubcriterios(Long id_criterio){
-        return repository.obtenerSubcirteriosConCantidadIndicador(id_criterio);
+    public List<SubcriterioIndicadoresProjection> obtenerDatosSubcriterios(Long id_criterio,Long id_modelo){
+        return repository.obtenerSubcirteriosConCantidadIndicador(id_criterio,id_modelo);
     };
     public List<SubcriterioIndicadoresProjectionFull> obtenerDatosSubcriteriosFull(){
         return repository.obtenerSubcirteriosConCantidadIndicadorFull();
@@ -40,7 +40,7 @@ public class Subcriterio_ServiceImpl extends GenericServiceImpl<Subcriterio, Lon
         return repository.obtenerSubcriterios(id_criterio, id_modelo);
     }
     @Override
-    public List<SubcriterioPorcProjection> subcriteriosporCriterio(String cri_nombre) {
-        return repository.subcriteriosporCriterio(cri_nombre);
+    public List<SubcriterioPorcProjection> subcriteriosporCriterio(String cri_nombre,Long id_modelo) {
+        return repository.subcriteriosporCriterio(cri_nombre,id_modelo);
     }
 }

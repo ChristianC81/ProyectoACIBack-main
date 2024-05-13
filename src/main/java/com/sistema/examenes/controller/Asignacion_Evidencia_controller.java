@@ -79,7 +79,7 @@ public class Asignacion_Evidencia_controller {
         }
     }
     @GetMapping("/listarv/{id_modelo}")
-    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav(Long id_modelo) {
+    public ResponseEntity<List<AsignacionEvidenciaCalendarProjection>> obtenerListav(@PathVariable("id_modelo") Long id_modelo) {
         try {
             return new ResponseEntity<>(Service.listar(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
@@ -87,10 +87,10 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    @GetMapping("/listasignacion")
-    public ResponseEntity<List<AsignaProjection>> obtenerListaasig() {
+    @GetMapping("/listasignacion/{id_modelo}")
+    public ResponseEntity<List<AsignaProjection>> obtenerListaasig(@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listarAsigEvidencia(), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarAsigEvidencia(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -232,9 +232,10 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    @PutMapping("/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}")
-    public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario, @PathVariable Long idModel) {
-        List<Asignacion_Evidencia> asignacionEvidenciaList = Service.listarporEvidencia(idEvidencia);
+
+    @PutMapping("/cambiarUsuario/{idEvidencia}/{idNuevoUsuario}/{id_modelo}")
+    public ResponseEntity<Asignacion_Evidencia> cambiarUsuario(@PathVariable Long idEvidencia, @PathVariable Long idNuevoUsuario, @PathVariable Long id_modelo) {
+        List<Asignacion_Evidencia> asignacionEvidenciaList = Service.listarporEvidencia(idEvidencia,id_modelo);
         Evidencia evidencia = evidenciaService.findById(idEvidencia);
         Usuario nuevoUsuario = usuarioService.findById(idNuevoUsuario);
 
@@ -281,20 +282,20 @@ public class Asignacion_Evidencia_controller {
         }
     }
 
-    @GetMapping("/buscarporEvide/{idEviden}")
-    public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia) {
+    @GetMapping("/buscarporEvide/{idEviden}/{id_modelo}")
+    public ResponseEntity <List<Asignacion_Evidencia>> listarporEvidencia(@PathVariable("idEviden") Long idEvidencia,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.listarporEvidencia(idEvidencia), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarporEvidencia(idEvidencia, id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 //el de abajo no se utiliza
-    @GetMapping("/evidencias/{estado}")
-    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado) {
+    @GetMapping("/evidencias/{estado}/{id_modelo}")
+    public ResponseEntity<List<EvidenciaReApPeAtrProjection>> obtenerEvidenciasPorEstado(@PathVariable("estado") String estado, @PathVariable("id_modelo") Long id_modelo) {
 
         try {
-            return new ResponseEntity<>(Service.listarEvideByEstado(estado), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvideByEstado(estado,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

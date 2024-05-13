@@ -29,6 +29,7 @@ public class Asignacion_Admin implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_modelo")
     private Modelo id_modelo;
+
     public Asignacion_Admin() {
     }
 

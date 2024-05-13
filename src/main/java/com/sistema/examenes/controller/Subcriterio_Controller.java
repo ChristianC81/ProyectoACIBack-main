@@ -100,9 +100,9 @@ public class Subcriterio_Controller {
         }
     }
 
-    @GetMapping("/datosSubcriterios/{id_criterio}")
-    public List<SubcriterioIndicadoresProjection> obtenerDatosSubcriterios(@PathVariable("id_criterio") Long id_criterio) {
-        return Service.obtenerDatosSubcriterios(id_criterio);
+    @GetMapping("/datosSubcriterios/{id_criterio}/{id_modelo}")
+    public List<SubcriterioIndicadoresProjection> obtenerDatosSubcriterios(@PathVariable("id_criterio") Long id_criterio, @PathVariable("id_modelo") Long id_modelo) {
+        return Service.obtenerDatosSubcriterios(id_criterio,id_modelo);
     }
 
     @GetMapping("/subcritindi/{id_criterio}/{id_modelo}")
@@ -113,10 +113,10 @@ public class Subcriterio_Controller {
     public List<SubcriterioIndicadoresProjectionFull> obtenerDatosSubcriteriosFull() {
         return Service.obtenerDatosSubcriteriosFull();
     }
-    @GetMapping("/listarporcsubcriterios/{cri_nombre}")
-    public ResponseEntity<List<SubcriterioPorcProjection>> listarporcsubcriterios(@PathVariable("cri_nombre") String cri_nombre) {
+    @GetMapping("/listarporcsubcriterios/{cri_nombre}/{id_modelo}")
+    public ResponseEntity<List<SubcriterioPorcProjection>> listarporcsubcriterios(@PathVariable("cri_nombre") String cri_nombre,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.subcriteriosporCriterio(cri_nombre), HttpStatus.OK);
+            return new ResponseEntity<>(Service.subcriteriosporCriterio(cri_nombre,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

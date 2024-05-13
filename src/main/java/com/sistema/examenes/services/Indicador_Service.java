@@ -17,14 +17,12 @@ public interface Indicador_Service extends GenericService<Indicador, Long> {
 
     List<Indicador> listarIndicadorPorCriterioModelo(Long id_criterio, Long id_modelo);
 
-    List<IndicadoresProjection> indicadoresPorCriterios(List<Long> id_criterio);
+    List<IndicadoresProjection> indicadoresPorCriterios(Long id_modelo,List<Long> id_criterio);
 
-    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio);
-    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio);
+    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio,Long id_modelo);
+    List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio,Long id_modelo);
 
-    //List<Indicador> indicadoresPorCriteriosCuali();
-    //List<Indicador> indicadoresPorCriteriosCuanti();
-    public List<IndicadorEvidenciasProjection> obtenerDatosIndicadores(Long id_subcriterio);
+    public List<IndicadorEvidenciasProjection> obtenerDatosIndicadores(Long id_subcriterio, Long id_modelo);
     //public List<IndicadorEvidenciasProjectionFull> obtenerDatosIndicadoresFull();
     List<Indicador> indicadoresPorModelo(Long id_modelo);
     List<IndiColProjection> indicadorval(Long id_modelo);
@@ -32,7 +30,7 @@ public interface Indicador_Service extends GenericService<Indicador, Long> {
     List<IndicadorResp> indicadorPorSubcriterio(Long id_subcriterio,Long id_modelo);
     List<IndicadoresProjection> indicadoresresp(Long id_modelo,Long id);
     List<IndiColProjection> indicadorvaladmin(Long id_modelo,Long id);
-    List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre);
+    List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre, Long id_modelo);
 
     List<IndicadoresGPieProjection> indicadoresPorcObtenidoM75(Long id_modelo);
     List<IndicadoresGPieProjection> indicadoresPorcObtenido50_75(Long id_modelo);

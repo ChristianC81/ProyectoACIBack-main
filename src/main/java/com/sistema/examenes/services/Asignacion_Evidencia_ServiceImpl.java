@@ -39,8 +39,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<AsignaProjection> listarAsigEvidencia() {
-        return repository.listarAsigEvidencia();
+    public List<AsignaProjection> listarAsigEvidencia(Long id_modelo) {
+        return repository.listarAsigEvidencia(id_modelo);
     }
 
     @Override
@@ -90,8 +90,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
         return repository.listarporusuario(username);
     }
     @Override
-    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia) {
-        return repository.listarporEvidencia(idEvidencia);
+    public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia, Long id_modelo ) {
+        return repository.listarporEvidencia(idEvidencia, id_modelo);
     }
 
     @Override
@@ -100,8 +100,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado) {
-        return repository.listarEvideByEstado(estado);
+    public List<EvidenciaReApPeAtrProjection> listarEvideByEstado(String estado, Long id_modelo) {
+        return repository.listarEvideByEstado(estado,id_modelo);
     }
 
     @Override

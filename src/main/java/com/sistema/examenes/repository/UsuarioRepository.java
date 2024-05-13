@@ -78,11 +78,14 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "    AND u.visible = true ", nativeQuery = true)
         List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador);
 
-        @Query(value = "SELECT * FROM usuarios u\n" +
-                "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id\n" +
-                "JOIN persona p  ON u.persona_id_persona = p.id_persona\n" +
-                "WHERE u.visible = true AND ae.visible = true;", nativeQuery = true)
-        public List<Usuario> listaResponsablesDatos();
+         @Query(value = "SELECT u.*, p.* " +
+                 "FROM usuarios u " +
+                 "JOIN asignacion_evidencia ae ON u.id = ae.usuario_id AND ae.visible = true AND ae.id_modelo = :id_modelo " +
+                 "JOIN persona p ON u.persona_id_persona = p.id_persona " +
+                 "WHERE u.visible = true " +
+                 "GROUP BY u.id, p.id_persona " +
+                 "ORDER BY p.primer_nombre" , nativeQuery = true)
+         List<Usuario> listaResponsablesDatos(@Param("id_modelo") Long id_modelo);
 
         /*
          @Query( "SELECT u.id AS id, p.primer_nombre ||' '|| p.primer_apellido AS nombres," +
@@ -127,16 +130,16 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "        JOIN " +
                 "            indicador i_inner ON i_inner.id_indicador = e_inner.indicador_id_indicador " +
                 "        JOIN " +
-                "            asignacion_indicador po_inner ON po_inner.indicador_id_indicador = i_inner.id_indicador " +
-                "        JOIN " +
-                "            (SELECT MAX(id_modelo) AS max_id_modelo FROM modelo) max_mo ON po_inner.modelo_id_modelo = max_mo.max_id_modelo " +
+                "            asignacion_indicador po_inner ON po_inner.indicador_id_indicador = i_inner.id_indicador AND po_inner.modelo_id_modelo= :id_modelo " +
                 "        WHERE " +
-                "            ae_inner.visible = true " +
+                "            ae_inner.visible = true   " +
+                "            AND ae_inner.id_modelo= :id_modelo" +
                 "        GROUP BY " +
                 "            usuario_id " +
                 "    ) ae ON u.id = ae.usuario_id " +
                 "WHERE " +
                 "    ur.rol_rolid != 4 " +
+                "    AND u.visible = true " +
                 "GROUP BY " +
                 "    u.id, " +
                 "    per.primer_nombre, " +
@@ -146,7 +149,7 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "    u.username, " +
                 "    r.rolnombre, " +
                 "    ae.count_evidencias", nativeQuery = true)
-        public List<ResponsableProjection> responsablesGeneral();
+        public List<ResponsableProjection> responsablesGeneral(Long id_modelo);
 
         @Query(value = "SELECT u.* FROM public.usuarios u JOIN public.usuariorol ur ON ur.usuario_id = u.id WHERE ur.rol_rolid = 3 AND u.visible=true", nativeQuery = true)
         List<Usuario> responsables();

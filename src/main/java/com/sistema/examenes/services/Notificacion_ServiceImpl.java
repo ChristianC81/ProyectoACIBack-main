@@ -21,8 +21,8 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     }
 
     @Override
-    public List<Notificacion> listarTodasNotificaciones() {
-        return notificacionRepository.listarTodasNotificaciones();
+    public List<Notificacion> listarTodasNotificaciones(Long id_modelo) {
+        return notificacionRepository.listarTodasNotificaciones(id_modelo);
     }
 
     @Override
@@ -50,9 +50,9 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     }
 
     @Override
-    public List<Notificacion> all(String roluser) {
+    public List<Notificacion> listarNotificacionesPorRolUsuario(String roluser, Long id_modelo) {
         Pageable pageable = PageRequest.of(0, 20); // Página 0 y tamaño de página 20
-        return notificacionRepository.all(roluser, pageable);
+        return notificacionRepository.listarNotificacionesPorRolUsuario(roluser,id_modelo, pageable);
     }
 
     @Override
@@ -62,8 +62,8 @@ public class Notificacion_ServiceImpl extends GenericServiceImpl<Notificacion,Lo
     }
 
     @Override
-    public List<Notificacion> all2(String roluser, Long userId) {
-        return notificacionRepository.all2(roluser,userId);
+    public List<Notificacion> all2(String roluser, Long userId, Long id_modelo) {
+        return notificacionRepository.all2(roluser,userId, id_modelo);
     }
 
     @Override

@@ -24,8 +24,8 @@ public class Detalle_Evaluacion_ServiceImpl extends GenericServiceImpl<Detalle_E
     }*/
 
     @Override
-    public List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia) {
-        return repository.listarDetalleEvaluacion( idEvidencia);
+    public List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia, Long id_modelo) {
+        return repository.listarDetalleEvaluacion( idEvidencia, id_modelo);
     }
 
     @Override

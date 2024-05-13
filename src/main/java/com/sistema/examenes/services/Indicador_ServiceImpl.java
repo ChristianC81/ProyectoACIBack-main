@@ -56,18 +56,18 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
     }
 
     @Override
-    public List<IndicadoresProjection> indicadoresPorCriterios(List<Long> id_criterio) {
-        return repository.indicadoresPorCriterios(id_criterio);
+    public List<IndicadoresProjection> indicadoresPorCriterios(Long id_modelo,List<Long> id_criterio) {
+        return repository.indicadoresPorCriterios(id_modelo, id_criterio);
     }
 
     @Override
-    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio) {
-        return repository.indicadoresPorCriteriosPruebaCualitativa(id_criterio);
+    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCualitativa(List<Long> id_criterio, Long id_modelo) {
+        return repository.indicadoresPorCriteriosPruebaCualitativa(id_criterio, id_modelo);
     }
 
     @Override
-    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio) {
-        return repository.indicadoresPorCriteriosPruebaCuantitativa(id_criterio);
+    public List<IndicadoresProjection> indicadoresPorCriteriosPruebaCuantitativa(List<Long> id_criterio,Long id_modelo) {
+        return repository.indicadoresPorCriteriosPruebaCuantitativa(id_criterio, id_modelo);
     }
 
 
@@ -77,8 +77,8 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
     public List<Indicador> indicadoresPorCriteriosCuanti() {return repository.indicadoresPorCriteriosCuanti();}*/
 
     @Override
-    public List<IndicadorEvidenciasProjection> obtenerDatosIndicadores(Long id_subcriterio){
-        return repository.obtenerIndicadoresConCantidadEvidencia(id_subcriterio);
+    public List<IndicadorEvidenciasProjection> obtenerDatosIndicadores(Long id_subcriterio, Long id_modelo){
+        return repository.obtenerIndicadoresConCantidadEvidencia(id_subcriterio, id_modelo);
     };
     /*@Override
     public List<IndicadorEvidenciasProjectionFull> obtenerDatosIndicadoresFull(){
@@ -109,8 +109,8 @@ public class Indicador_ServiceImpl extends GenericServiceImpl<Indicador, Long> i
         return repository.indicadorvaladmin(id_modelo, id);
     }
     @Override
-    public List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre) {
-        return repository.indicadoreporsubcriterio(sub_nombre);
+    public List<IndicadorPorcProjection> indicadoreporsubcriterio(String sub_nombre, Long id_modelo) {
+        return repository.indicadoreporsubcriterio(sub_nombre, id_modelo);
     }
     @Override
     public List<IndicadoresGPieProjection> indicadoresPorcObtenidoM75(Long id_modelo) {

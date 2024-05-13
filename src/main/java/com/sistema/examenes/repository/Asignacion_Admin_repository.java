@@ -157,17 +157,19 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "AND ac.visible = true", nativeQuery = true)
     List<ActivAprobadaProjection> actividadAprobada(Long id_modelo);
 
-    @Query(value = "SELECT per.primer_nombre || ' ' || per.primer_apellido as nombres, COUNT(ac.id_asignacion_evidencia) " +
-            "as total, ROUND(SUM(CASE WHEN ev.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_asignacion_evidencia), 2) as avance " +
-            "FROM asignacion_evidencia ac JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia " +
+    @Query(value = "SELECT per.primer_nombre || ' ' || per.primer_apellido as nombres, " +
+            "COUNT(ac.id_asignacion_evidencia) as total, " +
+            "ROUND(SUM(CASE WHEN ev.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_asignacion_evidencia), 2) as avance " +
+            "FROM asignacion_evidencia ac " +
+            "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia " +
             "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador " +
             "JOIN asignacion_indicador po ON po.indicador_id_indicador = i.id_indicador " +
             "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
             "JOIN usuarios u ON u.id = ac.usuario_id " +
             "JOIN persona per ON u.persona_id_persona = per.id_persona " +
-            "WHERE mo.id_modelo =:id_modelo AND ac.fecha_inicio BETWEEN mo.fecha_inicio " +
+            "WHERE mo.id_modelo =:id_modelo AND ac.id_modelo= :id_modelo AND ac.fecha_inicio BETWEEN mo.fecha_inicio " +
             "AND mo.fecha_fin AND ac.fecha_fin  BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
-            "AND ac.visible = true " +
+            "AND ac.visible = true AND u.visible=true " +
             "GROUP BY per.primer_nombre, per.primer_apellido;", nativeQuery = true)
     List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
 

@@ -35,10 +35,10 @@ public class Notificacion_Controller {
         }
     }
 
-    @GetMapping("/listarTodasNotificaciones")
-    public ResponseEntity<List<Notificacion>>listarTodasNotificaciones(){
+    @GetMapping("/listartodasnotificaciones/{id_modelo}")
+    public ResponseEntity<List<Notificacion>>listarTodasNotificaciones(@PathVariable("id_modelo") Long id_modelo){
         try {
-            return new ResponseEntity<>(service.listarTodasNotificaciones(), HttpStatus.OK);
+            return new ResponseEntity<>(service.listarTodasNotificaciones(id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -86,10 +86,10 @@ public class Notificacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listartodo/{roluser}")
-    public ResponseEntity<List<Notificacion>>obtenerLista(@PathVariable("roluser") String roluser) {
+    @GetMapping("/listarnotificacionesrol/{roluser}/{id_modelo}")
+    public ResponseEntity<List<Notificacion>>obtenerLista(@PathVariable("roluser") String roluser,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(service.all(roluser), HttpStatus.OK);
+            return new ResponseEntity<>(service.listarNotificacionesPorRolUsuario(roluser,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
@@ -102,10 +102,10 @@ public class Notificacion_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/listartodo2/{roluser}/{userId}")
-    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser, @PathVariable("userId") Long userId) {
+    @GetMapping("/listartodo2/{roluser}/{userId}/{id_modelo}")
+    public ResponseEntity<List<Notificacion>>obtenerLista2(@PathVariable("roluser") String roluser, @PathVariable("userId") Long userId,@PathVariable("id_modelo") Long id_modelo) {
         try {
-            return new ResponseEntity<>(service.all2(roluser,userId), HttpStatus.OK);
+            return new ResponseEntity<>(service.all2(roluser,userId,id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
