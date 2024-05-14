@@ -80,13 +80,12 @@ public class Asignacion_Admin_ServiceImpl extends GenericServiceImpl<Asignacion_
 
     }
     @Override
-    public List<ActivProyection> listarEvidenciasAutoridad(String estado) {
-        return  repository.listarEvidenciasAutoridad(estado);
+    public List<ActivProyection> listarEvidenciasAutoridad(String estado,Long id_modelo) {
+        return  repository.listarEvidenciasAutoridad(estado,id_modelo);
     }
+
     @Override
-    public List<ActivProyection> evidenciaUsu(Long id) {
-        return  repository.evidenciaUsu(id);
+    public List<ActivProyection> evidenciaUsu(Long id, Long id_modelo) {
+        return  repository.evidenciaUsu(id, id_modelo);
     }
-
-
 }

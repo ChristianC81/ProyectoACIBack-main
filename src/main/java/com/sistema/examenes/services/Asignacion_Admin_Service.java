@@ -25,6 +25,6 @@ public interface Asignacion_Admin_Service extends GenericService<Asignacion_Admi
 
     List<ActivAprobadaProjection> actividadpendiente(Long id_modelo);
     public List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
-    public List<ActivProyection> listarEvidenciasAutoridad(String estado);
-    public List<ActivProyection> evidenciaUsu(Long id);
+    public List<ActivProyection> listarEvidenciasAutoridad(String estado, Long id_modelo);
+    public List<ActivProyection> evidenciaUsu(Long id,Long id_modelo);
 }

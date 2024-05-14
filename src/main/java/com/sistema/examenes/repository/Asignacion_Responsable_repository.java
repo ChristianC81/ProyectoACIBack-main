@@ -118,8 +118,14 @@ public interface Asignacion_Responsable_repository extends JpaRepository<Asignac
     @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioResponsable.id = :id_usuarioResponsable")
     Asignacion_Responsable asignacionByIdUsuarioResponsable(@Param("id_usuarioResponsable") Long id_usuarioResponsable);
 
+    @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioResponsable.id = :id_usuarioResponsable AND ar.id_modelo= :id_modelo ")
+    Asignacion_Responsable asignacionByIdUsuarioResponsableIdModelo(@Param("id_usuarioResponsable") Long id_usuarioResponsable,@Param("id_modelo") Long id_modelo);
+
     @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioAdmin.id = :idAdministrador")
     List<Asignacion_Responsable> Asignacion_ResponsablesByAdmin(@Param("idAdministrador") Long idAdministrador);
+
+    @Query("SELECT ar FROM Asignacion_Responsable ar WHERE ar.usuarioResponsable.id = :id_usuarioResponsable AND ar.usuarioAdmin.id= :id_usuarioAdmin AND ar.id_modelo= :id_modelo")
+    Asignacion_Responsable obtenerAsignacionResponsablePorIdResponsableIdAdminIdModelo(@Param("id_usuarioResponsable") Long id_usuarioResponsable,@Param("id_usuarioAdmin") Long id_usuarioAdmin, @Param("id_modelo") Long id_modelo);
 
     boolean existsByUsuarioAdminIdAndUsuarioResponsableId(Long adminId, Long userId);
 

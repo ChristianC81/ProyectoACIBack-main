@@ -234,10 +234,10 @@ public class Evidencia_Controller {
     }
 
     //Estados de las Evidencias Generales - Rol Autoridad
-    @GetMapping("/porcentajeEstadosdeActividadesGeneral")
-    public ResponseEntity<ActiDiagramaPieProjection> porcentajeEstadosdeEvidenciasGeneral() {
+    @GetMapping("/porcentajeEstadosdeActividadesGeneral/{id_modelo}")
+    public ResponseEntity<ActiDiagramaPieProjection> porcentajeEstadosdeEvidenciasGeneral(@PathVariable("id_modelo") Long id_modelo) {
         try {
-            ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeEvidenciasGeneral();
+            ActiDiagramaPieProjection actividades = Service.porcentajeEstadosdeEvidenciasGeneral(id_modelo);
             return new ResponseEntity<>(actividades, HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

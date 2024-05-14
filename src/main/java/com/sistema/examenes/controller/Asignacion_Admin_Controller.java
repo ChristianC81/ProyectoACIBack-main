@@ -270,20 +270,20 @@ public class Asignacion_Admin_Controller {
         }
     }
 
-    @GetMapping("/listarevidencias/{estado}")
-    public ResponseEntity<List<ActivProyection>> evidenciasautoridad(@PathVariable("estado")String estado) {
+    @GetMapping("/listarevidencias/{estado}/{id_modelo}")
+    public ResponseEntity<List<ActivProyection>> evidenciasautoridad(@PathVariable("estado")String estado, @PathVariable("id_modelo")Long id_modelo) {
 
         try {
-            return new ResponseEntity<>(Service.listarEvidenciasAutoridad(estado), HttpStatus.OK);
+            return new ResponseEntity<>(Service.listarEvidenciasAutoridad(estado, id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
 
-    @GetMapping("/evidenciausuario/{id}")
-    public ResponseEntity<List<ActivProyection>> evidenciausuario(@PathVariable("id")Long id) {
+    @GetMapping("/evidenciausuario/{id}/{id_modelo}")
+    public ResponseEntity<List<ActivProyection>> evidenciausuario(@PathVariable("id")Long id,@PathVariable("id_modelo")Long id_modelo) {
         try {
-            return new ResponseEntity<>(Service.evidenciaUsu(id), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenciaUsu(id, id_modelo), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

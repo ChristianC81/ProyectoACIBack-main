@@ -14,10 +14,10 @@ public class Asignacion_Responsable implements Serializable {
     @Column(name = "id_asignacion")
     private Long id_asignacion;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuarioAdmin;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne(fetch = FetchType.EAGER)
     private Usuario usuarioResponsable;
 
     @Column(name = "id_modelo") // Columna para guardar el Modelo en el que se realiza el registro

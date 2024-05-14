@@ -42,7 +42,7 @@ public interface Ponderacion_repository extends JpaRepository<Ponderacion, Long>
             "JOIN p.modelo m " +
             "WHERE m.id_modelo = :id_modelo " +
             "GROUP BY p.contador, p.fecha " +
-            "ORDER BY p.contador")
+            "ORDER BY p.fecha DESC")
     List<PonderacionProjection> listarPonderacionModelo(Long id_modelo);
 
     @Query("SELECT p " +

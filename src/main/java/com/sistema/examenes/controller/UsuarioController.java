@@ -82,9 +82,16 @@ public class UsuarioController {
                 //Contraseña nueva ingresada
                 String nuevaContraseña =  r.getPassword(); // La contraseña proporcionada por el usuario
                 String contraseñaAlmacenada = usuarioExistente.getPassword(); // La contraseña almacenada en la base de datos
-                // Actualizar la contraseña en el usuario existente
-                if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
-                    usuarioExistente.setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                // Verificar si la nueva contraseña no está vacía
+                if (nuevaContraseña != null && !nuevaContraseña.isEmpty()) {
+                    // Verificar si la nueva contraseña es diferente a la almacenada
+                    if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
+                        // Codificar y actualizar la nueva contraseña
+                        usuarioExistente.setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                    }
+                } else {
+                    // Si la nueva contraseña está vacía, mantener la contraseña almacenada
+                    usuarioExistente.setPassword(contraseñaAlmacenada);
                 }
                 activaroRegistrarRoles(usuarioExistente,rolIds);
                 usuarioService.save(usuarioExistente);
@@ -118,15 +125,19 @@ public class UsuarioController {
         try {
             Usuario usuarioExistente = usuarioService.findAllByUsername(r.getUsername());
             if (usuarioExistente != null) {
-                if (!arr.existsByUsuarioAdminIdAndUsuarioResponsableId(adminId, usuarioExistente.getId())) {
+                //Si existe se debe comprobar si tiene el registro del responsable para que solo pase a true y listo, debe
+                //validarse la combinacion del id_admin y id_modelo y id_usuario_responsable
+                Asignacion_Responsable asignacionResponsableExistente = arr.obtenerAsignacionResponsablePorIdResponsableIdAdminIdModelo(usuarioExistente.getId(),adminId,modeloId);
+                if (asignacionResponsableExistente==null) {
                     // Si no lo ha asignado, realizar la asignación
                     usuarioExistente.setVisible(true);
                     registrarCriteriosAdminAlResponsable(usuarioExistente, adminId, modeloId);
                     asignarResponsableAdm(usuarioExistente, adminId, modeloId);
                     return new ResponseEntity<>(usuarioService.save(usuarioExistente), HttpStatus.OK);
                 } else {
-                    System.out.println("USUARIO YA ASIGNADO POR ESTE ADMINISTRADOR");
-                    return new ResponseEntity<>(usuarioExistente, HttpStatus.BAD_REQUEST);
+                    asignacionResponsableExistente.setVisible(true);
+                    arr.save(asignacionResponsableExistente);
+                    return new ResponseEntity<>(usuarioExistente, HttpStatus.OK);
                 }
             }
             // Buscar el rol por ID
@@ -417,9 +428,9 @@ public class UsuarioController {
         }
     }
 
-    @PutMapping("/eliminarlogicResp/{id_usuarioResponsable}")
-    public ResponseEntity<?> eliminarlogicResp(@PathVariable Long id_usuarioResponsable) {
-        Asignacion_Responsable a = ServiceResponsable.asignacionByIdUsuarioResponsable(id_usuarioResponsable);
+    @PutMapping("/eliminarlogicResp/{id_usuarioResponsable}/{id_modelo}")
+    public ResponseEntity<?> eliminarlogicResp(@PathVariable Long id_usuarioResponsable,@PathVariable Long id_modelo) {
+        Asignacion_Responsable a = ServiceResponsable.asignacionByIdUsuarioResponsableIdModelo(id_usuarioResponsable, id_modelo);
         if (a == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         } else {
@@ -435,8 +446,10 @@ public class UsuarioController {
                     // Guardar los cambios en cada asignación de evidencia
                     asigeviservice.save(asignacion);
                 }
+                //Listas de asignaciones admin
+                //List<Asignacion_Admin> asignacionAdmins = asigadmservice.listaAsignacionAdminPorIdUsuario()
                 //usuarioService.save(u);
-                return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.NO_CONTENT);
+                return new ResponseEntity<>(ServiceResponsable.save(a), HttpStatus.OK);
             } catch (Exception e) {
                 System.out.println("ERROR AL ELIMINAR UN RESPONSABLE ASIGNADO: "+ e.getMessage());
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
