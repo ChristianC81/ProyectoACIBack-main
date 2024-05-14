@@ -53,13 +53,13 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "JOIN " +
                 "    roles r ON ur.rol_rolid = r.rolid " +
                 "LEFT JOIN " +
-                "    asignacion_responsable asigres ON asigres.usuarioresponsable_id = u.id " +
+                "    asignacion_responsable asigres ON asigres.usuarioresponsable_id = u.id AND asigres.id_modelo = :idModel " +
                 "LEFT JOIN " +
-                "    asignacion_admin asigadm ON asigres.usuarioresponsable_id = asigadm.usuario_id " +
+                "    asignacion_admin asigadm ON asigres.usuarioresponsable_id = asigadm.usuario_id AND asigadm.id_modelo = :idModel " +
                 "WHERE " +
                 "    r.rolnombre = 'RESPONSABLE' " +
                 "    AND ( " +
-                "        (asigres.usuarioadmin_id = ?1 AND asigres.visible = true) " +
+                "        (asigres.usuarioadmin_id = :idAdministrador AND asigres.visible = true) " +
                 "        OR " +
                 "        (u.id IN ( " +
                 "            SELECT ae_inner.usuario_id " +
@@ -71,12 +71,12 @@ public interface UsuarioRepository extends JpaRepository<Usuario, Long> {
                 "            WHERE c.id_criterio IN ( " +
                 "                SELECT criterio_id_criterio " +
                 "                FROM asignacion_admin " +
-                "                WHERE usuario_id = ?1 " +
-                "            ) " +
+                "                WHERE usuario_id = :idAdministrador AND id_modelo = :idModel " +
+                "            ) AND ae_inner.id_modelo = :idModel " +
                 "        )) " +
                 "    ) " +
                 "    AND u.visible = true ", nativeQuery = true)
-        List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador);
+        List<Usuario> listaResponsablesFromAdmin(@Param("idAdministrador") Long idAdministrador, @Param("idModel") Long idModel);
 
          @Query(value = "SELECT u.*, p.* " +
                  "FROM usuarios u " +

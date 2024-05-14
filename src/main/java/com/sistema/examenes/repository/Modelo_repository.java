@@ -77,7 +77,8 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true AND arc.id_modelo= :id_modelo " +
             "WHERE ai.modelo_id_modelo = :id_modelo " +
             "AND cri.nombre = :nombre " +
-            "ORDER BY sub.nombre, i.descripcion, ev.descripcion ASC", nativeQuery = true)
+            "ORDER BY cri.nombre, sub.nombre, i.nombre, CAST(SUBSTRING(ev.descripcion FROM '^[0-9]+') AS INTEGER), " +
+            "ev.descripcion ASC", nativeQuery = true)
     List<criteriosdesprojection> listicritedes(Long id_modelo,String nombre);
 
     @Query(value = "SELECT cri.nombre AS criterionomj, " +
@@ -108,30 +109,33 @@ public interface Modelo_repository extends JpaRepository<Modelo, Long> {
             "WHERE cri.id_criterio = :id_criterio AND ai.modelo_id_modelo = :id_modelo " +
             "ORDER BY cri.id_criterio, sub.id_subcriterio, i.id_indicador", nativeQuery = true)
     List<criteriosdesprojection> listcritmodel(Long id_criterio, Long id_modelo);
+
     @Query(value = "SELECT cri.nombre AS criterionomj, " +
             "sub.nombre AS subcrierioj, " +
             "i.id_indicador AS id_indicardorj, " +
             "i.nombre AS ind_nombrej, " +
             "ev.descripcion AS descrip, " +
+            "ac.estado AS estado_evi, " +
             "(CASE " +
             "WHEN (SELECT count(evi.id_evidencia) FROM evidencia evi WHERE evi.indicador_id_indicador = i.id_indicador) = 0 THEN 0 " +
             "ELSE (i.peso / (SELECT count(evi.id_evidencia) FROM evidencia evi WHERE evi.indicador_id_indicador = i.id_indicador)) " +
             "END) AS peso_evid, " +
             "i.peso AS pes, " +
-            "i.porc_obtenido AS obt, " +
+            "COALESCE(ci.porc_obtenido, 0) AS obt," +
+            "COALESCE(ci.porc_utilida_obtenida, 0) AS uti," +
+            "COALESCE(ci.valor_obtenido, 0) AS val," +
             "i.tipo AS tip, " +
-            "i.porc_utilida_obtenida AS uti, " +
-            "i.valor_obtenido AS val, " +
             "CASE WHEN ai.visible IS NOT NULL THEN ai.visible ELSE false END AS visi, " +
             "arc.nombre AS archivo_nombre, " +
             "arc.enlace AS archivo_enlace " +
             "FROM criterio cri " +
             "JOIN subcriterio sub ON cri.id_criterio = sub.id_criterio AND sub.visible = true " +
             "LEFT JOIN indicador i ON sub.id_subcriterio = i.subcriterio_id_subcriterio AND i.visible = true " +
-            "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador " +
+            "LEFT JOIN calificar_indicador ci ON i.id_indicador = ci.indicador_id_indicador AND ci.id_modelo = :id_modelo " +
+            "LEFT JOIN asignacion_indicador ai ON i.id_indicador = ai.indicador_id_indicador  AND ai.modelo_id_modelo = :id_modelo " +
             "LEFT JOIN evidencia ev ON i.id_indicador = ev.indicador_id_indicador AND ev.visible = true " +
-            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true " +
-            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true " +
+            "LEFT JOIN asignacion_evidencia ac ON ev.id_evidencia = ac.evidencia_id_evidencia AND ac.visible = true  AND ac.id_modelo= :id_modelo " +
+            "LEFT JOIN archivo arc ON ac.id_asignacion_evidencia = arc.id_asignacion_evidencia AND arc.visible = true AND arc.id_modelo= :id_modelo " +
             "JOIN asignacion_admin aa ON aa.criterio_id_criterio = cri.id_criterio AND aa.visible = true AND aa.id_modelo = :id_modelo " +
             "WHERE ai.modelo_id_modelo = :id_modelo AND aa.usuario_id = :id " +
             "ORDER BY cri.nombre, sub.nombre, i.nombre, CAST(SUBSTRING(ev.descripcion FROM '^[0-9]+') AS INTEGER), " +

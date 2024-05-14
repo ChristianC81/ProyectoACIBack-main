@@ -123,10 +123,10 @@ public class Evidencia_Controller {
     }
 
 
-    @GetMapping("/evidenuser/{username}")
-    public ResponseEntity<List<EvidenciaProjection>> evidenciauser(@PathVariable("username") String username) {
+    @GetMapping("/evidenuser/{username}/{idModel}")
+    public ResponseEntity<List<EvidenciaProjection>> evidenciauser(@PathVariable("username") String username, @PathVariable("idModel") Long idModel) {
         try {
-            return new ResponseEntity<>(Service.evidenUsuario(username), HttpStatus.OK);
+            return new ResponseEntity<>(Service.evidenUsuario(username, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

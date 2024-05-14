@@ -28,13 +28,13 @@ public class Archivo_ServiceImpl extends GenericServiceImpl<Archivo_s, Long> imp
     }
 
     @Override
-    public List<ArchivoResProjection> listararchivouser(String username, Long id_asignacion_evi) {
-        return repository.listararchivouser(username,id_asignacion_evi);
+    public List<ArchivoResProjection> listararchivouser(String username, Long id_asignacion_evi, Long idModel) {
+        return repository.listararchivouser(username,id_asignacion_evi, idModel);
     }
 
     @Override
-    public List<ArchivoAdmSupProjection> listararchivoActividad(Long idActividad) {
-        return repository.listararchivoActividad(idActividad);
+    public List<ArchivoAdmSupProjection> listararchivoActividad(Long idActividad, Long idModel) {
+        return repository.listararchivoActividad(idActividad, idModel);
     }
 
     @Override

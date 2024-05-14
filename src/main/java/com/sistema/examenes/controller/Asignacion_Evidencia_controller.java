@@ -266,9 +266,10 @@ public class Asignacion_Evidencia_controller {
         return Service.countArchivosByIdAsigEv(idAsignacionEv);
     }
 
-    @GetMapping("/listarAsigEviUser/{username}/{id_evidencia}")
-    public List<Asignacion_EvidenciaDTO> listarAsigEviUser(@PathVariable("username") String username,@PathVariable("id_evidencia") Long id_evidencia) {
-        return Service.listarAsigEviUser(username,id_evidencia);
+    @GetMapping("/listarAsigEviUser/{username}/{id_evidencia}/{idModel}")
+    public List<Asignacion_EvidenciaDTO> listarAsigEviUser(@PathVariable("username") String username,@PathVariable("id_evidencia") Long id_evidencia,
+                                                           @PathVariable("idModel") Long idModel) {
+        return Service.listarAsigEviUser(username,id_evidencia, idModel);
     }
 
     //no se utiliza la de abajo

@@ -53,7 +53,7 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "AND ae.id_modelo = :idModel " +
             "AND aa.usuario_id = :usuarioId " +
             "AND u.username = :username " +
-            "ORDER BY ae.usuario_id, cri.id_criterio, s.id_subcriterio, i.id_indicador, " +
+            "ORDER BY cri.nombre, s.nombre, i.nombre, " +
             "CAST(SUBSTRING(e.descripcion FROM '^[0-9]+') AS INTEGER), e.descripcion ASC", nativeQuery = true)
     List<EvidenciaEvProjection> evidenciaFiltraCriterio(String username, Long usuarioId, Long idModel);
 
@@ -68,8 +68,9 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "JOIN ae.usuario u " +
             "WHERE u.username = :username " +
             "AND ae.visible = true " +
-            "AND ae.id_modelo = (SELECT MAX(m.id_modelo) FROM Modelo m)")
-    public List<EvidenciaProjection> evidenUsuario(@Param("username") String username);
+            "AND ae.id_modelo = :idModel " +
+            "ORDER BY cri.id_criterio ASC ")
+    public List<EvidenciaProjection> evidenUsuario(@Param("username") String username, @Param("idModel") Long idModel);
 
     @Query("SELECT e.id_evidencia AS id_evidencia, cri.nombre AS criterio, s.nombre AS subcriterio, i.nombre AS indicador, " +
             "e.descripcion AS descripcion, e.estado AS estado " +

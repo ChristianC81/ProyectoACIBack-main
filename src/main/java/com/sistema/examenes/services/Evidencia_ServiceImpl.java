@@ -81,8 +81,8 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
     }
 
     @Override
-    public List<EvidenciaProjection> evidenUsuario(String username) {
-        return repository.evidenUsuario(username);
+    public List<EvidenciaProjection> evidenUsuario(String username, Long idModel) {
+        return repository.evidenUsuario(username, idModel);
     }
 
     @Override

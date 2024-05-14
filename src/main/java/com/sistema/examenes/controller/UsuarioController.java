@@ -265,10 +265,10 @@ public class UsuarioController {
         }
     }
 
-    @GetMapping("/listaResponsablesFromAdmin/{idAdministrador}")
-    public ResponseEntity<List<Usuario>> obtenerListaRespoDatos(@PathVariable Long idAdministrador) {
+    @GetMapping("/listaResponsablesFromAdmin/{idAdministrador}/{idModel}")
+    public ResponseEntity<List<Usuario>> obtenerListaRespoDatos(@PathVariable Long idAdministrador, @PathVariable Long idModel) {
         try {
-            return new ResponseEntity<>(uR.listaResponsablesFromAdmin(idAdministrador), HttpStatus.OK);
+            return new ResponseEntity<>(uR.listaResponsablesFromAdmin(idAdministrador, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

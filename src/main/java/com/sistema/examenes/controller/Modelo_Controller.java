@@ -243,6 +243,8 @@ public class  Modelo_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+
+    /*este*/
     @GetMapping("/listcriterioadmin/{id_modelo}/{id}")
     public ResponseEntity<List<criteriosdesprojection>> criterioadminis(@PathVariable("id_modelo") Long id_modelo,
                                                                           @PathVariable("id") Long id) {
