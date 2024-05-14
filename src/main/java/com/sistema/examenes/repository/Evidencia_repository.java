@@ -208,13 +208,13 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
     EvidenciaCalProjection evidenciacal(Long id_evidencia, Long id_modelo);
 
     @Query(value = "SELECT " +
-            "SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, \n" +
-            "SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, \n" +
-            "SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) AS rechazados, \n" +
+            "SUM(CASE WHEN LOWER(asi.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, \n" +
+            "SUM(CASE WHEN LOWER(asi.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, \n" +
+            "SUM(CASE WHEN LOWER(asi.estado) = 'rechazada' THEN 1 ELSE 0 END) AS rechazados, \n" +
             "COUNT(*) AS total, "+
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_pendientes, " +
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_aprobados, " +
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_rechazados " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'pendiente' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_pendientes, " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'aprobada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_aprobados, " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'rechazada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_rechazados " +
             "FROM " +
             "evidencia e " +
             "JOIN " +
@@ -223,13 +223,13 @@ public interface Evidencia_repository extends JpaRepository<Evidencia, Long> {
             "asi.usuario_id = :responsableId AND asi.visible = true AND asi.id_modelo= :id_modelo ", nativeQuery = true)
     ActiDiagramaPieProjection porcentajeEstadosdeActividadesByResponsableId(@Param("responsableId") Long responsableId,@Param("id_modelo") Long id_modelo);
 
-    @Query(value = "SELECT SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, " +
-            "SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, " +
-            "SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) AS rechazados, " +
+    @Query(value = "SELECT SUM(CASE WHEN LOWER(asi.estado) = 'pendiente' THEN 1 ELSE 0 END) AS pendientes, " +
+            "SUM(CASE WHEN LOWER(asi.estado) = 'aprobada' THEN 1 ELSE 0 END) AS aprobados, " +
+            "SUM(CASE WHEN LOWER(asi.estado) = 'rechazada' THEN 1 ELSE 0 END) AS rechazados, " +
             "COUNT(*) AS total, " +
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'pendiente' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_pendientes, " +
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'aprobada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_aprobados, " +
-            "TRUNC((SUM(CASE WHEN LOWER(e.estado) = 'rechazada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_rechazados " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'pendiente' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_pendientes, " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'aprobada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_aprobados, " +
+            "TRUNC((SUM(CASE WHEN LOWER(asi.estado) = 'rechazada' THEN 1 ELSE 0 END) * 100.0) / COUNT(*), 2) AS porcentaje_rechazados " +
             "FROM " +
             "evidencia e " +
             "JOIN " +

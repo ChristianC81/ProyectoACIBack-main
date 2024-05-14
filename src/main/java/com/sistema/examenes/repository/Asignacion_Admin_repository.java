@@ -159,7 +159,7 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
 
     @Query(value = "SELECT per.primer_nombre || ' ' || per.primer_apellido as nombres, " +
             "COUNT(ac.id_asignacion_evidencia) as total, " +
-            "ROUND(SUM(CASE WHEN ev.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_asignacion_evidencia), 2) as avance " +
+            "ROUND(SUM(CASE WHEN ac.estado = 'Aprobada' THEN 1 ELSE 0 END) * 100.0 / COUNT(ac.id_asignacion_evidencia), 2) as avance " +
             "FROM asignacion_evidencia ac " +
             "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia " +
             "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador " +
