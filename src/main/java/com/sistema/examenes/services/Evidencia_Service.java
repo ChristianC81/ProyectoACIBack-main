@@ -22,7 +22,7 @@ public interface Evidencia_Service extends GenericService<Evidencia, Long> {
     EvidenciaCalProjection evidenciacal(Long id_evidencia, Long id_modelo);
     List<AsigEvidProjection> obtenerEvidenciasPorCriterio(Long idcriterio, Long id_modelo);
     List<AsigEvidProjection> listarEvidenciaAdmin(Long idUser, Long id_modelo);
-    public List<EvidenciaProjection> evidenUsuario(String username);
+    public List<EvidenciaProjection> evidenUsuario(String username, Long idModel);
     public List<EvidenciaProjection> evidenUserPendiente(String username, Long id_modelo);
     ActiDiagramaPieProjection porcentajeEstadosdeActividades (Long responsableId, Long id_modelo);
     ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral();

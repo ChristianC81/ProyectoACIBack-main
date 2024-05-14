@@ -196,18 +196,19 @@ public class Archivo_Controller {
     }
 
 
-    @GetMapping("/buscarev/{username}/{id_asignacion_evi}")
-    public ResponseEntity<List<ArchivoResProjection>> listararchi(@PathVariable("username") String username, @PathVariable("id_asignacion_evi") Long id_asignacion_evi) {
+    @GetMapping("/buscarev/{username}/{id_asignacion_evi}/{idModel}")
+    public ResponseEntity<List<ArchivoResProjection>> listararchi(@PathVariable("username") String username, @PathVariable("id_asignacion_evi") Long id_asignacion_evi,
+                                                                  @PathVariable("idModel") Long idModel) {
         try {   
-            return new ResponseEntity<>(archivoservis.listararchivouser(username,id_asignacion_evi), HttpStatus.OK);
+            return new ResponseEntity<>(archivoservis.listararchivouser(username,id_asignacion_evi, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
-    @GetMapping("/buscararchivo/{idActi}")
-    public ResponseEntity<List<ArchivoAdmSupProjection>> listararchiActividad(@PathVariable("idActi") Long idActividad) {
+    @GetMapping("/buscararchivo/{idActi}/{idModel}")
+    public ResponseEntity<List<ArchivoAdmSupProjection>> listararchiActividad(@PathVariable("idActi") Long idActividad, @PathVariable("idModel") Long idModel) {
         try {
-            return new ResponseEntity<>(archivoservis.listararchivoActividad(idActividad), HttpStatus.OK);
+            return new ResponseEntity<>(archivoservis.listararchivoActividad(idActividad, idModel), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }

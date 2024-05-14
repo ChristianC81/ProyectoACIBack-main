@@ -19,7 +19,7 @@ public interface Asignacion_Evidencia_Service extends GenericService<Asignacion_
 
     List<ActiCalendarProjection> listarActiCalendarbyuser (Long usuario, Long id_modelo);
 
-    List<Asignacion_EvidenciaDTO>listarAsigEviUser(String username, Long id_evidencia);
+    List<Asignacion_EvidenciaDTO>listarAsigEviUser(String username, Long id_evidencia, Long idModel);
     public List<Asignacion_Evidencia> listarporusuario(String username);
     public List<Asignacion_Evidencia>listarporEvidencia(Long idEvidencia,Long id_modelo );
     public List<Asignacion_Evidencia> listarporUsuarioxd(Long userId);

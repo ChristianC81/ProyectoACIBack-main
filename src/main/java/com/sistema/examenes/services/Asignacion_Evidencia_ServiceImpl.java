@@ -64,8 +64,8 @@ public class Asignacion_Evidencia_ServiceImpl extends GenericServiceImpl<Asignac
     }
 
     @Override
-    public List<Asignacion_EvidenciaDTO> listarAsigEviUser(String username, Long id_evidencia) {
-        List<Object[]> resultados = repository.listarAsigEviUser(username, id_evidencia);
+    public List<Asignacion_EvidenciaDTO> listarAsigEviUser(String username, Long id_evidencia, Long idModel) {
+        List<Object[]> resultados = repository.listarAsigEviUser(username, id_evidencia, idModel);
         List<Asignacion_EvidenciaDTO> asignaciones = new ArrayList<>();
 
         for (Object[] fila : resultados) {
