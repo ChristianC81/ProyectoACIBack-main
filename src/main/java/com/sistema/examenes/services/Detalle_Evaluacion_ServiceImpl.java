@@ -29,8 +29,8 @@ public class Detalle_Evaluacion_ServiceImpl extends GenericServiceImpl<Detalle_E
     }
 
     @Override
-    public List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia) {
-        return repository.listarDetallesEvalu(idevidencia);
+    public List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia, Long id_modelo) {
+        return repository.listarDetallesEvalu(idevidencia, id_modelo);
     }
 
     @Override

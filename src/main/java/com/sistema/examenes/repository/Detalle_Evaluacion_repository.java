@@ -29,16 +29,16 @@ public interface Detalle_Evaluacion_repository extends JpaRepository<Detalle_Eva
             "ORDER BY d.fecha DESC")
     List<Detalle_Evaluacion> listarDetalleEvaluacion(Long idEvidencia, Long id_modelo);
 
-    @Query(value = "SELECT d.observacion as comentario, e.estado as estado, d.fecha as fecha, \n" +
-            "per.primer_nombre||' '||per.primer_apellido as usuarioevaluador \n" +
-            "FROM Detalle_Evaluacion d\n" +
-            "JOIN evidencia e ON d.evidencia_id_evidencia = e.id_evidencia\n" +
-            "JOIN usuarios u ON d.usuario_id = u.id\n" +
-            "JOIN persona per ON u.persona_id_persona = per.id_persona\n" +
-            "WHERE d.visible = true \n" +
-            "AND d.evidencia_id_evidencia =:idevidencia\n" +
+    @Query(value = "SELECT d.observacion as comentario, e.estado as estado, d.fecha as fecha, " +
+            "per.primer_nombre||' '||per.primer_apellido as usuarioevaluador " +
+            "FROM Detalle_Evaluacion d " +
+            "JOIN evidencia e ON d.evidencia_id_evidencia = e.id_evidencia " +
+            "JOIN usuarios u ON d.usuario_id = u.id " +
+            "JOIN persona per ON u.persona_id_persona = per.id_persona " +
+            "WHERE d.visible = true " +
+            "AND d.evidencia_id_evidencia =:idevidencia  AND d.id_modelo = :id_modelo " +
             "ORDER BY d.fecha DESC", nativeQuery = true)
-    List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia);
+    List<DetalleEvaluacionProjection> listarDetallesEvalu(Long idevidencia, Long id_modelo);
 
     @Query("SELECT CASE WHEN COUNT(d.id_detalle_evaluacion) > 0 THEN true ELSE false END " +
             "FROM Detalle_Evaluacion d " +

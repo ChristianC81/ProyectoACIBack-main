@@ -46,6 +46,14 @@ public class Calificar_Indicador_Controller {
             return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
         }
     }
+    @GetMapping("/buscarporindicador/{id_indicador}/{id_modelo}")
+    public ResponseEntity<Calificar_Indicador> getById(@PathVariable("id_indicador") Long id_indicador,@PathVariable("id_modelo") Long id_modelo) {
+        try {
+            return new ResponseEntity<>(Service.obtenerCalificacionPorIdIndicadorIdModelo(id_indicador,id_modelo), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
+    }
 
     @PutMapping("/eliminarlogic/{id}")
     public ResponseEntity<?> eliminarLogic(@PathVariable Long id) {
@@ -73,8 +81,6 @@ public class Calificar_Indicador_Controller {
                 Calificar_Indicador.setValor_obtenido(p.getValor_obtenido()); ;
                 Calificar_Indicador.setPorc_obtenido(p.getPorc_obtenido());
                 Calificar_Indicador.setPorc_utilida_obtenida(p.getPorc_utilida_obtenida());
-                Calificar_Indicador.setId_modelo(p.getId_modelo());
-                Calificar_Indicador.setIndicador(p.getIndicador());
                 return new ResponseEntity<>(Service.save(Calificar_Indicador), HttpStatus.CREATED);
             } catch (Exception e) {
                 return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);

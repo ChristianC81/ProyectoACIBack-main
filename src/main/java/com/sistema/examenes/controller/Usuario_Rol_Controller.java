@@ -78,9 +78,16 @@ public class Usuario_Rol_Controller {
             if (usuarioRolExistente != null) {
                 String nuevaContraseña =  usuarioRol.getUsuario().getPassword(); // La contraseña proporcionada por el usuario
                 String contraseñaAlmacenada = usuarioRolExistente.getUsuario().getPassword(); // La contraseña almacenada en la base de datos
-                // Actualizar la contraseña en el usuario existente
-                if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
-                    usuarioRolExistente.getUsuario().setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                // Verificar si la nueva contraseña no está vacía
+                if (nuevaContraseña != null && !nuevaContraseña.isEmpty()) {
+                    // Verificar si la nueva contraseña es diferente a la almacenada
+                    if (!bCryptPasswordEncoder.matches(nuevaContraseña, contraseñaAlmacenada)) {
+                        // Codificar y actualizar la nueva contraseña
+                        usuarioRolExistente.getUsuario().setPassword(bCryptPasswordEncoder.encode(nuevaContraseña));
+                    }
+                } else {
+                    // Si la nueva contraseña está vacía, mantener la contraseña almacenada
+                    usuarioRolExistente.getUsuario().setPassword(contraseñaAlmacenada);
                 }
 
                  //Marcar todos los roles existentes como no visibles (eliminados lógicamente)

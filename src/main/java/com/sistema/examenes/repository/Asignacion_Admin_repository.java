@@ -163,37 +163,38 @@ public interface Asignacion_Admin_repository extends JpaRepository<Asignacion_Ad
             "FROM asignacion_evidencia ac " +
             "JOIN evidencia ev ON ac.evidencia_id_evidencia = ev.id_evidencia " +
             "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador " +
-            "JOIN asignacion_indicador po ON po.indicador_id_indicador = i.id_indicador " +
-            "JOIN modelo mo ON mo.id_modelo = po.modelo_id_modelo " +
             "JOIN usuarios u ON u.id = ac.usuario_id " +
             "JOIN persona per ON u.persona_id_persona = per.id_persona " +
-            "WHERE mo.id_modelo =:id_modelo AND ac.id_modelo= :id_modelo AND ac.fecha_inicio BETWEEN mo.fecha_inicio " +
-            "AND mo.fecha_fin AND ac.fecha_fin  BETWEEN mo.fecha_inicio AND mo.fecha_fin " +
-            "AND ac.visible = true AND u.visible=true " +
-            "GROUP BY per.primer_nombre, per.primer_apellido;", nativeQuery = true)
+            "WHERE ac.id_modelo = :id_modelo " +
+            "  AND ac.visible = true " +
+            "  AND u.visible = true " +
+            "GROUP BY per.primer_nombre, per.primer_apellido", nativeQuery = true)
     List<ActividadesAvanceProjection> actividadCont(Long id_modelo);
 
     @Query(value = "SELECT u.id as idusuario, e.id_evidencia as idevidencia, cri.nombre as criterio, s.nombre as subcriterio, i.nombre as indicador, e.descripcion as nombre, ae.fecha_fin as fechafin, " +
-            "ae.fecha_inicio as fechainicio, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable, e.estado as estado " +
-            "FROM evidencia e JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
+            "ae.fecha_inicio as fechainicio, pe.primer_nombre||' '||pe.primer_apellido as nombreresponsable, ae.estado as estado " +
+            "FROM evidencia e " +
+            "JOIN asignacion_evidencia ae ON ae.evidencia_id_evidencia = e.id_evidencia " +
             "JOIN usuarios u ON u.id = ae.usuario_id " +
             "JOIN persona pe ON pe.id_persona = u.persona_id_persona " +
             "JOIN indicador i ON e.indicador_id_indicador = i.id_indicador " +
             "JOIN subcriterio s ON i.subcriterio_id_subcriterio = s.id_subcriterio " +
-            "JOIN criterio cri ON s.criterio_id_criterio = cri.id_criterio " +
+            "JOIN criterio cri ON s.id_criterio = cri.id_criterio " +
             "JOIN asignacion_indicador ag ON ag.indicador_id_indicador = i.id_indicador " +
-            "WHERE (LOWER(e.estado) = LOWER(:estado)) AND u.visible= true  AND ae.visible=true AND e.visible=true " +
-            "AND ag.modelo_id_modelo = (SELECT MAX(id_modelo) FROM modelo)", nativeQuery = true)
-    List<ActivProyection> listarEvidenciasAutoridad(String estado);
+            "WHERE (LOWER(ae.estado) = LOWER(:estado)) " +
+            "AND u.visible= true AND e.visible=true AND ae.visible=true " +
+            "AND ag.visible= true AND ag.modelo_id_modelo = :id_modelo AND ae.id_modelo= :id_modelo ", nativeQuery = true)
+    List<ActivProyection> listarEvidenciasAutoridad(String estado, Long id_modelo);
 
 
-    @Query(value = "SELECT distinct ev.descripcion as nombreevidencia, ae.fecha_inicio as inicio, ae.fecha_fin as fin \n" +
-            "FROM asignacion_evidencia ae JOIN evidencia ev ON ev.id_evidencia = ae.evidencia_id_evidencia\n" +
-            "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador \n" +
-            "JOIN asignacion_indicador po ON po.indicador_id_indicador=i.id_indicador \n" +
-            "JOIN modelo mo ON mo.id_modelo=po.modelo_id_modelo WHERE \n" +
-            "mo.id_modelo=(SELECT MAX(id_modelo) FROM modelo) \n" +
+    @Query(value = "SELECT distinct ev.descripcion as nombreevidencia, ae.fecha_inicio as inicio, ae.fecha_fin as fin " +
+            "FROM asignacion_evidencia ae " +
+            "JOIN evidencia ev ON ev.id_evidencia = ae.evidencia_id_evidencia " +
+            "JOIN indicador i ON i.id_indicador = ev.indicador_id_indicador " +
+            "JOIN asignacion_indicador po ON po.indicador_id_indicador=i.id_indicador " +
+            "JOIN modelo mo ON mo.id_modelo=po.modelo_id_modelo " +
+            "WHERE mo.id_modelo= :id_modelo AND ae.id_modelo= :id_modelo " +
             "AND ae.visible=true AND ae.usuario_id=:id", nativeQuery = true)
-    List<ActivProyection> evidenciaUsu(Long id);
+    List<ActivProyection> evidenciaUsu(Long id, Long id_modelo);
 
 }

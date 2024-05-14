@@ -94,8 +94,8 @@ public class Evidencia_ServiceImpl extends GenericServiceImpl<Evidencia, Long> i
         return repository.porcentajeEstadosdeActividadesByResponsableId(responsableId, id_modelo);
     }
     @Override
-    public ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral() {
-        return repository.porcentajeEstadosdeEvidenciasGeneral();
+    public ActiDiagramaPieProjection porcentajeEstadosdeEvidenciasGeneral(Long id_modelo) {
+        return repository.porcentajeEstadosdeEvidenciasGeneral(id_modelo);
     }
 
     @Override
